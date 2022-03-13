@@ -27,7 +27,7 @@ airr10x   = system.file('extdata', '10x_airr_rearrangement.tsv.gz', package = 'T
 contig10x = system.file('extdata', '10x_filtered_contig_annotations.csv.gz', package = 'TrustVDJ')
 vdj10x    = Read10x(airr_file = airr10x, contig_file = contig10x, verbose = FALSE)
 summary(vdj10x[,1:3])
-#>    cell_id            clone_id         sequence_id       
+#>  cell_id            clone_id           sequence_id       
 #>  Length:40          Length:40          Length:40         
 #>  Class :character   Class :character   Class :character  
 #>  Mode  :character   Mode  :character   Mode  :character
@@ -36,7 +36,7 @@ airrTrust = system.file('extdata', 'TRUST4_airr.tsv.gz', package = 'TrustVDJ')
 bcTrust   = system.file('extdata', 'TRUST4_barcode_report.tsv.gz', package = 'TrustVDJ')
 vdjTrust  = ReadTrust(airr_file = airrTrust, barcode_report_file = bcTrust, verbose = FALSE)
 summary(vdjTrust[,1:3])
-#>  sequence_id          sequence           rev_comp        
+#>  sequence_id        sequence           rev_comp        
 #>  Length:3245        Length:3245        Length:3245       
 #>  Class :character   Class :character   Class :character  
 #>  Mode  :character   Mode  :character   Mode  :character
