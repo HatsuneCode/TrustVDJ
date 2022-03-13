@@ -5,6 +5,8 @@ Authors@R:
     person('Lianhao', 'Song', , 'hatsunecode@gmail.com', role = c('aut', 'cre'),
            comment = c(ORCID = '0000-0002-3211-3726'))
 Description: A toolkit for read immune repertoire data.
+BugReports:
+      https://github.com/HatsuneCode/TrustVDJ/issues
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
