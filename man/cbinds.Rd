@@ -14,7 +14,7 @@ cbinds(F1, F2, fill = 0)
 \item{fill}{character/numeric. Default 0}
 }
 \value{
-
+a combined data.frame
 }
 \description{
 cbind two data.frame by filling missing rows from each other based on their row.names.

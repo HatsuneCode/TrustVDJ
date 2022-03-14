@@ -17,12 +17,12 @@ NULL
 #' @export
 #'
 #' @examples
-#' treatment  = data.frame(S1 = sample(10, 5), S2 = sample(10, 5), S3 = sample(10, 5), row.names = seq(5))
-#' control    = data.frame(S4 = sample(20, 5), S5 = sample(20, 5), S6 = sample(10, 5), row.names = seq(5))
-#' cor_result = corTest(treatment, control)
-#' head(cor_result)
+#' treatment = data.frame(S1 = sample(10, 5), S2 = sample(10, 5), S3 = sample(10, 5))
+#' control   = data.frame(S4 = sample(20, 5), S5 = sample(20, 5), S6 = sample(10, 5))
+#' result    = corTest(treatment, control, method = 'pearson')
+#' head(result)
 #'
-corTest = function (x, y, method = NULL, adj_method = NULL, rm0 = T) {
+corTest = function(x, y, method = NULL, adj_method = NULL, rm0 = T) {
 
   # check parameter
   if (is.null(dim(x))) x = t(data.frame(x))

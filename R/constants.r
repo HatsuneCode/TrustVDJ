@@ -6,3 +6,4 @@ chainName = c('v_call', 'd_call', 'j_call', 'c_call',
 # consensus name for 10x clonotype report
 consensusName = c('clonotype_id', 'consensus_id', 'clonotype_frequency', 'clonotype_proportion', 
                   'cdr3', 'cdr3_aa', 'clonotype_inkt_evidence', 'clonotypemait_evidence')
+

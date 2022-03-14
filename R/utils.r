@@ -72,7 +72,7 @@ df_chain = function(chain) setNames(data.frame(t(unlist(chain))), chainName)
 #' @param F2 data.frame.
 #' @param fill character/numeric. Default 0
 #'
-#' @return
+#' @return a combined data.frame
 #' @export
 #'
 #' @examples
