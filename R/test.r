@@ -7,8 +7,8 @@ NULL
 #'
 #' @param x data.frame.
 #' @param y data.frame.
-#' @param method character. pearson, spearman or both.
-#' @param adj_method character. choose one method in \code{p.adjust.methods}.
+#' @param method character. pearson, spearman or both. Default 'both'.
+#' @param adj_method character. choose one method in \code{p.adjust.methods}. Default 'BH'.
 #' @param rm0 logical. whether remove 0 in each analyse. Default TRUE.
 #'
 #' @importFrom stats cor.test p.adjust
@@ -22,7 +22,7 @@ NULL
 #' result    = corTest(treatment, control, method = 'pearson')
 #' head(result)
 #'
-corTest = function(x, y, method = NULL, adj_method = NULL, rm0 = T) {
+corTest = function(x, y, method = 'both', adj_method = 'BH', rm0 = T) {
 
   # check parameter
   if (is.null(dim(x))) x = t(data.frame(x))
@@ -71,4 +71,3 @@ corTest = function(x, y, method = NULL, adj_method = NULL, rm0 = T) {
   # return
   cbinds(Pearson, Spearman)
 }
-
