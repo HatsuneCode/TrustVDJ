@@ -21,13 +21,13 @@ NULL
   # 0. check parameter
   contig_file = as.character(contig_file %|||% NA)
   if(!file.exists(contig_file))
-    stop('!!!', timer(), '10x contig_annotations file does not exist: ', contig_file, ' !!!')
+    stop('!!! ', timer(), ' 10x contig_annotations file does not exist: ', contig_file, ' !!!')
   
   # 1. read contig file
   if(verbose) cat('-->', timer(), 'Reading:', contig_file, '<--\n')
   contig = data.table::fread(contig_file, data.table = F)
   if(!nrow(contig))
-    stop('!!!', timer(), 'There is no content in 10x contig_annotations file !!!')
+    stop('!!! ', timer(), ' There is no content in 10x contig_annotations file !!!')
   
   # return
   contig
@@ -53,13 +53,13 @@ NULL
   # 0. check parameter
   consensus_file = as.character(consensus_file %|||% NA)
   if(!file.exists(consensus_file))
-    stop('!!!', timer(), '10x consensus_annotations file does not exist: ', consensus_file, ' !!!')
+    stop('!!! ', timer(), ' 10x consensus_annotations file does not exist: ', consensus_file, ' !!!')
   
   # 1. read consensus file
   if(verbose) cat('-->', timer(), 'Reading:', consensus_file, '<--\n')
   consensus = data.table::fread(consensus_file, data.table = F)
   if(!nrow(consensus))
-    stop('!!!', timer(), 'There is no content in 10x consensus_annotations file !!!')
+    stop('!!! ', timer(), ' There is no content in 10x consensus_annotations file !!!')
   
   # return
   consensus
@@ -87,13 +87,13 @@ NULL
   # 0. check parameter
   clonotype_file = as.character(clonotype_file %|||% NA)
   if(!file.exists(clonotype_file))
-    stop('!!!', timer(), '10x clonotypes file does not exist: ', clonotype_file, ' !!!')
+    stop('!!! ', timer(), ' 10x clonotypes file does not exist: ', clonotype_file, ' !!!')
   
   # 1. read clonotype file
   if(verbose) cat('-->', timer(), 'Reading:', clonotype_file, '<--\n')
   clonotype = data.table::fread(clonotype_file, data.table = F)
   if(!nrow(clonotype))
-    stop('!!!', timer(), 'There is no content in 10x clonotypes file !!!')
+    stop('!!! ', timer(), ' There is no content in 10x clonotypes file !!!')
   
   # 2. process clonotype
   if(verbose) p = utils::txtProgressBar(style = 3)
@@ -179,12 +179,12 @@ Read10x = function(airr_file      = NULL,
   # 1. Read AIRR file
   airr_file = as.character(airr_file %|||% NA)
   airr = if(file.exists(airr_file)) .ReadAIRR(airr_file, verbose = verbose) else
-    if(verbose) cat('--!', timer(), 'Ignored AIRR report file due to no exist: ', airr_file, ' --!')
+    if(verbose) cat('--!', timer(), 'Ignored AIRR report file due to no exist:', airr_file, '!--\n')
   
   # 2. Read contig file
   contig_file = as.character(contig_file %|||% NA)
   contig = if(file.exists(contig_file)) .Read10x_contig(contig_file, verbose = verbose) else
-    if(verbose) cat('--!', timer(), 'Ignored 10x contig_annotations file due to no exist: ', contig_file, ' --!')
+    if(verbose) cat('--!', timer(), 'Ignored 10x contig_annotations file due to no exist:', contig_file, '!--\n')
   
   # 3. If no 1.&2. file
   if(is.null(airr) && is.null(contig)) {
@@ -192,13 +192,13 @@ Read10x = function(airr_file      = NULL,
     # 3.1 Read consensus file
     consensus_file = as.character(consensus_file %|||% NA)
     consensus = if(file.exists(consensus_file)) .Read10x_consensus(consensus_file, verbose = verbose) else
-      if(verbose) cat('--!', timer(), 'Ignored 10x consensus_annotations file due to no exist: ', consensus_file, ' --!')
+      if(verbose) cat('--!', timer(), 'Ignored 10x consensus_annotations file due to no exist:', consensus_file, '!--\n')
   
     # 3.2. Read clonotype file
     if(is.null(consensus)) {
       clonotype_file = as.character(clonotype_file %|||% NA)
       clonotype = if(file.exists(clonotype_file)) .Read10x_clonotype(clonotype_file, verbose = verbose) else
-        stop('!!!', timer(), 'Even clonotype file does not exist, please check input file path !!!')
+        stop('!!! ', timer(), ' Even clonotype file does not exist, please check input file path !!!')
       return(clonotype)
     } else return(consensus)
   }
@@ -214,7 +214,7 @@ Read10x = function(airr_file      = NULL,
   contig = contig[match(airr$sequence_id, contig$contig_id, nomatch = 1),]
   if(!sum(airr$sequence_id != contig$contig_id)) {
     airr = cbind(airr, contig[grep('^fwr|^cdr1|^cdr2|^full_length', colnames(contig))])
-  } else warning('--!', timer(), ' Ignored combine: sequence_id in AIRR not equal to contig_id in contig file !--')
+  } else warning('--! ', timer(), ' Ignored combine: sequence_id in AIRR not equal to contig_id in contig file !--')
   
   # return
   airr
