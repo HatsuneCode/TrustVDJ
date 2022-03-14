@@ -17,6 +17,7 @@ Collate:
     'class.r'
     'read10x.r'
     'readTrust.r'
+    'test.r'
 Imports: 
     data.table,
     methods,
