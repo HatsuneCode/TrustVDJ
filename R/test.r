@@ -34,10 +34,10 @@ corTest = function(x, y, method = 'both', adj_method = 'BH', rm0 = T) {
   Pearson = data.frame()
   if (sum(c('both', 'pearson') %in% method)) {
     Pearson = apply(x, 1, function(i) apply(y, 1, function(j)
-      if(rm0)
-        cor.test(as.numeric(i[which(i != 0 & j != 0)]), as.numeric(j[which(i != 0 & j != 0)]),
-                 method = 'pearson', alternative = 'two.sided') else
-          cor.test(as.numeric(i), as.numeric(j), method = 'pearson', alternative = 'two.sided') ))
+        if(rm0)
+          stats::cor.test(as.numeric(i[which(i != 0 & j != 0)]), as.numeric(j[which(i != 0 & j != 0)]),
+                   method = 'pearson', alternative = 'two.sided') else
+          stats::cor.test(as.numeric(i), as.numeric(j), method = 'pearson', alternative = 'two.sided') ))
     Pearson = do.call(rbind, lapply(Pearson, function(i){
       re = data.frame(t(sapply(i, function(j)
         c(Cor_pearson = as.numeric(j$estimate), Pvalue_pearson = as.numeric(j$p.value)) )))
@@ -45,7 +45,7 @@ corTest = function(x, y, method = 'both', adj_method = 'BH', rm0 = T) {
       re
     }))
     Pearson$MainName_P = rep(rownames(x), each = nrow(y))
-    Pearson$Padj_pearson = p.adjust(Pearson$Pvalue_pearson, method = adj_method)
+    Pearson$Padj_pearson = stats::p.adjust(Pearson$Pvalue_pearson, method = adj_method)
     Pearson = Pearson[c(4,3,1,2,5)]
   }
 
@@ -54,9 +54,9 @@ corTest = function(x, y, method = 'both', adj_method = 'BH', rm0 = T) {
   if (sum(c('both', 'spearman') %in% method)) {
     Spearman = apply(x, 1, function(i) apply(y, 1, function(j)
         if(rm0)
-          cor.test(as.numeric(i[which(i != 0 & j != 0)]), as.numeric(j[which(i != 0 & j != 0)]),
+          stats::cor.test(as.numeric(i[which(i != 0 & j != 0)]), as.numeric(j[which(i != 0 & j != 0)]),
                    method = 'spearman', alternative = 'two.sided') else
-          cor.test(as.numeric(i), as.numeric(j), method = 'spearman', alternative = 'two.sided') ))
+          stats::cor.test(as.numeric(i), as.numeric(j), method = 'spearman', alternative = 'two.sided') ))
     Spearman = do.call(rbind, lapply(Spearman, function(i){
       re = data.frame(t(sapply(i, function(j)
         c(Cor_spearman = as.numeric(j$estimate), Pvalue_spearman = as.numeric(j$p.value)) )))
@@ -64,7 +64,7 @@ corTest = function(x, y, method = 'both', adj_method = 'BH', rm0 = T) {
       re
     }))
     Spearman$MainName_S = rep(rownames(x), each = nrow(y))
-    Spearman$Padj_spearman = p.adjust(Spearman$Pvalue_spearman, method = adj_method)
+    Spearman$Padj_spearman = stats::p.adjust(Spearman$Pvalue_spearman, method = adj_method)
     Spearman = Spearman[c(4,3,1,2,5)]
   }
 
