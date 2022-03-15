@@ -4,16 +4,16 @@
 \alias{corTest}
 \title{correlation testing one by one}
 \usage{
-corTest(x, y, method = NULL, adj_method = NULL, rm0 = T)
+corTest(x, y, method = "both", adj_method = "BH", rm0 = T)
 }
 \arguments{
 \item{x}{data.frame.}
 
 \item{y}{data.frame.}
 
-\item{method}{character. pearson, spearman or both.}
+\item{method}{character. pearson, spearman or both. Default 'both'.}
 
-\item{adj_method}{character. choose one method in \code{p.adjust.methods}.}
+\item{adj_method}{character. choose one method in \code{p.adjust.methods}. Default 'BH'.}
 
 \item{rm0}{logical. whether remove 0 in each analyse. Default TRUE.}
 }
