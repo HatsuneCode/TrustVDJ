@@ -40,7 +40,7 @@ Download = function(x, name = NULL, sleep = NULL, outdir = NULL){
       
       # check index
       Log = readLines(log)
-      if('ok' %in% Log) cat('--> ', timer(), ' ', i, ': download ok for ', name[i], ' !--')
+      if('ok' %in% Log) cat('--> ', timer(), ' ', i, ': download ok for ', name[i], ' <--\n')
       
       # retry
       while ('Erro' %in% Log){
@@ -52,7 +52,7 @@ Download = function(x, name = NULL, sleep = NULL, outdir = NULL){
         
         # check index
         Log = readLines(log)
-        if('ok' %in% Log) cat('--> ', timer(), ' ', i, ': download ok for ', name[i], ' !--')
+        if('ok' %in% Log) cat('--> ', timer(), ' ', i, ': download ok for ', name[i], ' <--\n')
         
         # sleep
         Sys.sleep(sleep)
