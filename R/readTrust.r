@@ -20,7 +20,7 @@ NULL
 #' airr = .ReadAIRR(airr_file = airr_file, verbose = FALSE)
 #' head(airr)
 #'
-.ReadAIRR = function(airr_file = NULL, verbose = T) {
+.ReadAIRR = function(airr_file = NULL, verbose = TRUE) {
 
   # 0. check parameter
   airr_file = as.character(airr_file %|||% NA)
@@ -29,7 +29,7 @@ NULL
 
   # 1. read airr file
   if(verbose) cat('-->', timer(), 'Reading:', airr_file, '<--\n')
-  airr = data.table::fread(airr_file, data.table = F)
+  airr = data.table::fread(airr_file, data.table = FALSE)
   if(!nrow(airr))
     stop('!!! ', timer(), ' There is no content in AIRR report file !!!')
 
@@ -60,7 +60,7 @@ NULL
 #' barcode_report = .ReadTrust_BarcodeReport(barcode_report_file, verbose = FALSE)
 #' head(barcode_report)
 #'
-.ReadTrust_BarcodeReport = function(barcode_report_file = NULL, verbose = T) {
+.ReadTrust_BarcodeReport = function(barcode_report_file = NULL, verbose = TRUE) {
 
   # 0. check parameter
   barcode_report_file = as.character(barcode_report_file %|||% NA)
@@ -69,7 +69,7 @@ NULL
 
   # 1. read barcode_report file
   if(verbose) cat('-->', timer(), 'Reading:', barcode_report_file, '<--\n')
-  barcode_report = data.table::fread(barcode_report_file, data.table = F)
+  barcode_report = data.table::fread(barcode_report_file, data.table = FALSE)
   if(!nrow(barcode_report))
     stop('!!! ', timer(), ' There is no content in barcode_report file !!!')
 
@@ -126,7 +126,7 @@ NULL
 #' report = .ReadTrust_Report(report_file = report_file, verbose = FALSE)
 #' head(report)
 #'
-.ReadTrust_Report = function(report_file = NULL, verbose = T) {
+.ReadTrust_Report = function(report_file = NULL, verbose = TRUE) {
 
   # 0. check parameter
   report_file = as.character(report_file %|||% NA)
@@ -135,7 +135,7 @@ NULL
 
   # 1. read report file
   if(verbose) cat('-->', timer(), 'Reading:', report_file, '<--\n')
-  report = data.table::fread(report_file, data.table = F)
+  report = data.table::fread(report_file, data.table = FALSE)
   if(!nrow(report))
     stop('!!! ', timer(), ' There is no content in report file !!!')
 
@@ -194,7 +194,7 @@ NULL
 #' # data = ReadTrust(report_file = report_file)
 #' # head(data)
 #'
-ReadTrust = function(airr_file = NULL, barcode_report_file = NULL, report_file = NULL, verbose = T) {
+ReadTrust = function(airr_file = NULL, barcode_report_file = NULL, report_file = NULL, verbose = TRUE) {
 
   # 1. Read AIRR file
   airr_file = as.character(airr_file %|||% NA)

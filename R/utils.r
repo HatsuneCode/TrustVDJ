@@ -100,7 +100,7 @@ cbinds = function(F1, F2, fill = 0) {
     F2             = rbind(F2, SF2r)
     rm(SF2r)
   }
-  F2 = F2[rownames(F1), , drop = F]
+  F2 = F2[rownames(F1), , drop = FALSE]
   cbind(F1, F2)
 }
 

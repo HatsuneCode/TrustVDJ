@@ -14,7 +14,7 @@ NULL
 #' @slot Count   numeric.       Read counts, eg.: 200
 #' @slot ID      character.     Consensus id, eg.: Sample1_consensus1
 #' @slot CDR3germlineSimilarity numeric. CDR3 germline similarity score, eg.: 80
-#' @slot FullLength logical.    Whether the vdj gene is complete, eg.: T
+#' @slot FullLength logical.    Whether the vdj gene is complete, eg.: TRUE
 #'
 #' @importFrom methods new
 #'

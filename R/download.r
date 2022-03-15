@@ -33,7 +33,7 @@ Download = function(x, name = NULL, sleep = NULL, outdir = NULL){
   for (i in seq(x)) {
     # check file
     if(!any(list.files(outdir) %in% name[i])) {
-      tryCatch(download.file(x[i], paste0(outdir, '/', name[i]), 'libcurl', T),
+      tryCatch(download.file(x[i], paste0(outdir, '/', name[i]), 'libcurl', TRUE),
                error = function(e) { 
                  writeLines('Erro', log)
                  warning('--! ', timer(), ' ', i, ': download fail for ', name[i], ' !--') })
@@ -45,7 +45,7 @@ Download = function(x, name = NULL, sleep = NULL, outdir = NULL){
       # retry
       while ('Erro' %in% Log){
         writeLines('ok', log)
-        tryCatch(download.file(x[i], destfile = paste0(outdir, '/', name[i]), 'libcurl', T),
+        tryCatch(download.file(x[i], destfile = paste0(outdir, '/', name[i]), 'libcurl', TRUE),
                  error = function(e){
                    writeLines('Erro', log)
                    warning('--! ', timer(), ' ', i, ': download fail for ', name[i], ' !--') })

@@ -16,7 +16,7 @@ NULL
 #' contig = .Read10x_contig(contig_file = contig_file, verbose = FALSE)
 #' head(contig)
 #' 
-.Read10x_contig = function(contig_file, verbose = T) {
+.Read10x_contig = function(contig_file, verbose = TRUE) {
   
   # 0. check parameter
   contig_file = as.character(contig_file %|||% NA)
@@ -25,7 +25,7 @@ NULL
   
   # 1. read contig file
   if(verbose) cat('-->', timer(), 'Reading:', contig_file, '<--\n')
-  contig = data.table::fread(contig_file, data.table = F)
+  contig = data.table::fread(contig_file, data.table = FALSE)
   if(!nrow(contig))
     stop('!!! ', timer(), ' There is no content in 10x contig_annotations file !!!')
   
@@ -48,7 +48,7 @@ NULL
 #' consensus = .Read10x_consensus(consensus_file = consensus_file, verbose = FALSE)
 #' head(consensus)
 #' 
-.Read10x_consensus = function(consensus_file, verbose = T) {
+.Read10x_consensus = function(consensus_file, verbose = TRUE) {
   
   # 0. check parameter
   consensus_file = as.character(consensus_file %|||% NA)
@@ -57,7 +57,7 @@ NULL
   
   # 1. read consensus file
   if(verbose) cat('-->', timer(), 'Reading:', consensus_file, '<--\n')
-  consensus = data.table::fread(consensus_file, data.table = F)
+  consensus = data.table::fread(consensus_file, data.table = FALSE)
   if(!nrow(consensus))
     stop('!!! ', timer(), ' There is no content in 10x consensus_annotations file !!!')
   
@@ -81,7 +81,7 @@ NULL
 #' clonotype = .Read10x_clonotype(clonotype_file = clonotype_file, verbose = FALSE)
 #' head(clonotype)
 #' 
-.Read10x_clonotype = function(clonotype_file, verbose = T) {
+.Read10x_clonotype = function(clonotype_file, verbose = TRUE) {
   
   # 0. check parameter
   clonotype_file = as.character(clonotype_file %|||% NA)
@@ -90,7 +90,7 @@ NULL
   
   # 1. read clonotype file
   if(verbose) cat('-->', timer(), 'Reading:', clonotype_file, '<--\n')
-  clonotype = data.table::fread(clonotype_file, data.table = F)
+  clonotype = data.table::fread(clonotype_file, data.table = FALSE)
   if(!nrow(clonotype))
     stop('!!! ', timer(), ' There is no content in 10x clonotypes file !!!')
   
@@ -173,7 +173,7 @@ Read10x = function(airr_file      = NULL,
                    contig_file    = NULL, 
                    consensus_file = NULL, 
                    clonotype_file = NULL, 
-                   verbose        = T ){
+                   verbose        = TRUE ){
   
   # 1. Read AIRR file
   airr_file = as.character(airr_file %|||% NA)

@@ -22,7 +22,7 @@ NULL
 #' result    = corTest(treatment, control, method = 'pearson')
 #' head(result)
 #'
-corTest = function(x, y, method = 'both', adj_method = 'BH', rm0 = T) {
+corTest = function(x, y, method = 'both', adj_method = 'BH', rm0 = TRUE) {
 
   # check parameter
   if (is.null(dim(x))) x = t(data.frame(x))
@@ -46,7 +46,7 @@ corTest = function(x, y, method = 'both', adj_method = 'BH', rm0 = T) {
     }))
     Pearson$MainName_P = rep(rownames(x), each = nrow(y))
     Pearson$Padj_pearson = stats::p.adjust(Pearson$Pvalue_pearson, method = adj_method)
-    Pearson = Pearson[c(4,3,1,2,5)]
+    Pearson = Pearson[c(4, 3, 1, 2, 5)]
   }
 
   # spearman
@@ -65,7 +65,7 @@ corTest = function(x, y, method = 'both', adj_method = 'BH', rm0 = T) {
     }))
     Spearman$MainName_S = rep(rownames(x), each = nrow(y))
     Spearman$Padj_spearman = stats::p.adjust(Spearman$Pvalue_spearman, method = adj_method)
-    Spearman = Spearman[c(4,3,1,2,5)]
+    Spearman = Spearman[c(4, 3, 1, 2, 5)]
   }
 
   # return
