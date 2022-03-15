@@ -8,7 +8,7 @@
 x \%|||\% y
 }
 \arguments{
-\item{x}{ANY. An object}
+\item{x}{character/numeric/factor/list. An object which could be checked by \code{is.na()}.}
 
 \item{y}{ANY. A default value}
 }

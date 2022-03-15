@@ -43,23 +43,11 @@ report file: report.tsv.
 
 # file paths
 airr_file           = system.file('extdata', 'TRUST4_airr.tsv.gz', package = 'TrustVDJ')
-barcode_report_file = system.file('extdata', 'TRUST4_barcode_report.tsv.gz', package = 'TrustVDJ') 
+barcode_report_file = system.file('extdata', 'TRUST4_barcode_report.tsv.gz', package = 'TrustVDJ')
 report_file         = system.file('extdata', 'TRUST4_report.tsv.gz', package = 'TrustVDJ')
 
-# both AIRR and barcode_report
-# data = ReadTrust(airr_file = airr_file, barcode_report_file = barcode_report_file)
-# head(data)
-
-# only AIRR
+# AIRR
 data = ReadTrust(airr_file = airr_file)
 head(data)
-
-# only barcode_report
-# data = ReadTrust(barcode_report_file = barcode_report_file)
-# head(data)
-
-# only report
-# data = ReadTrust(report_file = report_file)
-# head(data)
 
 }

@@ -1,7 +1,7 @@
 #' @include utils.r
 NULL
 
-#' Download files retryably
+#' Download files retryable
 #'
 #' @param URLs character/list. URLs to be downloaded.
 #' @param names character/list. file names. Default \code{seq(URLs)}
@@ -26,7 +26,7 @@ Download = function(URLs, names = NULL, method = NULL, sleep = NULL, outdir = NU
   URLs   = as.character(unlist(URLs))
   names  = as.character(unlist(names) %|||% seq(URLs))
   method = as.character(method %|||% 'libcurl')
-  sleep  = as.numeric(sleep) %|||% 2
+  sleep  = as.numeric(sleep)   %|||% 2
   outdir = as.character(outdir %|||% getwd())
 
   # set index
@@ -68,5 +68,7 @@ Download = function(URLs, names = NULL, method = NULL, sleep = NULL, outdir = NU
       }
     } else warning('--! ', timer(), ' ', i, ': file already exist for ', name, ' !--')
   }
+
+  # return
   file.remove(log)
 }

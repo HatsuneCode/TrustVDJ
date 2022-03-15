@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.r
 \name{cbinds}
 \alias{cbinds}
-\title{cbind two data.frame}
+\title{Combine Two Data-frame by Columns}
 \usage{
 cbinds(F1, F2, fill = 0)
 }
@@ -17,11 +17,11 @@ cbinds(F1, F2, fill = 0)
 a combined data.frame
 }
 \description{
-cbind two data.frame by filling missing rows from each other based on their row.names.
+Combine two data.frame by columns by filling in missing rows from each other based on \code{rownames}.
 }
 \examples{
 F1 = data.frame(A = seq(10), B = seq(10), row.names = seq(10))
 F2 = data.frame(C = seq(5),  D = seq(5),  row.names = 3:7)
-cbinds(F1, F2, fill = 'none')
+cbinds(F1, F2)
 
 }

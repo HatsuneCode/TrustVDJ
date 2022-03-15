@@ -95,7 +95,7 @@ Trust = setClass('Trust', slots = c(
 setMethod('show', 'Trust', function(object) {
   cat('Trust object --', length(object@barcode), 'cells contain:\n celltype:',
       unlist(lapply(unique(object@celltype), function(cell)
-        c(sum(object@celltype %in% cell), cell))) %||% 'None', '\n')
+        c(sum(object@celltype %in% cell), cell))) %|||% 'None', '\n')
   cat(' Alpha-chain(confident):', length(object@Achain@ID), 'consensus \n')
   cat(' Beta-chain (confident):', length(object@Bchain@ID), 'consensus \n')
 })

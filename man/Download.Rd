@@ -2,7 +2,7 @@
 % Please edit documentation in R/download.r
 \name{Download}
 \alias{Download}
-\title{Download files retryably}
+\title{Download files retryable}
 \usage{
 Download(
   URLs,
@@ -30,7 +30,7 @@ Download(
 if success, return TRUE
 }
 \description{
-Download files retryably
+Download files retryable
 }
 \examples{
 URLs = paste0('http://www.imgt.org//download/', c('V-QUEST/IMGT_V-QUEST_reference_directory',

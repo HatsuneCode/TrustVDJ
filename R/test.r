@@ -1,14 +1,14 @@
 #' @include utils.r
 NULL
 
-#' correlation testing one by one
+#' Test for Correlation
 #'
-#' Correlation analysis for each row between two data-frames.
+#' Correlation analysis for each row (each to each) between two data-frames.
 #'
 #' @param x data.frame.
 #' @param y data.frame.
-#' @param method character. pearson, spearman or both. Default 'both'.
-#' @param adj_method character. choose one method in \code{p.adjust.methods}. Default 'BH'.
+#' @param method character. 'pearson', 'spearman' or 'both'. Default 'both'
+#' @param adj_method character. choose one method in \code{p.adjust.methods}. Default 'BH'
 #' @param rm0 logical. whether remove 0 in each analyse. Default TRUE.
 #'
 #' @importFrom stats cor.test p.adjust

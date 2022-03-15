@@ -36,7 +36,7 @@ timer = function() as.character(Sys.time())
 #'
 #' @name Ifnone
 #'
-#' @param x ANY. An object
+#' @param x character/numeric/factor/list. An object which could be checked by \code{is.na()}.
 #' @param y ANY. A default value
 #'
 #' @return \code{\%|||\%}: \code{x} unless \code{NULL}, \code{NA} nor \code{length(x) == 0}, otherwise \code{y}
@@ -64,9 +64,9 @@ timer = function() as.character(Sys.time())
 #'
 df_chain = function(chain) setNames(data.frame(t(unlist(chain))), chainName)
 
-#' cbind two data.frame
-#' 
-#' cbind two data.frame by filling missing rows from each other based on their row.names.
+#' Combine Two Data-frame by Columns
+#'
+#' Combine two data.frame by columns by filling in missing rows from each other based on \code{rownames}.
 #'
 #' @param F1 data.frame.
 #' @param F2 data.frame.
@@ -78,14 +78,20 @@ df_chain = function(chain) setNames(data.frame(t(unlist(chain))), chainName)
 #' @examples
 #' F1 = data.frame(A = seq(10), B = seq(10), row.names = seq(10))
 #' F2 = data.frame(C = seq(5),  D = seq(5),  row.names = 3:7)
-#' cbinds(F1, F2, fill = 'none')
-#' 
+#' cbinds(F1, F2)
+#'
 cbinds = function(F1, F2, fill = 0) {
+
+  # check dim
   if(any(dim(F1) == 0)) return(F2)
   if(any(dim(F2) == 0)) return(F1)
+
+  # rownames
   rowall = c(rownames(F1), rownames(F2))
   dF1 = setdiff(rowall, rownames(F1))
   dF2 = setdiff(rowall, rownames(F2))
+
+  # fill F1
   if(length(dF1)){
     SF1r           = matrix(fill, nrow = length(setdiff(rowall, rownames(F1))), ncol = ncol(F1))
     rownames(SF1r) = dF1
@@ -93,6 +99,8 @@ cbinds = function(F1, F2, fill = 0) {
     F1             = rbind(F1, SF1r)
     rm(SF1r)
   }
+
+  # fill F2
   if(length(dF2)){
     SF2r           = matrix(fill, nrow = length(setdiff(rowall, rownames(F2))), ncol = ncol(F2))
     rownames(SF2r) = dF2
@@ -100,7 +108,11 @@ cbinds = function(F1, F2, fill = 0) {
     F2             = rbind(F2, SF2r)
     rm(SF2r)
   }
+
+  # match
   F2 = F2[rownames(F1), , drop = FALSE]
+
+  # return
   cbind(F1, F2)
 }
 

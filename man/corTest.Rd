@@ -2,7 +2,7 @@
 % Please edit documentation in R/test.r
 \name{corTest}
 \alias{corTest}
-\title{correlation testing one by one}
+\title{Test for Correlation}
 \usage{
 corTest(x, y, method = "both", adj_method = "BH", rm0 = TRUE)
 }
@@ -11,9 +11,9 @@ corTest(x, y, method = "both", adj_method = "BH", rm0 = TRUE)
 
 \item{y}{data.frame.}
 
-\item{method}{character. pearson, spearman or both. Default 'both'.}
+\item{method}{character. 'pearson', 'spearman' or 'both'. Default 'both'}
 
-\item{adj_method}{character. choose one method in \code{p.adjust.methods}. Default 'BH'.}
+\item{adj_method}{character. choose one method in \code{p.adjust.methods}. Default 'BH'}
 
 \item{rm0}{logical. whether remove 0 in each analyse. Default TRUE.}
 }
@@ -21,7 +21,7 @@ corTest(x, y, method = "both", adj_method = "BH", rm0 = TRUE)
 a correlation results data.frame
 }
 \description{
-Correlation analysis for each row between two data-frames.
+Correlation analysis for each row (each to each) between two data-frames.
 }
 \examples{
 treatment = data.frame(S1 = sample(10, 5), S2 = sample(10, 5), S3 = sample(10, 5))
