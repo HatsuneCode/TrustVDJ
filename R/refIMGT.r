@@ -7,7 +7,7 @@ NULL
 #' @param verbose logical. Default TRUE
 #'
 #' @importFrom rvest read_html html_node html_text
-#' @importFrom Biostrings readBStringSet chartr
+#' @importFrom Biostrings readBStringSet chartr writeXStringSet
 #'
 #' @return if success, return TRUE
 #' @export
@@ -44,7 +44,7 @@ build_IMGT_reference = function(outdir = NULL, verbose = TRUE) {
       if(verbose) cat('-->', timer(), 'process fa for:', sp, '<--\n')
       names(fa_sp) = sapply(strsplit(names(fa_sp), '\\|'), function(nm) nm[2])
       fa_sp = Biostrings::chartr('acgtn', 'ACGTN', fa_sp)
-      writeXStringSet(fa_sp, paste0('IMGT_', sp, '.fa'))
+      Biostrings::writeXStringSet(fa_sp, paste0('IMGT_', sp, '.fa'))
       if(verbose) cat('-->', timer(), 'saved fa in:', sp, '<--\n')
     } else warning('--! ', timer(), ' no fa content in: ', sp, ' !--')
   })
