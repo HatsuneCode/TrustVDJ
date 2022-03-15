@@ -4,19 +4,30 @@
 \alias{Download}
 \title{Download files retryably}
 \usage{
-Download(x, name = NULL, sleep = NULL, outdir = NULL)
+Download(
+  URLs,
+  names = NULL,
+  method = NULL,
+  sleep = NULL,
+  outdir = NULL,
+  verbose = TRUE
+)
 }
 \arguments{
-\item{x}{character. URLs.}
+\item{URLs}{character/list. URLs to be downloaded.}
 
-\item{name}{character. file names.}
+\item{names}{character/list. file names. Default \code{seq(URLs)}}
 
-\item{sleep}{numeric. retry interval.}
+\item{method}{character. Method to be used for downloading files, equal to \code{download.file}. Default 'libcurl'}
+
+\item{sleep}{numeric. retry interval (second). Default 2}
 
 \item{outdir}{character. output directory.}
+
+\item{verbose}{logical. Default TRUE}
 }
 \value{
-downloaded files
+if success, return TRUE
 }
 \description{
 Download files retryably
@@ -24,6 +35,6 @@ Download files retryably
 \examples{
 URLs = paste0('http://www.imgt.org//download/', c('V-QUEST/IMGT_V-QUEST_reference_directory',
          'GENE-DB/IMGTGENEDB-ReferenceSequences.fasta-nt-WithGaps-F+ORF+inframeP'))
-# Download(URLs, c('vdj_species.html', 'IMGT_download.fa') )
+Download(URLs, c('vdj_species.html', 'IMGT_download.fa'))
 
 }

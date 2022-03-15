@@ -36,6 +36,6 @@ The consensus class
 
 \item{\code{CDR3germlineSimilarity}}{numeric. CDR3 germline similarity score, eg.: 80}
 
-\item{\code{FullLength}}{logical.    Whether the vdj gene is complete, eg.: T}
+\item{\code{FullLength}}{logical.    Whether the vdj gene is complete, eg.: TRUE}
 }}
 

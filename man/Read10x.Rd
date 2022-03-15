@@ -9,7 +9,7 @@ Read10x(
   contig_file = NULL,
   consensus_file = NULL,
   clonotype_file = NULL,
-  verbose = T
+  verbose = TRUE
 )
 }
 \arguments{

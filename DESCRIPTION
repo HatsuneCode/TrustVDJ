@@ -18,6 +18,7 @@ Collate:
     'download.r'
     'read10x.r'
     'readTrust.r'
+    'refIMGT.r'
     'test.r'
 Imports: 
     data.table,

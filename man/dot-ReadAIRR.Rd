@@ -4,7 +4,7 @@
 \alias{.ReadAIRR}
 \title{Read AIRR file.}
 \usage{
-.ReadAIRR(airr_file = NULL, verbose = T)
+.ReadAIRR(airr_file = NULL, verbose = TRUE)
 }
 \arguments{
 \item{airr_file}{character. Path to AIRR file, eg. xx_airr.tsv or xx_barcode_airr.tsv.}

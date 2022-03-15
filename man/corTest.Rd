@@ -4,7 +4,7 @@
 \alias{corTest}
 \title{correlation testing one by one}
 \usage{
-corTest(x, y, method = "both", adj_method = "BH", rm0 = T)
+corTest(x, y, method = "both", adj_method = "BH", rm0 = TRUE)
 }
 \arguments{
 \item{x}{data.frame.}

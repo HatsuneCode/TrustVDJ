@@ -8,7 +8,7 @@ ReadTrust(
   airr_file = NULL,
   barcode_report_file = NULL,
   report_file = NULL,
-  verbose = T
+  verbose = TRUE
 )
 }
 \arguments{
