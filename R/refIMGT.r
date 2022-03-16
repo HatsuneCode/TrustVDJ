@@ -3,6 +3,9 @@ NULL
 
 #' Build IMGT database reference
 #'
+#' Download reference sequences from the IMGT (the international ImMunoGeneTics information system, 
+#' http://www.imgt.org) database and split the sequences by species.
+#'
 #' @param outdir character. Default \code{getwd()}
 #' @param verbose logical. Default TRUE
 #'

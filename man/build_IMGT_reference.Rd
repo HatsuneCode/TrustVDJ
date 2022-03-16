@@ -15,9 +15,10 @@ build_IMGT_reference(outdir = NULL, verbose = TRUE)
 if success, return TRUE
 }
 \description{
-Build IMGT database reference
+Download reference sequences from the IMGT (the international ImMunoGeneTics information system,
+http://www.imgt.org) database and split the sequences by species.
 }
 \examples{
-\donttest{build_IMGT_reference('IMGT_reference')}
+\donttest{build_IMGT_reference('IMGT_reference', verbose = FALSE)}
 
 }
