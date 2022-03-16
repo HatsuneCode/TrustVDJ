@@ -18,6 +18,6 @@ if success, return TRUE
 Build IMGT database reference
 }
 \examples{
-build_IMGT_reference('IMGT_reference')
+\dontrun{build_IMGT_reference('IMGT_reference')}
 
 }

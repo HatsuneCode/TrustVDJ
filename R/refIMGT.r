@@ -13,7 +13,7 @@ NULL
 #' @export
 #'
 #' @examples
-#' build_IMGT_reference('IMGT_reference')
+#' \dontrun{build_IMGT_reference('IMGT_reference')}
 #'
 build_IMGT_reference = function(outdir = NULL, verbose = TRUE) {
 

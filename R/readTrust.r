@@ -178,8 +178,20 @@ NULL
 #' barcode_report_file = system.file('extdata', 'TRUST4_barcode_report.tsv.gz', package = 'TrustVDJ')
 #' report_file         = system.file('extdata', 'TRUST4_report.tsv.gz', package = 'TrustVDJ')
 #'
-#' # AIRR
+#' # both AIRR and barcode_report
+#' \dontrun{data = ReadTrust(airr_file = airr_file, barcode_report_file = barcode_report_file)
+#' head(data)}
+#'
+#' # only AIRR
 #' data = ReadTrust(airr_file = airr_file)
+#' head(data)
+#'
+#' # only barcode_report
+#' data = ReadTrust(barcode_report_file = barcode_report_file)
+#' head(data)
+#'
+#' # only report
+#' data = ReadTrust(report_file = report_file)
 #' head(data)
 #'
 ReadTrust = function(airr_file = NULL, barcode_report_file = NULL, report_file = NULL, verbose = TRUE) {

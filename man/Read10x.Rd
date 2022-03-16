@@ -60,4 +60,20 @@ clonotype_file = system.file('extdata', '10x_clonotypes.csv.gz', package = 'Trus
 data = Read10x(airr_file = airr_file, contig_file = contig_file)
 head(data)
 
+# only AIRR
+data = Read10x(airr_file = airr_file)
+head(data)
+
+# only contig
+data = Read10x(contig_file = contig_file)
+head(data)
+
+# only consensus
+data = Read10x(consensus_file = consensus_file)
+head(data)
+
+# only clonotype
+data = Read10x(clonotype_file = clonotype_file)
+head(data)
+
 }
