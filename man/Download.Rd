@@ -35,6 +35,6 @@ Download files retryable
 \examples{
 URLs = paste0('http://www.imgt.org//download/', c('V-QUEST/IMGT_V-QUEST_reference_directory',
          'GENE-DB/IMGTGENEDB-ReferenceSequences.fasta-nt-WithGaps-F+ORF+inframeP'))
-\dontrun{Download(URLs, c('vdj_species.html', 'IMGT_download.fa'))}
+\donttest{Download(URLs, c('vdj_species.html', 'IMGT_download.fa'))}
 
 }

@@ -13,18 +13,18 @@ NULL
 #' @export
 #'
 #' @examples
-#' \dontrun{build_IMGT_reference('IMGT_reference')}
+#' \donttest{build_IMGT_reference('IMGT_reference', verbose = FALSE)}
 #'
 build_IMGT_reference = function(outdir = NULL, verbose = TRUE) {
 
   # check parameter
   outdir = as.character(outdir %|||% getwd())
   if(verbose) cat('-->', timer(), '1. Build VDJ reference from IMGT website in:', outdir, '<--\n')
-  dir.create(outdir, FALSE, TRUE); setwd(outdir)
+  dir.create(outdir, FALSE, TRUE)
 
   # catch #
-  species_web = 'vdj_species.html'
-  species_fa  = 'IMGT_download.fa'
+  species_web = paste0(outdir, '/vdj_species.html')
+  species_fa  = paste0(outdir, '/IMGT_download.fa')
   URLs = paste0('http://www.imgt.org/download/', c('V-QUEST/IMGT_V-QUEST_reference_directory',
                   'GENE-DB/IMGTGENEDB-ReferenceSequences.fasta-nt-WithGaps-F+ORF+inframeP'))
   Download(URLs, c(species_web, species_fa), verbose = verbose)
@@ -50,7 +50,7 @@ build_IMGT_reference = function(outdir = NULL, verbose = TRUE) {
       fa_sp = Biostrings::chartr('acgtn', 'ACGTN', fa_sp)
 
       # save fa
-      Biostrings::writeXStringSet(fa_sp, paste0('IMGT_', sp, '.fa'))
+      Biostrings::writeXStringSet(fa_sp, paste0(outdir, '/IMGT_', sp, '.fa'))
       if(verbose) cat('-->', timer(), 'saved fa in:', sp, '<--\n')
 
     } else if(verbose) warning('--! ', timer(), ' no fa content in: ', sp, ' !--')
