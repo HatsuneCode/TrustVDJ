@@ -31,8 +31,8 @@ build_IMGT_reference = function(outdir = NULL, method = NULL, verbose = TRUE) {
   # catch
   species_web = 'vdj_species.html'
   species_fa  = 'IMGT_download.fa'
-  species_web_file = paste0(outdir, species_web)
-  species_fa_file  = paste0(outdir, species_fa)
+  species_web_file = paste0(outdir, '/', species_web)
+  species_fa_file  = paste0(outdir, '/', species_fa)
   URLs = paste0('http://www.imgt.org/download/', c('V-QUEST/IMGT_V-QUEST_reference_directory',
                   'GENE-DB/IMGTGENEDB-ReferenceSequences.fasta-nt-WithGaps-F+ORF+inframeP'))
   Download(URLs, c(species_web, species_fa), outdir = outdir, method = method, verbose = verbose)
