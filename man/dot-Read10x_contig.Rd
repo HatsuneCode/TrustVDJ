@@ -19,7 +19,7 @@ Read 10x contig file
 }
 \examples{
 contig_file = system.file('extdata', '10x_all_contig_annotations.csv.gz', package = 'TrustVDJ')
-contig = .Read10x_contig(contig_file = contig_file, verbose = FALSE)
+contig = .Read10x_contig(contig_file = contig_file)
 head(contig)
 
 }

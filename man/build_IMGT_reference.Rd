@@ -9,7 +9,7 @@ build_IMGT_reference(outdir = NULL, method = NULL, verbose = TRUE)
 \arguments{
 \item{outdir}{character. Default \code{getwd()}}
 
-\item{method}{character. Method to be used for downloading files, equal to \code{download.file}. Default 'curl'}
+\item{method}{character. Method to be used for downloading files, equal to \code{download.file}. Default 'libcurl'}
 
 \item{verbose}{logical. Default TRUE}
 }
@@ -21,6 +21,6 @@ Download reference sequences from the IMGT (the international ImMunoGeneTics inf
 http://www.imgt.org) database and split the sequences by species.
 }
 \examples{
-\donttest{build_IMGT_reference('IMGT_reference', verbose = FALSE)}
+\donttest{build_IMGT_reference('IMGT_reference')}
 
 }

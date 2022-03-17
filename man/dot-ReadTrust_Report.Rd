@@ -21,7 +21,7 @@ Note that it could be xx_report.tsv but not xx_barcode_report.tsv.
 }
 \examples{
 report_file = system.file('extdata', 'TRUST4_report.tsv.gz', package = 'TrustVDJ')
-report = .ReadTrust_Report(report_file = report_file, verbose = FALSE)
+report = .ReadTrust_Report(report_file = report_file)
 head(report)
 
 }

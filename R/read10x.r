@@ -13,7 +13,7 @@ NULL
 #'
 #' @examples
 #' contig_file = system.file('extdata', '10x_all_contig_annotations.csv.gz', package = 'TrustVDJ')
-#' contig = .Read10x_contig(contig_file = contig_file, verbose = FALSE)
+#' contig = .Read10x_contig(contig_file = contig_file)
 #' head(contig)
 #'
 .Read10x_contig = function(contig_file, verbose = TRUE) {
@@ -45,7 +45,7 @@ NULL
 #'
 #' @examples
 #' consensus_file = system.file('extdata', '10x_consensus_annotations.csv.gz', package = 'TrustVDJ')
-#' consensus = .Read10x_consensus(consensus_file = consensus_file, verbose = FALSE)
+#' consensus = .Read10x_consensus(consensus_file = consensus_file)
 #' head(consensus)
 #'
 .Read10x_consensus = function(consensus_file, verbose = TRUE) {
@@ -78,7 +78,7 @@ NULL
 #'
 #' @examples
 #' clonotype_file = system.file('extdata', '10x_clonotypes.csv.gz', package = 'TrustVDJ')
-#' clonotype = .Read10x_clonotype(clonotype_file = clonotype_file, verbose = FALSE)
+#' clonotype = .Read10x_clonotype(clonotype_file = clonotype_file)
 #' head(clonotype)
 #'
 .Read10x_clonotype = function(clonotype_file, verbose = TRUE) {

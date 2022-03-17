@@ -17,7 +17,7 @@ NULL
 #'
 #' @examples
 #' airr_file = system.file('extdata', 'TRUST4_airr.tsv.gz', package = 'TrustVDJ')
-#' airr = .ReadAIRR(airr_file = airr_file, verbose = FALSE)
+#' airr = .ReadAIRR(airr_file = airr_file)
 #' head(airr)
 #'
 .ReadAIRR = function(airr_file = NULL, verbose = TRUE) {
@@ -57,7 +57,7 @@ NULL
 #'
 #' @examples
 #' barcode_report_file = system.file('extdata', 'TRUST4_barcode_report.tsv.gz', package = 'TrustVDJ')
-#' barcode_report = .ReadTrust_BarcodeReport(barcode_report_file, verbose = FALSE)
+#' barcode_report = .ReadTrust_BarcodeReport(barcode_report_file)
 #' head(barcode_report)
 #'
 .ReadTrust_BarcodeReport = function(barcode_report_file = NULL, verbose = TRUE) {
@@ -123,7 +123,7 @@ NULL
 #'
 #' @examples
 #' report_file = system.file('extdata', 'TRUST4_report.tsv.gz', package = 'TrustVDJ')
-#' report = .ReadTrust_Report(report_file = report_file, verbose = FALSE)
+#' report = .ReadTrust_Report(report_file = report_file)
 #' head(report)
 #'
 .ReadTrust_Report = function(report_file = NULL, verbose = TRUE) {

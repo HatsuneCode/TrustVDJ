@@ -7,7 +7,7 @@ NULL
 #' http://www.imgt.org) database and split the sequences by species.
 #'
 #' @param outdir character. Default \code{getwd()}
-#' @param method character. Method to be used for downloading files, equal to \code{download.file}. Default 'curl'
+#' @param method character. Method to be used for downloading files, equal to \code{download.file}. Default 'libcurl'
 #' @param verbose logical. Default TRUE
 #'
 #' @importFrom stats setNames
@@ -18,13 +18,13 @@ NULL
 #' @export
 #'
 #' @examples
-#' \donttest{build_IMGT_reference('IMGT_reference', verbose = FALSE)}
+#' \donttest{build_IMGT_reference('IMGT_reference')}
 #'
 build_IMGT_reference = function(outdir = NULL, method = NULL, verbose = TRUE) {
 
   # check parameter
   outdir = as.character(outdir %|||% getwd())
-  method = as.character(method %|||% 'curl')
+  method = as.character(method %|||% 'libcurl')
   if(verbose) cat('-->', timer(), '1. Build VDJ reference from IMGT website in:', outdir, '<--\n')
   dir.create(outdir, FALSE, TRUE)
 
@@ -56,7 +56,7 @@ build_IMGT_reference = function(outdir = NULL, method = NULL, verbose = TRUE) {
       
       # combine same name 
       fa_sp = do.call(c, lapply(unique(names(fa_sp)), function(nm) 
-        stats::setNames(Biostrings::BStringSet(BiocGenerics::unlist(fa_sp[names(fa_sp) %in% nm])), nm) ))
+        stats::setNames(Biostrings::BStringSet(unlist(fa_sp[names(fa_sp) %in% nm])), nm) ))
         
       # case conversion
       fa_sp = Biostrings::chartr('acgtn', 'ACGTN', fa_sp)
@@ -71,3 +71,41 @@ build_IMGT_reference = function(outdir = NULL, method = NULL, verbose = TRUE) {
   # done
   file.remove(c(species_web, species_fa))
 }
+
+#' Build NCBI-Igblast database reference
+#'
+#' Download Igblast reference files from NCBI.
+#'
+#' @param outdir character. Default \code{getwd()}
+#' @param method character. Method to be used for downloading files, equal to download.file. Default 'curl'
+#' @param verbose logical. Default TRUE
+#'
+#' @importFrom utils untar
+#'
+#' @return if success, return TRUE
+#' @export
+#'
+#' @examples
+#' \donttest{build_IgBlast_reference('IgBlast')}
+#' 
+build_IgBlast_reference = function(outdir = NULL, method = NULL, verbose = TRUE) {
+  
+  # check parameter
+  outdir = as.character(outdir %|||% getwd())
+  method = as.character(method %|||% 'curl')
+  if(verbose) cat('-->', timer(), '1. Build IgBlast reference from NCBI website in:', outdir, '<--\n')
+  dir.create(outdir, FALSE, TRUE)
+  
+  # catch
+  name = c('mouse_gl_VDJ.tar', 'ncbi_human_c_genes.tar', 'rhesus_monkey_VJ.tar')
+  URLs = paste0('ftp://ftp.ncbi.nih.gov/blast/executables/igblast/release/database/', name)
+  file = paste0(outdir, '/', name)
+  Download(URLs, file, method, verbose = verbose)
+  
+  # untar 
+  lapply(file, function(f) utils::untar(f, exdir = outdir))
+  
+  # done
+  file.remove(file)
+}
+

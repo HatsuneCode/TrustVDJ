@@ -19,7 +19,7 @@ Read 10x clonotype file
 }
 \examples{
 clonotype_file = system.file('extdata', '10x_clonotypes.csv.gz', package = 'TrustVDJ')
-clonotype = .Read10x_clonotype(clonotype_file = clonotype_file, verbose = FALSE)
+clonotype = .Read10x_clonotype(clonotype_file = clonotype_file)
 head(clonotype)
 
 }

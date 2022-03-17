@@ -19,7 +19,7 @@ Read 10x consensus file
 }
 \examples{
 consensus_file = system.file('extdata', '10x_consensus_annotations.csv.gz', package = 'TrustVDJ')
-consensus = .Read10x_consensus(consensus_file = consensus_file, verbose = FALSE)
+consensus = .Read10x_consensus(consensus_file = consensus_file)
 head(consensus)
 
 }
