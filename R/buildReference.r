@@ -44,7 +44,7 @@ build_IMGT_reference = function(outdir = NULL, method = NULL, verbose = TRUE) {
   fa_name = strsplit(names(fa), split = '\\|')
 
   # extract by species
-  lapply(sort(unique(species)), function(sp) {
+  species_ok = unlist(lapply(sort(unique(species)), function(sp) {
 
     # only TCR/BCR
     fa_sp = fa[sapply(fa_name, function(nm) grepl(sp, gsub(' ', '_', nm[3])) & grepl('^IG|^TR', nm[2]) )]
@@ -65,8 +65,17 @@ build_IMGT_reference = function(outdir = NULL, method = NULL, verbose = TRUE) {
       Biostrings::writeXStringSet(fa_sp, paste0(outdir, '/IMGT_', sp, '.fa'))
       if(verbose) cat('-->', timer(), 'saved fa in:', sp, '<--\n')
 
+      # return
+      return(sp)
+
     } else if(verbose) warning('--! ', timer(), ' no fa content in: ', sp, ' !--')
-  })
+
+    # return
+    NULL
+  }))
+
+  # save log
+  writeLines(c(timer(), species_ok), 'species.available.txt')
 
   # done
   file.remove(c(species_web, species_fa))
