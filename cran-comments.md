@@ -12,3 +12,7 @@ There were no ERRORs, WARNINGs, or NOTEs
 
 There is no package that depends on TrustVDJ.
 
+# TrustVDJ v0.1.1
+
+* fix bug in build_IMGT_reference: when same gene name, combine their sequences.
+

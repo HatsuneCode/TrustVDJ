@@ -5,7 +5,7 @@ NULL
 #'
 #' @param URLs character/list. URLs to be downloaded.
 #' @param names character/list. file names. Default \code{seq(URLs)}
-#' @param method character. Method to be used for downloading files, equal to \code{download.file}. Default 'libcurl'
+#' @param method character. Method to be used for downloading files, equal to \code{download.file}. Default 'curl'
 #' @param sleep numeric. retry interval (second). Default 2
 #' @param outdir character. output directory.
 #' @param verbose logical. Default TRUE
@@ -25,7 +25,7 @@ Download = function(URLs, names = NULL, method = NULL, sleep = NULL, outdir = NU
   # check parameter #
   URLs   = as.character(unlist(URLs))
   names  = as.character(unlist(names) %|||% seq(URLs))
-  method = as.character(method %|||% 'libcurl')
+  method = as.character(method %|||% 'curl')
   sleep  = as.numeric(sleep)   %|||% 2
   outdir = as.character(outdir %|||% getwd())
 
