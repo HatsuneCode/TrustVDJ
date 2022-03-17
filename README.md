@@ -8,10 +8,16 @@ TRUST4, 10x Genomics cellranger or AIRR format results.
 
 ## Installation
 
-TrustVDJ is available on CRAN
+1.  TrustVDJ is available on CRAN:
 
 ``` r
 install.packages('TrustVDJ')
+```
+
+2.  Install TrustVDJ using devtools:
+
+``` r
+devtools::install_github('HatsuneCode/TrustVDJ')
 ```
 
 ## Example

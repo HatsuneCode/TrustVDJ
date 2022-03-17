@@ -18,7 +18,7 @@ Download(
 
 \item{names}{character/list. file names. Default \code{seq(URLs)}}
 
-\item{method}{character. Method to be used for downloading files, equal to \code{download.file}. Default 'libcurl'}
+\item{method}{character. Method to be used for downloading files, equal to \code{download.file}. Default 'curl'}
 
 \item{sleep}{numeric. retry interval (second). Default 2}
 

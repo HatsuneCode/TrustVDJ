@@ -19,10 +19,16 @@ The goal of TrustVDJ is to read immune repertoire data, especially from TRUST4, 
 
 ## Installation
 
-TrustVDJ is available on CRAN
+1. TrustVDJ is available on CRAN:
 
 ``` r
 install.packages('TrustVDJ')
+```
+
+2. Install TrustVDJ using devtools:
+
+``` r
+devtools::install_github('HatsuneCode/TrustVDJ')
 ```
 
 ## Example

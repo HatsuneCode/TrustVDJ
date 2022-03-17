@@ -14,11 +14,11 @@ RoxygenNote: 7.1.2
 Collate: 
     'constants.r'
     'utils.r'
-    'class.r'
     'download.r'
+    'buildReference.r'
+    'class.r'
     'read10x.r'
     'readTrust.r'
-    'refIMGT.r'
     'test.r'
 Imports: 
     Biostrings,
