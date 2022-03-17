@@ -50,6 +50,12 @@ build_IMGT_reference = function(outdir = NULL, verbose = TRUE) {
       # process name
       if(verbose) cat('-->', timer(), 'process fa for:', sp, '<--\n')
       names(fa_sp) = sapply(strsplit(names(fa_sp), '\\|'), function(nm) nm[2])
+      
+      # combine same name
+      fa_sp = do.call(c, lapply(unique(names(fa_sp)), function(nm) 
+        stats::setNames(Biostrings::BStringSet(BiocGenerics::unlist(fa_sp[names(fa_sp) %in% nm])), nm) ))
+        
+      # case conversion
       fa_sp = Biostrings::chartr('acgtn', 'ACGTN', fa_sp)
 
       # save fa

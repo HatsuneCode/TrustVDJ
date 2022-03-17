@@ -1,6 +1,6 @@
 Package: TrustVDJ
 Title: Tools for Immune Repertoire Analysis
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: 
     person('Lianhao', 'Song', , 'hatsunecode@gmail.com', role = c('aut', 'cre'),
            comment = c(ORCID = '0000-0002-3211-3726'))
