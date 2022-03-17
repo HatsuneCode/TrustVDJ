@@ -12,7 +12,3 @@ There were no ERRORs, WARNINGs, or NOTEs
 
 There is no package that depends on TrustVDJ.
 
-# TrustVDJ v0.1.1
-
-* fix build_IMGT_reference bug: combine same name sequence.
-
