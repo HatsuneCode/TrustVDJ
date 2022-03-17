@@ -110,8 +110,7 @@ build_IgBlast_reference = function(outdir = NULL, method = NULL, verbose = TRUE)
   # catch
   name = c('mouse_gl_VDJ.tar', 'ncbi_human_c_genes.tar', 'rhesus_monkey_VJ.tar')
   URLs = paste0('ftp://ftp.ncbi.nih.gov/blast/executables/igblast/release/database/', name)
-  file = paste0(outdir, '/', name)
-  Download(URLs, file, method, verbose = verbose)
+  Download(URLs, name, outdir = outdir, method = method, verbose = verbose)
   
   # untar 
   lapply(file, function(f) utils::untar(f, exdir = outdir))
