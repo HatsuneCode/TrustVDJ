@@ -29,18 +29,20 @@ build_IMGT_reference = function(outdir = NULL, method = NULL, verbose = TRUE) {
   dir.create(outdir, FALSE, TRUE)
 
   # catch
-  species_web = paste0(outdir, '/vdj_species.html')
-  species_fa  = paste0(outdir, '/IMGT_download.fa')
+  species_web = 'vdj_species.html'
+  species_fa  = 'IMGT_download.fa'
+  species_web_file = paste0(outdir, species_web)
+  species_fa_file  = paste0(outdir, species_fa)
   URLs = paste0('http://www.imgt.org/download/', c('V-QUEST/IMGT_V-QUEST_reference_directory',
                   'GENE-DB/IMGTGENEDB-ReferenceSequences.fasta-nt-WithGaps-F+ORF+inframeP'))
-  Download(URLs, c(species_web, species_fa), method = method, verbose = verbose)
+  Download(URLs, c(species_web, species_fa), outdir = outdir, method = method, verbose = verbose)
 
   # process html
-  species_html = rvest::html_text(rvest::html_node(rvest::read_html(species_web), 'body section table'))
+  species_html = rvest::html_text(rvest::html_node(rvest::read_html(species_web_file), 'body section table'))
   species = sub('.', '', sub('/.*', '', grep('/', unlist(strsplit(species_html, '- ')), value = TRUE)))
 
   # read fa
-  fa = Biostrings::readBStringSet(species_fa)
+  fa = Biostrings::readBStringSet(species_fa_file)
   fa_name = strsplit(names(fa), split = '\\|')
 
   # extract by species
@@ -75,10 +77,10 @@ build_IMGT_reference = function(outdir = NULL, method = NULL, verbose = TRUE) {
   }))
 
   # save log
-  writeLines(c(timer(), species_ok), 'species.available.txt')
+  writeLines(c(timer(), species_ok), paste0(outdir, '/species.available.txt'))
 
   # done
-  file.remove(c(species_web, species_fa))
+  file.remove(c(species_web_file, species_fa_file))
 }
 
 #' Build NCBI-Igblast database reference
