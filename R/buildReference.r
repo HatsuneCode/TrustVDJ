@@ -109,6 +109,7 @@ build_IgBlast_reference = function(outdir = NULL, method = NULL, verbose = TRUE)
   
   # catch
   name = c('mouse_gl_VDJ.tar', 'ncbi_human_c_genes.tar', 'rhesus_monkey_VJ.tar')
+  file = paste0(outdir, '/', name)
   URLs = paste0('ftp://ftp.ncbi.nih.gov/blast/executables/igblast/release/database/', name)
   Download(URLs, name, outdir = outdir, method = method, verbose = verbose)
   
@@ -119,3 +120,52 @@ build_IgBlast_reference = function(outdir = NULL, method = NULL, verbose = TRUE)
   file.remove(file)
 }
 
+build_Ensembl_reference = function(outdir = NULL, method = NULL, verbose = TRUE) {
+  
+  # check parameter
+  outdir = as.character(outdir %|||% getwd())
+  method = as.character(method %|||% 'libcurl')
+  if(verbose) cat('-->', timer(), '1. Build Ensembl reference in:', outdir, '<--\n')
+  dir.create(outdir, FALSE, TRUE)
+  
+  # catch ensembl
+  web = 'Ensembl.html'
+  web_file = paste0(outdir, '/', web)
+  Download('https://ftp.ensembl.org/pub', web, outdir = outdir, method = method, verbose = verbose)
+  
+  # process ensembl html
+  html = rvest::html_text(rvest::html_node(rvest::read_html(web_file), 'body'))
+  release = sort(as.numeric(stringr::str_match_all(html, 'release-(.*?)/')[[1]][,2]), T)[1]
+  if(is.na(release)) stop('!!! ', timer(), ' No Ensembl release number detected !!!')
+  if(verbose) cat('-->', timer(), 'catch the latest Ensembl release:', release, '<--\n')
+  
+  # catch species
+  fa_web = paste0('Ensembl_release', release, '.fa.html')
+  fa_web_file = paste0(outdir, '/', fa_web)
+  Download(paste0('https://ftp.ensembl.org/pub/release-', release, '/fasta'), 
+           fa_web, outdir = outdir, method = method, verbose = verbose)
+  
+  # process species html
+  fa_html = rvest::html_text(rvest::html_node(rvest::read_html(fa_web_file), 'body'))
+  species = sort(stringr::str_match_all(fa_html, '-\\r\\r\\n(.*?)/')[[1]][,2])
+  
+  # download fasta for each species
+  lapply(seq(species), function(sp) {
+    
+    # catch fasta list
+    sp_fa_web = paste0('Ensembl_release', release, sp, '.fa.html')
+    sp_fa_web_file = paste0(outdir, '/', sp_fa_web)
+    Download(paste0('https://ftp.ensembl.org/pub/release-', release, '/fasta/', sp, '/dna'), 
+             sp_fa_web, outdir = outdir, method = method, verbose = verbose)
+    
+    # process fasta html
+    fastas_html = rvest::html_text(rvest::html_node(rvest::read_html(sp_fa_web_file), 'body'))
+    fasta = grep('sm.toplevel.fa', stringr::str_match_all(fastas_html, '\\r\\r\\n(.*?) ')[[1]][,2], value = T)[1]
+    
+    # download fasta
+    Download(paste0('https://ftp.ensembl.org/pub/release-', release, '/fasta/', sp, '/dna/', fasta),
+             fasta, outdir = paste0(outdir, '/', sp), method = method, verbose = verbose)
+    
+  })
+  
+}

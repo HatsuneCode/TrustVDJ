@@ -28,6 +28,7 @@ Download = function(URLs, names = NULL, method = NULL, sleep = NULL, outdir = NU
   method = as.character(method %|||% 'libcurl')
   sleep  = as.numeric(sleep)   %|||% 2
   outdir = as.character(outdir %|||% getwd())
+  dir.create(outdir, FALSE, TRUE)
 
   # set index
   log = 'Download.log'
