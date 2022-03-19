@@ -12,7 +12,7 @@ htmlHref(file, css = "body a")
 \item{css}{character. HTML elements (one of css) to select. Default \code{'body a'}}
 }
 \value{
-
+A character vector.
 }
 \description{
 Get HTML href content
@@ -20,7 +20,7 @@ Get HTML href content
 \examples{
 \donttest{
 Download('https://ftp.ensembl.org/pub', 'test.html')
-content = htmlText('test.html', css = 'body a')
+content = htmlHref('test.html')
 head(content)
 }
 

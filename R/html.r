@@ -5,13 +5,13 @@
 #'
 #' @importFrom rvest read_html html_elements html_attr
 #'
-#' @return
+#' @return A character vector.
 #' @export
 #'
 #' @examples
 #' \donttest{
 #' Download('https://ftp.ensembl.org/pub', 'test.html')
-#' content = htmlText('test.html', css = 'body a')
+#' content = htmlHref('test.html')
 #' head(content)
 #' }
 #' 
