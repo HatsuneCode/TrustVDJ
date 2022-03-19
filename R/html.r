@@ -3,7 +3,7 @@
 #' @param file character. Path to HTML file.
 #' @param css character. HTML elements (one of css) to select. Default \code{'body a'}
 #'
-#' @importFrom rvest read_html html_elements html_text
+#' @importFrom rvest read_html html_elements html_attr
 #'
 #' @return
 #' @export
