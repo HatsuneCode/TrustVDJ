@@ -116,3 +116,18 @@ cbinds = function(F1, F2, fill = 0) {
   cbind(F1, F2)
 }
 
+#' Pick field
+#'
+#' @param x character.
+#' @param f numeric. target field. Default \code{1}
+#' @param exct pattern. Default \code{'\\|'}
+#'
+#' @return A character vector.
+#' @export
+#'
+#' @examples
+#' char = c('Hello, miku!', 'Love? Love!')
+#' pick(char, 2, ' ')
+#' 
+pick = function(x, f = 1, exct = '\\|') sapply(strsplit(x, exct), function(i) i[f])
+

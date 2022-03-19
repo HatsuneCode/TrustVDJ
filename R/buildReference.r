@@ -54,7 +54,7 @@ build_IMGT_reference = function(outdir = NULL, method = NULL, verbose = TRUE) {
 
       # process name
       if(verbose) cat('-->', timer(), 'process fa for:', sp, '<--\n')
-      names(fa_sp) = sapply(strsplit(names(fa_sp), '\\|'), function(nm) nm[2])
+      names(fa_sp) = pick(names(fa_sp), 2)
       
       # combine same name 
       fa_sp = do.call(c, lapply(unique(names(fa_sp)), function(nm) 
