@@ -20,6 +20,6 @@ if success, return TRUE
 Download Igblast reference files from NCBI.
 }
 \examples{
-\donttest{build_IgBlast_reference('IgBlast')}
+\donttest{build_IgBlast_reference('IgBlast_ref')}
 
 }

@@ -179,16 +179,20 @@ NULL
 #' report_file         = system.file('extdata', 'TRUST4_report.tsv.gz', package = 'TrustVDJ')
 #'
 #' # both AIRR and barcode_report
-#' \donttest{data = ReadTrust(airr_file = airr_file, barcode_report_file = barcode_report_file)
-#' head(data)}
+#' \donttest{
+#' data = ReadTrust(airr_file = airr_file, barcode_report_file = barcode_report_file)
+#' head(data)
+#' }
 #'
 #' # only AIRR
 #' data = ReadTrust(airr_file = airr_file)
 #' head(data)
 #'
 #' # only barcode_report
-#' \donttest{data = ReadTrust(barcode_report_file = barcode_report_file)
-#' head(data)}
+#' \donttest{
+#' data = ReadTrust(barcode_report_file = barcode_report_file)
+#' head(data)
+#' }
 #'
 #' # only report
 #' data = ReadTrust(report_file = report_file)
@@ -231,6 +235,7 @@ ReadTrust = function(airr_file = NULL, barcode_report_file = NULL, report_file =
     airr[a_pool %in% pool[i], chainName[9]] = barcode_report[which(b_pool %in% pool[i])[1], chainName[9]]
     if(verbose) utils::setTxtProgressBar(p, i/length(pool))
   }
+  if(verbose) close(p)
 
   # return
   airr

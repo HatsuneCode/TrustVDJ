@@ -1,4 +1,4 @@
-#' @include utils.r download.r
+#' @include utils.r download.r html.r
 NULL
 
 #' Build IMGT database reference
@@ -11,14 +11,13 @@ NULL
 #' @param verbose logical. Default TRUE
 #'
 #' @importFrom stats setNames
-#' @importFrom rvest read_html html_node html_text
 #' @importFrom Biostrings readBStringSet chartr writeXStringSet
 #'
 #' @return if success, return TRUE
 #' @export
 #'
 #' @examples
-#' \donttest{build_IMGT_reference('IMGT_reference')}
+#' \donttest{build_IMGT_reference('IMGT_ref')}
 #'
 build_IMGT_reference = function(outdir = NULL, method = NULL, verbose = TRUE) {
 
@@ -29,20 +28,21 @@ build_IMGT_reference = function(outdir = NULL, method = NULL, verbose = TRUE) {
   dir.create(outdir, FALSE, TRUE)
 
   # catch
-  species_web = 'vdj_species.html'
-  species_fa  = 'IMGT_download.fa'
+  species_web = 'TrustVDJ_species.html'
+  species_fa  = 'TrustVDJ_imgt.fa'
   species_web_file = paste0(outdir, '/', species_web)
   species_fa_file  = paste0(outdir, '/', species_fa)
   URLs = paste0('http://www.imgt.org/download/', c('V-QUEST/IMGT_V-QUEST_reference_directory',
                   'GENE-DB/IMGTGENEDB-ReferenceSequences.fasta-nt-WithGaps-F+ORF+inframeP'))
+  suppressWarnings(file.remove(c(species_web_file, species_fa_file)))
   Download(URLs, c(species_web, species_fa), outdir = outdir, method = method, verbose = verbose)
 
   # process html
-  species_html = rvest::html_text(rvest::html_node(rvest::read_html(species_web_file), 'body section table'))
-  species = sub('.', '', sub('/.*', '', grep('/', unlist(strsplit(species_html, '- ')), value = TRUE)))
+  species = grep('/', sub('/$', '', unique(
+    grep('\\w/$', htmlHref(species_web, 'body section table a'), value = TRUE) )), invert = TRUE, value = TRUE)
 
   # read fa
-  fa = Biostrings::readBStringSet(species_fa_file)
+  fa      = Biostrings::readBStringSet(species_fa_file)
   fa_name = strsplit(names(fa), split = '\\|')
 
   # extract by species
@@ -79,7 +79,7 @@ build_IMGT_reference = function(outdir = NULL, method = NULL, verbose = TRUE) {
   # save log
   writeLines(c(timer(), species_ok), paste0(outdir, '/species.available.txt'))
 
-  # done
+  # return
   file.remove(c(species_web_file, species_fa_file))
 }
 
@@ -97,7 +97,7 @@ build_IMGT_reference = function(outdir = NULL, method = NULL, verbose = TRUE) {
 #' @export
 #'
 #' @examples
-#' \donttest{build_IgBlast_reference('IgBlast')}
+#' \donttest{build_IgBlast_reference('IgBlast_ref')}
 #' 
 build_IgBlast_reference = function(outdir = NULL, method = NULL, verbose = TRUE) {
   
@@ -108,64 +108,124 @@ build_IgBlast_reference = function(outdir = NULL, method = NULL, verbose = TRUE)
   dir.create(outdir, FALSE, TRUE)
   
   # catch
-  name = c('mouse_gl_VDJ.tar', 'ncbi_human_c_genes.tar', 'rhesus_monkey_VJ.tar')
-  file = paste0(outdir, '/', name)
-  URLs = paste0('ftp://ftp.ncbi.nih.gov/blast/executables/igblast/release/database/', name)
-  Download(URLs, name, outdir = outdir, method = method, verbose = verbose)
+  names = c('mouse_gl_VDJ.tar', 'ncbi_human_c_genes.tar', 'rhesus_monkey_VJ.tar')
+  files = paste0(outdir, '/', names)
+  URLs  = paste0('ftp://ftp.ncbi.nih.gov/blast/executables/igblast/release/database/', names)
+  suppressWarnings(file.remove(files))
+  Download(URLs, names, outdir = outdir, method = method, verbose = verbose)
   
   # untar 
-  lapply(file, function(f) utils::untar(f, exdir = outdir))
+  lapply(files, function(file) utils::untar(file, exdir = outdir))
   
-  # done
-  file.remove(file)
+  # return
+  file.remove(files)
 }
 
-build_Ensembl_reference = function(outdir = NULL, method = NULL, verbose = TRUE) {
+#' Build Ensembl database reference
+#'
+#' Download latest reference files (\code{.fa} and \code{.gtf}) from Ensembl database 
+#' and split the files by species.
+#'
+#' @param outdir character. Default \code{getwd()}
+#' @param species character. Default \code{'ALL'}
+#' @param method character. Method to be used for downloading html files, equal to \code{download.file}. Default 'libcurl'
+#' @param ftp_method character. Method to be used for downloading ftp files (.fa and .gtf), equal to \code{download.file}. Default 'curl'
+#' @param verbose logical. Default \code{TRUE}
+#'
+#' @return if success, return \code{TRUE}
+#' @export
+#'
+#' @examples
+#' \donttest{build_Ensembl_reference('Ensembl_ref', 'acanthochromis_polyacanthus')}
+#' 
+build_Ensembl_reference = function(outdir = NULL, species = NULL, method = NULL, ftp_method = NULL, verbose = TRUE) {
   
   # check parameter
-  outdir = as.character(outdir %|||% getwd())
-  method = as.character(method %|||% 'libcurl')
+  outdir     = as.character(outdir     %|||% getwd())
+  species    = as.character(species    %|||% 'ALL')
+  method     = as.character(method     %|||% 'libcurl')
+  ftp_method = as.character(ftp_method %|||% 'curl')
+  
   if(verbose) cat('-->', timer(), '1. Build Ensembl reference in:', outdir, '<--\n')
   dir.create(outdir, FALSE, TRUE)
   
   # catch ensembl
-  web = 'Ensembl.html'
+  web      = 'Ensembl.html'
   web_file = paste0(outdir, '/', web)
-  Download('https://ftp.ensembl.org/pub', web, outdir = outdir, method = method, verbose = verbose)
+  suppressWarnings(file.remove(web_file))
+  Download('https://ftp.ensembl.org/pub', web, outdir = outdir, method = method, verbose = FALSE)
   
   # process ensembl html
-  html = rvest::html_text(rvest::html_node(rvest::read_html(web_file), 'body'))
-  release = sort(as.numeric(stringr::str_match_all(html, 'release-(.*?)/')[[1]][,2]), T)[1]
+  release = sort(as.numeric(
+    sub('/$', '', sub('release-', '', grep('^release.*/$', htmlHref(web_file), value = TRUE))) ), TRUE)[1]
+  file.remove(web_file)
   if(is.na(release)) stop('!!! ', timer(), ' No Ensembl release number detected !!!')
   if(verbose) cat('-->', timer(), 'catch the latest Ensembl release:', release, '<--\n')
   
+  # release URL
+  URL     = paste0('https://ftp.ensembl.org/pub/release-', release, '/')
+  URL_ftp = paste0('ftp://ftp.ensembl.org/pub/release-', release, '/')
+  
   # catch species
-  fa_web = paste0('Ensembl_release', release, '.fa.html')
-  fa_web_file = paste0(outdir, '/', fa_web)
-  Download(paste0('https://ftp.ensembl.org/pub/release-', release, '/fasta'), 
-           fa_web, outdir = outdir, method = method, verbose = verbose)
+  sp_web      = paste0('Ensembl_release', release, c('.fa.html', '.gtf.html'))
+  sp_web_file = paste0(outdir, '/', sp_web)
+  suppressWarnings(file.remove(sp_web_file))
+  Download(paste0(URL, c('fasta', 'gtf')), sp_web, outdir = outdir, method = method, verbose = FALSE)
   
   # process species html
-  fa_html = rvest::html_text(rvest::html_node(rvest::read_html(fa_web_file), 'body'))
-  species = sort(stringr::str_match_all(fa_html, '-\\r\\r\\n(.*?)/')[[1]][,2])
+  Species = do.call(intersect, lapply(sp_web_file, function(file)
+    sub('/$', '', grep('\\w/$', htmlHref(file), value = TRUE)) ))
+  file.remove(sp_web_file)
+  if('ALL' %in% species) {
+    species = Species
+    if(verbose) cat('-->', timer(), 'catch all species <--\n')
+  } else {
+    species = intersect(species, Species)
+    if(verbose) cat('-->', timer(), 'catch species:', paste(species, collapse = ', '), '<--\n')
+  }
+  if(!length(species))
+    stop('!!! ', timer(), ' No species detected !!!')
+
+  # download for each species
+  if(verbose) p = utils::txtProgressBar(style = 3)
+  species_ok = unlist(lapply(seq(species), function(i) {
+    
+    # species
+    sp = species[i]
+    
+    # catch fa and gtf html
+    spi_web      = paste0('Ensembl_release', release, sp, c('.fa.html', '.gtf.html'))
+    spi_web_file = paste0(outdir, '/', spi_web)
+    suppressWarnings(file.remove(spi_web_file))
+    Download(paste0(URL, c('fasta', 'gtf'), '/', sp, c('/dna', '')),
+             spi_web, outdir = outdir, method = method, verbose = FALSE)
+    
+    # process html
+    files = unlist(lapply(spi_web_file, function(file) 
+      lapply(c('sm.toplevel.fa', paste0(release, '.gtf')), function(part) 
+        grep(part, htmlHref(file), value = TRUE)[1] %|||% NULL) ))
+    file.remove(spi_web_file)
+    
+    # download files
+    if(length(files) > 1) {
+      suppressWarnings(file.remove(files))
+      Download(paste0(URL_ftp, c('fasta', 'gtf'), '/', sp, c('/dna', ''), '/', files),
+               files, outdir = paste0(outdir, '/', sp), method = ftp_method, verbose = FALSE)
+    } else {
+      warning('--! ', timer(), ' no fasta | gtf in species: ', sp, ' !--')
+      sp = NULL
+    }
+    
+    # progress
+    if(verbose) utils::setTxtProgressBar(p, i/length(species))
+    
+    sp
+  }))
+  if(verbose) close(p)
   
-  # download fasta for each species
-  lapply(seq(species), function(sp) {
-    
-    # catch fasta list
-    sp_fa_web = paste0('Ensembl_release', release, sp, '.fa.html')
-    sp_fa_web_file = paste0(outdir, '/', sp_fa_web)
-    Download(paste0('https://ftp.ensembl.org/pub/release-', release, '/fasta/', sp, '/dna'), 
-             sp_fa_web, outdir = outdir, method = method, verbose = verbose)
-    
-    # process fasta html
-    fastas_html = rvest::html_text(rvest::html_node(rvest::read_html(sp_fa_web_file), 'body'))
-    fasta = grep('sm.toplevel.fa', stringr::str_match_all(fastas_html, '\\r\\r\\n(.*?) ')[[1]][,2], value = T)[1]
-    
-    # download fasta
-    Download(paste0('https://ftp.ensembl.org/pub/release-', release, '/fasta/', sp, '/dna/', fasta),
-             fasta, outdir = paste0(outdir, '/', sp), method = method, verbose = verbose)
-    
-  })
+  # save log
+  writeLines(c(timer(), species_ok), paste0(outdir, '/species.available.txt'))
   
+  # return
+  TRUE
 }

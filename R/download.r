@@ -16,9 +16,7 @@ NULL
 #' @export
 #'
 #' @examples
-#' URLs = paste0('http://www.imgt.org//download/', c('V-QUEST/IMGT_V-QUEST_reference_directory',
-#'          'GENE-DB/IMGTGENEDB-ReferenceSequences.fasta-nt-WithGaps-F+ORF+inframeP'))
-#' \donttest{Download(URLs, c('vdj_species.html', 'IMGT_download.fa'))}
+#' \donttest{Download('https://ftp.ensembl.org/pub', 'test.html')}
 #'
 Download = function(URLs, names = NULL, method = NULL, sleep = NULL, outdir = NULL, verbose = TRUE){
 
