@@ -39,7 +39,7 @@ build_IMGT_reference = function(outdir = NULL, method = NULL, verbose = TRUE) {
 
   # process html
   species = grep('/', sub('/$', '', unique(
-    grep('\\w/$', htmlHref(species_web, 'body section table a'), value = TRUE) )), invert = TRUE, value = TRUE)
+    grep('\\w/$', htmlHref(species_web_file, 'body section table a'), value = TRUE) )), invert = TRUE, value = TRUE)
 
   # read fa
   fa      = Biostrings::readBStringSet(species_fa_file)
@@ -218,7 +218,6 @@ build_Ensembl_reference = function(outdir = NULL, species = NULL, method = NULL,
     
     # progress
     if(verbose) utils::setTxtProgressBar(p, i/length(species))
-    
     sp
   }))
   if(verbose) close(p)
