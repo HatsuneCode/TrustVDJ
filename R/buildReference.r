@@ -229,3 +229,122 @@ build_Ensembl_reference = function(outdir = NULL, species = NULL, method = NULL,
   # return
   TRUE
 }
+
+#' Build viruSite database reference
+#'
+#' Download reference sequences from the viruSite database and make genome and gene gtf.
+#'
+#' @param outdir character. Default \code{getwd()}
+#' @param method character. Method to be used for downloading html files, equal to \code{download.file}. Default 'libcurl'
+#' @param ftp_method character. Method to be used for downloading ftp files (.fa and .gtf), equal to \code{download.file}. Default 'curl'
+#' @param verbose logical. Default \code{TRUE}
+#'
+#' @importFrom Biostrings readBStringSet width writeXStringSet
+#'
+#' @return if success, return \code{TRUE}
+#' @export
+#'
+#' @examples
+#' \donttest{build_viruSite_reference('viruSite')}
+#' 
+build_viruSite_reference = function(outdir = NULL, method = NULL, ftp_method = NULL, verbose = TRUE) {
+
+  # check parameter
+  outdir     = as.character(outdir     %|||% getwd())
+  method     = as.character(method     %|||% 'libcurl')
+  ftp_method = as.character(ftp_method %|||% 'curl')
+  if(verbose) cat('-->', timer(), '1. Build viruses reference from viruSite in:', outdir, '<--\n')
+  dir.create(outdir, FALSE, TRUE)
+
+  # catch
+  URL = 'http://www.virusite.org/'
+  viruse_web = 'TrustVDJ_viruSite.html'
+  viruse_web_file = paste0(outdir, '/', viruse_web)
+  suppressWarnings(file.remove(viruse_web_file))
+  Download(URL, viruse_web, outdir = outdir, method = method, verbose = verbose)
+
+  # process html
+  release = sort(as.numeric(
+    sub('^Release ', '', grep('^Release', htmlText(viruse_web_file, 'body div b'), value = TRUE)) ), TRUE)[1]
+  file.remove(viruse_web_file)
+  if(is.na(release)) stop('!!! ', timer(), ' No viruSite release number detected !!!')
+  if(verbose) cat('-->', timer(), 'catch the latest viruSite release:', release, '<--\n')
+
+  # release download
+  names = c('genes.fasta.zip', 'genomes.fasta.zip')
+  URLs  = paste0(URL, 'archive/', release, '/', names)
+  files = paste0(outdir, '/', names)
+  suppressWarnings(file.remove(files))
+  Download(URLs, names, outdir = outdir, method = ftp_method, verbose = verbose)
+  lapply(files, function(file) unzip(file, exdir = outdir))
+
+  # Ref from Genome
+  genome_file = paste0(outdir, '/genomes.fasta')
+  if(verbose) cat('-->', timer(), 'process genome reference <--\n')
+  genome = Biostrings::readBStringSet(genome_file)
+  id = pick(names(genome), 2)
+  genomeGTF = data.frame(
+    ID     = id,
+    source = 'viruSite',
+    fea    = 'exon',
+    start  = 1,
+    end    = Biostrings::width(genome),
+    score  = '.',
+    strand = '+',
+    frame  = '.',
+    attr   = paste0('gene_id "', id, '";transcript_id "', id,
+                    '";gene_name "', pick(names(genome), 4), '";')
+  )
+  write.table(genomeGTF, paste0(outdir, '/genomes.only.gtf'),
+              row.names = FALSE, col.names = FALSE, sep = '\t', quote = FALSE)
+  names(genome) = id
+  Biostrings::writeXStringSet(genome, genome_file)
+  rm(genome, genomeGTF)
+
+  # Ref from gene
+  gene_file = paste0(outdir, '/genes.fasta')
+  if(verbose) cat('-->', timer(), 'process gene reference <--\n')
+  gene   = Biostrings::readBStringSet(gene_file)
+  parent = pick(names(gene), 2)
+  id     = make.unique(paste0(parent, '.gene'))
+  name   = paste0(pick(names(gene), 4), sub('.*\\.gene', '-gene', id))
+  # gene gtf
+  geneGTF = data.frame(
+    ID     = id,
+    source = 'viruSite',
+    fea    = 'exon',
+    start  = 1,
+    end    = Biostrings::width(gene),
+    score  = '.',
+    strand = '+',
+    frame  = '.',
+    attr   = paste0('gene_id "', id, '";transcript_id "', id, '";gene_name "', name, '";')
+  )
+  write.table(geneGTF, paste0(outdir, '/genes.only.gtf'),
+              row.names = FALSE, col.names = FALSE, sep = '\t', quote = FALSE)
+  # gene-genome gtf (remove join, >, < and order)
+  local = sub('complement\\(', '', sub('\\)', '', pick(names(gene), 3)))
+  rm    = grep('join|order|<|>', local)
+  local = strsplit(local[-rm], '\\.\\.')
+  GTF   = data.frame(
+    ID     = parent[-rm],
+    source = 'viruSite',
+    fea    = 'exon',
+    start  = sapply(local, function(i) as.numeric(i[1])),
+    end    = sapply(local, function(i) as.numeric(i[2])),
+    score  = '.',
+    strand = '+',
+    frame  = '.',
+    attr   = paste0('gene_id "', id[-rm], '";transcript_id "', id[-rm], '";gene_name "', name[-rm], '";')
+  )
+  write.table(GTF, paste0(outdir, '/genes.genome.gtf'),
+              row.names = FALSE, col.names = FALSE, sep = '\t', quote = FALSE)
+  names(gene) = id
+  Biostrings::writeXStringSet(gene, gene_file)
+
+  # save log
+  writeLines(c(timer(), paste('latest release:', release)), paste0(outdir, '/release.latest.txt'))
+
+  # return
+  file.remove(files)
+}
