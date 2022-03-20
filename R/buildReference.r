@@ -153,7 +153,7 @@ build_Ensembl_reference = function(outdir = NULL, species = NULL, method = NULL,
   web      = 'Ensembl.html'
   web_file = paste0(outdir, '/', web)
   suppressWarnings(file.remove(web_file))
-  Download('https://ftp.ensembl.org/pub', web, outdir = outdir, method = method, verbose = FALSE)
+  Download('http://ftp.ensembl.org/pub', web, outdir = outdir, method = method, verbose = FALSE)
   
   # process ensembl html
   release = sort(as.numeric(
@@ -163,7 +163,7 @@ build_Ensembl_reference = function(outdir = NULL, species = NULL, method = NULL,
   if(verbose) cat('-->', timer(), 'catch the latest Ensembl release:', release, '<--\n')
   
   # release URL
-  URL     = paste0('https://ftp.ensembl.org/pub/release-', release, '/')
+  URL     = paste0('http://ftp.ensembl.org/pub/release-', release, '/')
   URL_ftp = paste0('ftp://ftp.ensembl.org/pub/release-', release, '/')
   
   # catch species
