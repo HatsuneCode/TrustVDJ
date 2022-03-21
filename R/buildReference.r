@@ -78,6 +78,7 @@ build_IMGT_reference = function(outdir = NULL, method = NULL, verbose = TRUE) {
 
   # save log
   writeLines(c(timer(), species_ok), paste0(outdir, '/species.available.txt'))
+  if(verbose) cat('-->', timer(), 'build IMGT reference done <--\n')
 
   # return
   file.remove(c(species_web_file, species_fa_file))
@@ -116,7 +117,8 @@ build_IgBlast_reference = function(outdir = NULL, method = NULL, verbose = TRUE)
   
   # untar 
   lapply(files, function(file) utils::untar(file, exdir = outdir))
-  
+  if(verbose) cat('-->', timer(), 'build IgBlast reference done <--\n') 
+ 
   # return
   file.remove(files)
 }
@@ -224,7 +226,8 @@ build_Ensembl_reference = function(outdir = NULL, species = NULL, method = NULL,
   
   # save log
   writeLines(c(timer(), species_ok), paste0(outdir, '/species.available.txt'))
-  
+  if(verbose) cat('-->', timer(), 'build Ensembl reference done <--\n') 
+ 
   # return
   TRUE
 }
@@ -239,6 +242,7 @@ build_Ensembl_reference = function(outdir = NULL, species = NULL, method = NULL,
 #' @param verbose logical. Default \code{TRUE}
 #'
 #' @importFrom Biostrings readBStringSet width writeXStringSet
+#' @importFrom utils write.table unzip
 #'
 #' @return if success, return \code{TRUE}
 #' @export
@@ -275,7 +279,7 @@ build_viruSite_reference = function(outdir = NULL, method = NULL, ftp_method = N
   files = paste0(outdir, '/', names)
   suppressWarnings(file.remove(files))
   Download(URLs, names, outdir = outdir, method = ftp_method, verbose = verbose)
-  lapply(files, function(file) unzip(file, exdir = outdir))
+  lapply(files, function(file) utils::unzip(file, exdir = outdir))
 
   # Ref from Genome
   genome_file = paste0(outdir, '/genomes.fasta')
@@ -294,8 +298,8 @@ build_viruSite_reference = function(outdir = NULL, method = NULL, ftp_method = N
     attr   = paste0('gene_id "', id, '";transcript_id "', id,
                     '";gene_name "', pick(names(genome), 4), '";')
   )
-  write.table(genomeGTF, paste0(outdir, '/genomes.only.gtf'),
-              row.names = FALSE, col.names = FALSE, sep = '\t', quote = FALSE)
+  utils::write.table(genomeGTF, paste0(outdir, '/genomes.only.gtf'),
+                     row.names = FALSE, col.names = FALSE, sep = '\t', quote = FALSE)
   names(genome) = id
   Biostrings::writeXStringSet(genome, genome_file)
   rm(genome, genomeGTF)
@@ -319,8 +323,8 @@ build_viruSite_reference = function(outdir = NULL, method = NULL, ftp_method = N
     frame  = '.',
     attr   = paste0('gene_id "', id, '";transcript_id "', id, '";gene_name "', name, '";')
   )
-  write.table(geneGTF, paste0(outdir, '/genes.only.gtf'),
-              row.names = FALSE, col.names = FALSE, sep = '\t', quote = FALSE)
+  utils::write.table(geneGTF, paste0(outdir, '/genes.only.gtf'),
+                     row.names = FALSE, col.names = FALSE, sep = '\t', quote = FALSE)
   # gene-genome gtf (remove join, >, < and order)
   local = sub('complement\\(', '', sub('\\)', '', pick(names(gene), 3)))
   rm    = grep('join|order|<|>', local)
@@ -336,13 +340,14 @@ build_viruSite_reference = function(outdir = NULL, method = NULL, ftp_method = N
     frame  = '.',
     attr   = paste0('gene_id "', id[-rm], '";transcript_id "', id[-rm], '";gene_name "', name[-rm], '";')
   )
-  write.table(GTF, paste0(outdir, '/genes.genome.gtf'),
-              row.names = FALSE, col.names = FALSE, sep = '\t', quote = FALSE)
+  utils::write.table(GTF, paste0(outdir, '/genes.genome.gtf'),
+                     row.names = FALSE, col.names = FALSE, sep = '\t', quote = FALSE)
   names(gene) = id
   Biostrings::writeXStringSet(gene, gene_file)
 
   # save log
   writeLines(c(timer(), paste('latest release:', release)), paste0(outdir, '/release.latest.txt'))
+  if(verbose) cat('-->', timer(), 'build viruSite reference done <--\n')
 
   # return
   file.remove(files)
