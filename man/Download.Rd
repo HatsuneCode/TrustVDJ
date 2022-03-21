@@ -33,6 +33,6 @@ if success, return TRUE
 Download files retryable
 }
 \examples{
-\donttest{Download('https://ftp.ensembl.org/pub', 'test.html')}
+\donttest{Download('http://ftp.ensembl.org/pub', 'test.html')}
 
 }

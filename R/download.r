@@ -16,7 +16,7 @@ NULL
 #' @export
 #'
 #' @examples
-#' \donttest{Download('https://ftp.ensembl.org/pub', 'test.html')}
+#' \donttest{Download('http://ftp.ensembl.org/pub', 'test.html')}
 #'
 Download = function(URLs, names = NULL, method = NULL, sleep = NULL, outdir = NULL, verbose = TRUE){
 
