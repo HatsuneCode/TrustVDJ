@@ -57,8 +57,10 @@ consensus_file = system.file('extdata', '10x_consensus_annotations.csv.gz', pack
 clonotype_file = system.file('extdata', '10x_clonotypes.csv.gz', package = 'TrustVDJ')
 
 # both AIRR and contig
+\donttest{
 data = Read10x(airr_file = airr_file, contig_file = contig_file)
 head(data)
+}
 
 # only AIRR
 data = Read10x(airr_file = airr_file)

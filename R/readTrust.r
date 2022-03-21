@@ -56,9 +56,11 @@ NULL
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' barcode_report_file = system.file('extdata', 'TRUST4_barcode_report.tsv.gz', package = 'TrustVDJ')
 #' barcode_report = .ReadTrust_BarcodeReport(barcode_report_file)
 #' head(barcode_report)
+#' }
 #'
 .ReadTrust_BarcodeReport = function(barcode_report_file = NULL, verbose = TRUE) {
 
