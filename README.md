@@ -20,13 +20,12 @@ install.packages('TrustVDJ')
 devtools::install_github('HatsuneCode/TrustVDJ')
 ```
 
-*** Maybe dependency 'Biostrings' is not available:
+\*\*\* Maybe dependency ‘Biostrings’ is not available:
 
 ``` r
 install.packages('BiocManager')
 BiocManager::install('Biostrings')
 ```
-
 
 ## Version
 
