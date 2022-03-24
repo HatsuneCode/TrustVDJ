@@ -42,6 +42,7 @@ commonly:
 ``` r
 library(TrustVDJ)
 ## basic example code
+
 # 10x cellranger:
 airr10x   = system.file('extdata', '10x_airr_rearrangement.tsv.gz', package = 'TrustVDJ')
 contig10x = system.file('extdata', '10x_filtered_contig_annotations.csv.gz', package = 'TrustVDJ')
