@@ -61,7 +61,7 @@ build_IMGT_reference = function(outdir = NULL, method = NULL, verbose = TRUE) {
         stats::setNames(Biostrings::BStringSet(unlist(fa_sp[names(fa_sp) %in% nm])), nm) ))
         
       # case conversion
-      fa_sp = Biostrings::chartr('acgtn', 'ACGTN', fa_sp)
+      fa_sp = Biostrings::chartr('atcgn', 'ATCGN', fa_sp)
 
       # save fa
       Biostrings::writeXStringSet(fa_sp, paste0(outdir, '/IMGT_', sp, '.fa'))
