@@ -20,6 +20,14 @@ install.packages('TrustVDJ')
 devtools::install_github('HatsuneCode/TrustVDJ')
 ```
 
+*** Maybe dependency 'Biostrings' is not available:
+
+``` r
+install.packages('BiocManager')
+BiocManager::install('Biostrings')
+```
+
+
 ## Version
 
 -   v0.1.0: initial release.
@@ -43,6 +51,7 @@ summary(vdj10x[,1:3])
 #>  Length:40          Length:40          Length:40         
 #>  Class :character   Class :character   Class :character  
 #>  Mode  :character   Mode  :character   Mode  :character
+
 # TRUST4:
 airrTrust = system.file('extdata', 'TRUST4_airr.tsv.gz', package = 'TrustVDJ')
 bcTrust   = system.file('extdata', 'TRUST4_barcode_report.tsv.gz', package = 'TrustVDJ')
