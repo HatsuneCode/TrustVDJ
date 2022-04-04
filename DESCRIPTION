@@ -28,4 +28,5 @@ Imports:
     rvest,
     stats
 Suggests:
-    R.utils
+    R.utils,
+    SeuratObject
