@@ -25,8 +25,10 @@ filterFasta = function(fasta, chromosomes = NULL, out = NULL, verbose = TRUE) {
   if(!file.exists(fasta))
     stop('!!! ', timer(), ' fasta file does not exist: ', fasta, ' !!!')
   if(is.null(chromosomes))
-    stop('!!! ', timer(), ' Please input target chromosomes !!!')
+    stop('!!! ', timer(), ' please input target chromosomes !!!')
   out  = as.character(out %|||% 'filter.fa')
+  if(file.exists(out))
+    stop('!!! ', timer(), ' output file already exists: ', out, ' !!!')
   chrs = as.character(unlist(chromosomes))
   if(verbose) cat('-->', timer(), 'target chromosomes:', paste(chrs, collapse = ', ') , '<--\n')
   
