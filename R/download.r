@@ -4,11 +4,11 @@ NULL
 #' Download files retryable
 #'
 #' @param URLs character/list. URLs to be downloaded.
-#' @param names character/list. file names. Default \code{seq(URLs)}
+#' @param names character/list. File names. Default \code{seq(URLs)}
 #' @param method character. Method to be used for downloading files, equal to \code{download.file}. Default 'libcurl'
-#' @param sleep numeric. retry interval (second). Default 2
-#' @param outdir character. output directory.
-#' @param verbose logical. Default TRUE
+#' @param sleep numeric. Retry interval (second). Default 2
+#' @param outdir character. Output directory.
+#' @param verbose logical. Print progress. Default TRUE
 #'
 #' @importFrom utils download.file
 #'

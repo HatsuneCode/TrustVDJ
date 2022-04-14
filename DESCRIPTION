@@ -20,6 +20,7 @@ Collate:
     'class.r'
     'read10x.r'
     'readTrust.r'
+    'sequence.r'
     'test.r'
 Imports: 
     Biostrings,

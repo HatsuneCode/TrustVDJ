@@ -16,15 +16,15 @@ Download(
 \arguments{
 \item{URLs}{character/list. URLs to be downloaded.}
 
-\item{names}{character/list. file names. Default \code{seq(URLs)}}
+\item{names}{character/list. File names. Default \code{seq(URLs)}}
 
 \item{method}{character. Method to be used for downloading files, equal to \code{download.file}. Default 'libcurl'}
 
-\item{sleep}{numeric. retry interval (second). Default 2}
+\item{sleep}{numeric. Retry interval (second). Default 2}
 
-\item{outdir}{character. output directory.}
+\item{outdir}{character. Output directory.}
 
-\item{verbose}{logical. Default TRUE}
+\item{verbose}{logical. Print progress. Default TRUE}
 }
 \value{
 if success, return TRUE
