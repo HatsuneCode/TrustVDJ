@@ -31,12 +31,15 @@ filterFasta = function(fasta, chromosomes = NULL, out = NULL, verbose = TRUE) {
     stop('!!! ', timer(), ' output file already exists: ', out, ' !!!')
   chrs = as.character(unlist(chromosomes))
   if(verbose) cat('-->', timer(), 'target chromosomes:', paste(chrs, collapse = ', ') , '<--\n')
-  
-  # 1. read fasta
+
+  # 1. file open 
+  fr = file(fasta, 'r')
+  fo = file(out,   'w')
+
+  # 2. read fasta
   if(verbose) cat('-->', timer(), 'filter fasta:', fasta, '<--\n')
-  fh   = file(normalizePath(as.character(fasta), '/', T), 'r')
   flag = F
-  line = readLines(fh, 1)
+  line = readLines(fr, 1)
   while(length(line)) {
     if(!grepl('^\\s*$', line, perl = T) && !grepl('^#', line)) {
       if(grepl('^>', line)) {
@@ -47,12 +50,15 @@ filterFasta = function(fasta, chromosomes = NULL, out = NULL, verbose = TRUE) {
           if(verbose) cat('-->', timer(), 'filter chromosome:', chr, '<--\n'); 0
         }
       }
-      if(flag) write.table(line, out, append = T, row.names = F, col.names = F, quote = F)
+      if(flag) writeLines(line, fo)
     }
-    line = readLines(fh, 1)
+    line = readLines(fr, 1)
   }
-  close(fh)
   
+  # 3. close
+  close(fr)
+  close(fo)  
+
   # return
   if(verbose) cat('-->', timer(), 'done <--\n')
   TRUE
