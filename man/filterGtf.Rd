@@ -4,7 +4,7 @@
 \alias{filterGtf}
 \title{Filter gtf file by target chromosomes}
 \usage{
-filterGtf(gtf, chromosomes = NULL, out = NULL, verbose = TRUE)
+filterGtf(gtf, chromosomes = NULL, out = NULL, sep = "\\t", verbose = TRUE)
 }
 \arguments{
 \item{gtf}{character. Path to gtf file.}
@@ -12,6 +12,8 @@ filterGtf(gtf, chromosomes = NULL, out = NULL, verbose = TRUE)
 \item{chromosomes}{character. Target chromosomes.}
 
 \item{out}{character. Output file.}
+
+\item{sep}{character. Each gtf line separator. Default \code{\t}}
 
 \item{verbose}{logical. Print progress. Default TRUE}
 }

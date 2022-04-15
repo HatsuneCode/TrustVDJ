@@ -4,7 +4,13 @@
 \alias{filterFasta}
 \title{Filter fasta file by target chromosomes}
 \usage{
-filterFasta(fasta, chromosomes = NULL, out = NULL, verbose = TRUE)
+filterFasta(
+  fasta,
+  chromosomes = NULL,
+  out = NULL,
+  sep = "\\\\s",
+  verbose = TRUE
+)
 }
 \arguments{
 \item{fasta}{character. Path to fasta file.}
@@ -13,7 +19,9 @@ filterFasta(fasta, chromosomes = NULL, out = NULL, verbose = TRUE)
 
 \item{out}{character. Output file.}
 
-\item{verbose}{logical. Print progress. Default TRUE}
+\item{sep}{character. Fasta name separator. Default \code{\\s}}
+
+\item{verbose}{logical. Print progress. Default \code{TRUE}}
 }
 \value{
 if success, return \code{TRUE}
