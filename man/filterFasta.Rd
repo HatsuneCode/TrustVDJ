@@ -23,7 +23,7 @@ if success, return \code{TRUE}
 (.gz supported)
 }
 \examples{
-fasta_file = system.file('extdata', 'IMGT_Homo_sapiens.fa.gz', package = 'TrustVDJ')
-filterFasta(fasta_file, c('IGHD1-1*01', 'TRDD1*01'), 'filter.fa')
+fa = system.file('extdata', 'IMGT_Homo_sapiens.fa.gz', package = 'TrustVDJ')
+filterFasta(fa, c('IGHD1-1*01', 'TRDD1*01'), 'filter.fa')
 
 }

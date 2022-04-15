@@ -15,8 +15,8 @@ NULL
 #' @export
 #'
 #' @examples
-#' fasta_file = system.file('extdata', 'IMGT_Homo_sapiens.fa.gz', package = 'TrustVDJ')
-#' filterFasta(fasta_file, c('IGHD1-1*01', 'TRDD1*01'), 'filter.fa')
+#' fa = system.file('extdata', 'IMGT_Homo_sapiens.fa.gz', package = 'TrustVDJ')
+#' filterFasta(fa, c('IGHD1-1*01', 'TRDD1*01'), 'filter.fa')
 #' 
 filterFasta = function(fasta, chromosomes = NULL, out = NULL, verbose = TRUE) {
   
@@ -59,6 +59,59 @@ filterFasta = function(fasta, chromosomes = NULL, out = NULL, verbose = TRUE) {
   close(fr)
   close(fo)  
 
+  # return
+  if(verbose) cat('-->', timer(), 'done <--\n')
+  TRUE
+}
+
+#' Filter gtf file by target chromosomes
+#'
+#' \code{filterGtf} reads gtf file and filter it by target chromosomes.
+#' (.gz supported)
+#'
+#' @param gtf character. Path to gtf file.
+#' @param chromosomes character. Target chromosomes.
+#' @param out character. Output file.
+#' @param verbose logical. Print progress. Default TRUE
+#'
+#' @return if success, return \code{TRUE} 
+#' @export
+#'
+#' @examples
+#' gtf = system.file('extdata', 'IMGT_Homo_sapiens.gtf.gz', package = 'TrustVDJ')
+#' filterGtf(gtf, c('IGHD1-1*01', 'TRDD1*01'), 'filter.gtf')
+#' 
+filterGtf = function(gtf, chromosomes = NULL, out = NULL, verbose = TRUE) {
+  
+  # 0. check parameter
+  gtf = as.character(gtf %|||% NA)
+  if(!file.exists(gtf))
+    stop('!!! ', timer(), ' gtf file does not exist: ', gtf, ' !!!')
+  if(is.null(chromosomes))
+    stop('!!! ', timer(), ' please input target chromosomes !!!')
+  out  = as.character(out %|||% 'filter.gtf')
+  if(file.exists(out))
+    stop('!!! ', timer(), ' output file already exists: ', out, ' !!!')
+  chrs = as.character(unlist(chromosomes))
+  if(verbose) cat('-->', timer(), 'target chromosomes:', paste(chrs, collapse = ', ') , '<--\n')
+  
+  # 1. file open 
+  fr = file(gtf, 'r')
+  fo = file(out, 'w')
+  
+  # 2. read gtf
+  if(verbose) cat('-->', timer(), 'filter gtf:', gtf, '<--\n')
+  line = readLines(fr, 1)
+  while(length(line)) {
+    if(!grepl('^\\s*$', line, perl = T) && !grepl('^#', line))
+      if(strsplit(line, '\\s')[[1]][1] %in% chrs) writeLines(line, fo)
+    line = readLines(fr, 1)
+  }
+  
+  # 3. close
+  close(fr)
+  close(fo)
+  
   # return
   if(verbose) cat('-->', timer(), 'done <--\n')
   TRUE
