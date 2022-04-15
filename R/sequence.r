@@ -9,16 +9,17 @@ NULL
 #' @param fasta character. Path to fasta file.
 #' @param chromosomes character. Target chromosomes.
 #' @param out character. Output file.
-#' @param verbose logical. Print progress. Default TRUE
+#' @param verbose logical. Print progress. Default \code{TRUE}
+#' @param sep character. Fasta name separator. Default \code{\\s}
 #'
-#' @return if success, return \code{TRUE} 
+#' @return if success, return \code{TRUE}
 #' @export
 #'
 #' @examples
 #' fa = system.file('extdata', 'IMGT_Homo_sapiens.fa.gz', package = 'TrustVDJ')
 #' filterFasta(fa, c('IGHD1-1*01', 'TRDD1*01'), 'filter.fa')
 #' 
-filterFasta = function(fasta, chromosomes = NULL, out = NULL, verbose = TRUE) {
+filterFasta = function(fasta, chromosomes = NULL, out = NULL, sep = '\\s', verbose = TRUE) {
   
   # 0. check parameter
   fasta = as.character(fasta %|||% NA)
@@ -43,7 +44,7 @@ filterFasta = function(fasta, chromosomes = NULL, out = NULL, verbose = TRUE) {
   while(length(line)) {
     if(!grepl('^\\s*$', line, perl = T) && !grepl('^#', line)) {
       if(grepl('^>', line)) {
-        chr  = sub('^>', '', strsplit(line, '\\s')[[1]][1])
+        chr  = sub('^>', '', strsplit(line, sep)[[1]][1])
         flag = if(chr %in% chrs) {
           if(verbose) cat('-->', timer(), 'save chromosome:', chr, '<--\n')  ; 1
         } else {
@@ -73,6 +74,7 @@ filterFasta = function(fasta, chromosomes = NULL, out = NULL, verbose = TRUE) {
 #' @param chromosomes character. Target chromosomes.
 #' @param out character. Output file.
 #' @param verbose logical. Print progress. Default TRUE
+#' @param sep character. Each gtf line separator. Default \code{\t}
 #'
 #' @return if success, return \code{TRUE} 
 #' @export
@@ -81,7 +83,7 @@ filterFasta = function(fasta, chromosomes = NULL, out = NULL, verbose = TRUE) {
 #' gtf = system.file('extdata', 'IMGT_Homo_sapiens.gtf.gz', package = 'TrustVDJ')
 #' filterGtf(gtf, c('IGHD1-1*01', 'TRDD1*01'), 'filter.gtf')
 #' 
-filterGtf = function(gtf, chromosomes = NULL, out = NULL, verbose = TRUE) {
+filterGtf = function(gtf, chromosomes = NULL, out = NULL, sep = '\t', verbose = TRUE) {
   
   # 0. check parameter
   gtf = as.character(gtf %|||% NA)
@@ -104,7 +106,7 @@ filterGtf = function(gtf, chromosomes = NULL, out = NULL, verbose = TRUE) {
   line = readLines(fr, 1)
   while(length(line)) {
     if(!grepl('^\\s*$', line, perl = T) && !grepl('^#', line))
-      if(strsplit(line, '\\s')[[1]][1] %in% chrs) writeLines(line, fo)
+      if(strsplit(line, sep)[[1]][1] %in% chrs) writeLines(line, fo)
     line = readLines(fr, 1)
   }
   
