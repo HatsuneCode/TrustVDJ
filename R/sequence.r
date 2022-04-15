@@ -74,7 +74,7 @@ filterFasta = function(fasta, chromosomes = NULL, out = NULL, sep = '\\s', verbo
 #' @param chromosomes character. Target chromosomes.
 #' @param out character. Output file.
 #' @param verbose logical. Print progress. Default TRUE
-#' @param sep character. Each gtf line separator. Default \code{\t}
+#' @param sep character. Each gtf line separator. Default \code{'\t'}
 #'
 #' @return if success, return \code{TRUE} 
 #' @export

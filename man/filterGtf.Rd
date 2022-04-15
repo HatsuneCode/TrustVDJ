@@ -13,7 +13,7 @@ filterGtf(gtf, chromosomes = NULL, out = NULL, sep = "\\t", verbose = TRUE)
 
 \item{out}{character. Output file.}
 
-\item{sep}{character. Each gtf line separator. Default \code{\t}}
+\item{sep}{character. Each gtf line separator. Default \code{'\t'}}
 
 \item{verbose}{logical. Print progress. Default TRUE}
 }
