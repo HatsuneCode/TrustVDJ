@@ -28,7 +28,7 @@ NULL
     stop('!!! ', timer(), ' AIRR report file does not exist: ', airr_file, ' !!!')
 
   # 1. read airr file
-  if(verbose) cat('-->', timer(), 'Reading:', airr_file, '<--\n')
+  if(verbose) cat('-->', timer(), 'reading:', airr_file, '<--\n')
   airr = data.table::fread(airr_file, data.table = FALSE)
   if(!nrow(airr))
     stop('!!! ', timer(), ' There is no content in AIRR report file !!!')
@@ -71,7 +71,7 @@ NULL
     stop('!!! ', timer(), ' TRUST4 barcode_report file does not exist: ', barcode_report_file, ' !!!')
 
   # 1. read barcode_report file
-  if(verbose) cat('-->', timer(), 'Reading:', barcode_report_file, '<--\n')
+  if(verbose) cat('-->', timer(), 'reading:', barcode_report_file, '<--\n')
   barcode_report = data.table::fread(barcode_report_file, data.table = FALSE)
   if(!nrow(barcode_report))
     stop('!!! ', timer(), ' There is no content in barcode_report file !!!')

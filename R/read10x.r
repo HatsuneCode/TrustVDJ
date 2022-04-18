@@ -24,7 +24,7 @@ NULL
     stop('!!! ', timer(), ' 10x contig_annotations file does not exist: ', contig_file, ' !!!')
 
   # 1. read contig file
-  if(verbose) cat('-->', timer(), 'Reading:', contig_file, '<--\n')
+  if(verbose) cat('-->', timer(), 'reading:', contig_file, '<--\n')
   contig = data.table::fread(contig_file, data.table = FALSE)
   if(!nrow(contig))
     stop('!!! ', timer(), ' There is no content in 10x contig_annotations file !!!')
@@ -57,7 +57,7 @@ NULL
     stop('!!! ', timer(), ' 10x consensus_annotations file does not exist: ', consensus_file, ' !!!')
 
   # 1. read consensus file
-  if(verbose) cat('-->', timer(), 'Reading:', consensus_file, '<--\n')
+  if(verbose) cat('-->', timer(), 'reading:', consensus_file, '<--\n')
   consensus = data.table::fread(consensus_file, data.table = FALSE)
   if(!nrow(consensus))
     stop('!!! ', timer(), ' There is no content in 10x consensus_annotations file !!!')
@@ -91,7 +91,7 @@ NULL
     stop('!!! ', timer(), ' 10x clonotypes file does not exist: ', clonotype_file, ' !!!')
 
   # 1. read clonotype file
-  if(verbose) cat('-->', timer(), 'Reading:', clonotype_file, '<--\n')
+  if(verbose) cat('-->', timer(), 'reading:', clonotype_file, '<--\n')
   clonotype = data.table::fread(clonotype_file, data.table = FALSE)
   if(!nrow(clonotype))
     stop('!!! ', timer(), ' There is no content in 10x clonotypes file !!!')
