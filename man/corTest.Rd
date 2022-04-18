@@ -4,7 +4,7 @@
 \alias{corTest}
 \title{Test for Correlation}
 \usage{
-corTest(x, y, method = "both", adj_method = "BH", rm0 = TRUE)
+corTest(x, y, method = "both", adj_method = "BH", rm0 = TRUE, verbose = TRUE)
 }
 \arguments{
 \item{x}{data.frame.}
@@ -16,6 +16,8 @@ corTest(x, y, method = "both", adj_method = "BH", rm0 = TRUE)
 \item{adj_method}{character. choose one method in \code{p.adjust.methods}. Default 'BH'}
 
 \item{rm0}{logical. whether remove 0 in each analyse. Default TRUE.}
+
+\item{verbose}{logical. Print progress. Default is TRUE}
 }
 \value{
 a correlation results data.frame

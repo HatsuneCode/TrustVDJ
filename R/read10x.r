@@ -30,6 +30,7 @@ NULL
     stop('!!! ', timer(), ' There is no content in 10x contig_annotations file !!!')
 
   # return
+  if(verbose) cat('-->', timer(), 'done <--\n')
   contig
 }
 
@@ -62,6 +63,7 @@ NULL
     stop('!!! ', timer(), ' There is no content in 10x consensus_annotations file !!!')
 
   # return
+  if(verbose) cat('-->', timer(), 'done <--\n')
   consensus
 }
 
@@ -108,6 +110,7 @@ NULL
   }))
 
   # return
+  if(verbose) cat('-->', timer(), 'done <--\n')
   clonotype_data
 }
 

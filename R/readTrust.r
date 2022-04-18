@@ -37,6 +37,7 @@ NULL
   if(all(is.na(airr$cell_id))) airr$cell_id = sub('_.*', '', airr$sequence_id)
 
   # return
+  if(verbose) cat('-->', timer(), 'done <--\n')
   airr
 }
 
@@ -99,13 +100,14 @@ NULL
     Chain = rbind(Achain, Achain2, Bchain, Bchain2)
     # progress
     if(verbose) utils::setTxtProgressBar(p, i/length(barcode_report$BC))
-    # return
+    # results
     if(!is.null(Chain))
       cbind(Barcode = as.character(barcode_report$BC[i]), Type = as.character(barcode_report$Type[i]), Chain)
   }))
   if(verbose) close(p)
 
   # return
+  if(verbose) cat('-->', timer(), 'done <--\n')
   barcode_data
 }
 
@@ -145,6 +147,7 @@ NULL
   colnames(report) = gsub('#', '', colnames(report))
 
   # return
+  if(verbose) cat('-->', timer(), 'done <--\n')
   report
 }
 

@@ -10,6 +10,7 @@ NULL
 #' @param method character. 'pearson', 'spearman' or 'both'. Default 'both'
 #' @param adj_method character. choose one method in \code{p.adjust.methods}. Default 'BH'
 #' @param rm0 logical. whether remove 0 in each analyse. Default TRUE.
+#' @param verbose logical. Print progress. Default is TRUE
 #'
 #' @importFrom stats cor.test p.adjust
 #'
@@ -22,7 +23,7 @@ NULL
 #' result    = corTest(treatment, control, method = 'pearson')
 #' head(result)
 #'
-corTest = function(x, y, method = 'both', adj_method = 'BH', rm0 = TRUE) {
+corTest = function(x, y, method = 'both', adj_method = 'BH', rm0 = TRUE, verbose = TRUE) {
 
   # check parameter
   if (is.null(dim(x))) x = t(data.frame(x))
@@ -33,6 +34,7 @@ corTest = function(x, y, method = 'both', adj_method = 'BH', rm0 = TRUE) {
   # pearson
   Pearson = data.frame()
   if (sum(c('both', 'pearson') %in% method)) {
+    if(verbose) cat('-->', timer(), 'Pearson cor.test <--\n')
     Pearson = apply(x, 1, function(i) apply(y, 1, function(j)
         if(rm0)
           stats::cor.test(as.numeric(i[which(i != 0 & j != 0)]), as.numeric(j[which(i != 0 & j != 0)]),
@@ -52,6 +54,7 @@ corTest = function(x, y, method = 'both', adj_method = 'BH', rm0 = TRUE) {
   # spearman
   Spearman = data.frame()
   if (sum(c('both', 'spearman') %in% method)) {
+    if(verbose) cat('-->', timer(), 'Spearman cor.test <--\n')
     Spearman = apply(x, 1, function(i) apply(y, 1, function(j)
         if(rm0)
           stats::cor.test(as.numeric(i[which(i != 0 & j != 0)]), as.numeric(j[which(i != 0 & j != 0)]),
@@ -69,5 +72,43 @@ corTest = function(x, y, method = 'both', adj_method = 'BH', rm0 = TRUE) {
   }
 
   # return
+  if(verbose) cat('-->', timer(), 'Done <--\n')
   cbinds(Pearson, Spearman)
 }
+
+#' Fisher's Exact Test
+#'
+#' @param control numeric.
+#' @param treatment numeric.
+#' @param base numeric. Default \code{2}
+#'
+#' @return a data.frame of Fisher's exact test results.
+#' @export
+#'
+#' @examples
+#' control   = c(1:10)
+#' treatment = c(10:1)
+#' Fisher(control, treatment)
+#' 
+Fisher = function(control, treatment, base = 2) {
+  
+  # check numeric #
+  control   = as.numeric(control)
+  control   = control[!is.na(control)]
+  treatment = as.numeric(treatment)
+  treatment = treatment[!is.na(treatment)]
+  if(length(control) != length(treatment))
+    stop('!!! ', timer(), ' Sample number in the control and treatment is not the same !!!')
+  
+  # fisher test #
+  do.call(rbind, lapply(seq(control), function(i) {
+    fish  = fisher.test(matrix(c(
+      control[i], sum(control)-control[i], treatment[i], sum(treatment)-treatment[i]), ncol = 2))
+    data.frame(Odds    = as.numeric(fish$estimate),
+               ConfMin = fish$conf.int[1],
+               ConfMax = fish$conf.int[2],
+               Log2Fc  = log(control[i]/treatment[i], base = base),
+               Pval    = fish$p.value )
+  }))
+}
+

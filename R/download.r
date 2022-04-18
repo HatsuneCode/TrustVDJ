@@ -69,5 +69,6 @@ Download = function(URLs, names = NULL, method = NULL, sleep = NULL, outdir = NU
   }
 
   # return
+  if(verbose) cat('-->', timer(), 'done <--\n')
   file.remove(log)
 }
