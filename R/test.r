@@ -104,11 +104,8 @@ Fisher = function(control, treatment, base = 2) {
   do.call(rbind, lapply(seq(control), function(i) {
     fish  = fisher.test(matrix(c(
       control[i], sum(control)-control[i], treatment[i], sum(treatment)-treatment[i]), ncol = 2))
-    data.frame(Odds    = as.numeric(fish$estimate),
-               ConfMin = fish$conf.int[1],
-               ConfMax = fish$conf.int[2],
-               Log2Fc  = log(control[i]/treatment[i], base = base),
-               Pval    = fish$p.value )
+    setNames(data.frame(as.numeric(fish$estimate), fish$conf.int[1], fish$conf.int[2], log(control[i]/treatment[i], base = base), fish$p.value), 
+      c('Odds', 'ConfMin', 'ConfMax', paste0('Log', base, 'Fc'), 'Pval') )
   }))
 }
 
