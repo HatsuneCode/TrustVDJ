@@ -223,3 +223,75 @@ Read10x = function(airr_file      = NULL,
   # return
   airr
 }
+
+#' Waiting to process
+#'
+#' @param airr_files 
+#' @param contig_files 
+#' @param consensus_files 
+#' @param clonotype_files 
+#' @param names 
+#' @param group 
+#' @param verbose 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' 
+#' 
+Read10xs = function(airr_files = NULL, contig_files = NULL, consensus_files = NULL, clonotype_files = NULL, 
+                    names = NULL, group = NULL, verbose = TRUE) {
+  # check parameter
+  nfiles = max(length(airr_files), length(contig_files), length(consensus_files), length(clonotype_files))
+  # consensus #
+  consenS = setNames(lapply(seq(nfiles), function(i) {
+    consen = Read10x(airr_file = airr_files[i], contig_file = contig_files[i], 
+                     consensus_file = consensus_files[i], clonotype_file = clonotype_files[i])
+    if(!is.null(consen$clonotype_id))
+      consen$clonotype_id = paste0(names[i], '_', consen$clonotype_id)
+    if(!is.null(consen$consensus_id))
+      consen$consensus_id = paste0(names[i], '_', consen$consensus_id)
+    consen
+  }), names)
+  # consen group
+  consenG = setNames(lapply(names(group), function(n) {
+    consen_gp = consenS[ group[[n]] ]
+    # clonotype id #
+    clono_gp  = do.call(rbind, lapply(seq(consen_gp), function(i) {
+      consen = consen_gp[[i]]
+      sample = names(consen_gp)[i]
+      do.call(rbind, lapply(unique(consen$clonotype_id), function(clo)
+        data.frame(sample = sample, id = clo, 
+                   nt = paste(sort(consen$cdr3_nt[consen$clonotype_id %in% clo]), collapse = ';')) ))
+    }))
+    # unique id
+    dup_clono = clono_gp[ clono_gp$nt %in% clono_gp$nt[duplicated(clono_gp$nt)], ]
+    rm(clono_gp)
+    if (nrow(dup_clono)) {
+      cat('-->', timer(), 'make clonotype_id unique <--\n')
+      for (nt in unique(dup_clono$nt)) {
+        dup_id = dup_clono[ dup_clono$nt %in% nt, -3]
+        for (i in 2:nrow(dup_id)) {
+          sample = dup_id$sample[i]
+          # dup -> replace
+          d_clo  = dup_id$id[i]
+          d_idx  = which(consen_gp[[sample]]$clonotype_id %in% d_clo)
+          d_cons = consen_gp[[sample]]$consensus_id[d_idx]
+          r_clo  = dup_id$id[1]
+          r_cons = sub(d_clo, r_clo, d_cons)
+          # change
+          consen_gp[[sample]]$clonotype_id[d_idx] = r_clo
+          consen_gp[[sample]]$consensus_id[d_idx] = r_cons
+        }
+      }
+    }
+    # consensus
+    consen_gp
+  }), names(group))
+  
+  # return
+  cat('-->', timer(), 'done <--\n')
+  consenG
+}
+
