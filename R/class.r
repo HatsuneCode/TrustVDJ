@@ -107,6 +107,7 @@ setMethod('show', 'Trust', function(object) {
 #'
 #' @slot samples list. Raw data for each sample
 #' @slot groups  list. Raw data for each group
+#' @slot info    list. Raw data meta information
 #'
 #' @importFrom methods new
 #' 
@@ -115,7 +116,8 @@ setMethod('show', 'Trust', function(object) {
 #'
 TrustRaw = setClass('TrustRaw', slots = c(
   samples = 'list',
-  groups  = 'list'
+  groups  = 'list',
+  info    = 'list'
 ))
 
 #' Overview of the TrustRaw class

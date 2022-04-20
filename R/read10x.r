@@ -306,6 +306,6 @@ Read10xs = function(airr_files = NULL, contig_files = NULL, consensus_files = NU
   
   # return
   if(verbose) cat('-->', timer(), 'done <--\n')
-  new('TrustRaw', samples = consenS, groups = consenG)
+  new('TrustRaw', samples = consenS, groups = consenG, info = group)
 }
 

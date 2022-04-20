@@ -18,5 +18,7 @@ Slots are listed below:
 \item{\code{samples}}{list. Raw data for each sample}
 
 \item{\code{groups}}{list. Raw data for each group}
+
+\item{\code{info}}{list. Raw data meta information}
 }}
 
