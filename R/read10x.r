@@ -279,7 +279,7 @@ Read10xs = function(airr_files = NULL, contig_files = NULL, consensus_files = NU
     }))
     
     # unique id
-    dup_clono = clono_gp[ clono_gp$nt %in% clono_gp$nt[duplicated(clono_gp$nt)], ]
+    dup_clono = data.frame( clono_gp[ clono_gp$nt %in% clono_gp$nt[duplicated(clono_gp$nt)], ] )
     rm(clono_gp)
     if (nrow(dup_clono)) {
       if(verbose) cat('-->', timer(), 'make clonotype_id unique <--\n')

@@ -53,7 +53,7 @@ setMethod('show', 'consensus', function(object) {
       sum(!is.na(object@Jgene)),   'Jgene,',
       sum(!is.na(object@Cgene)),   'Cgene,',
       sum(!is.na(object@CDR3dna)), 'CDR3_dna and',
-      sum(!is.na(object@CDR3aa)),  'CDR3_aa\n')
+      sum(!is.na(object@CDR3aa)),  'CDR3_aa \n')
 })
 
 #' The Trust class
