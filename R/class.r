@@ -43,7 +43,7 @@ consensus = setClass('consensus', slots = c(
 #'
 #' @importFrom methods show
 #'
-#' @return Brief information about an consensus object
+#' @return Brief information about a consensus object
 #' @export
 #'
 setMethod('show', 'consensus', function(object) {
@@ -59,7 +59,7 @@ setMethod('show', 'consensus', function(object) {
 #' The Trust class
 #'
 #' The Trust object is the center of each single-cell immune repertoire analysis.
-#' slots are listed below:
+#' Slots are listed below:
 #'
 #' @slot barcode  character. Cell barcode in single-cell sequencing, eg: Sample1_ATGCCAGAACGACT.
 #' @slot celltype character. Inferred cell type, such as: abT, gdT or B.
@@ -70,7 +70,7 @@ setMethod('show', 'consensus', function(object) {
 #'
 #' @importFrom methods new
 #'
-#' @return An object of the trust4 class
+#' @return An object of the Trust class
 #' @export
 #'
 Trust = setClass('Trust', slots = c(
@@ -89,7 +89,7 @@ Trust = setClass('Trust', slots = c(
 #'
 #' @importFrom methods show
 #'
-#' @return Brief information about an consensus object
+#' @return Brief information about a Trust object
 #' @export
 #'
 setMethod('show', 'Trust', function(object) {
@@ -99,4 +99,35 @@ setMethod('show', 'Trust', function(object) {
   cat(' Alpha-chain(confident):', length(object@Achain@ID), 'consensus \n')
   cat(' Beta-chain (confident):', length(object@Bchain@ID), 'consensus \n')
 })
+
+#' The Trust raw data class
+#' 
+#' The TrustRaw object is used for raw data storage.
+#' Slots are listed below:
+#'
+#' @slot samples list. Raw data for each sample
+#' @slot groups  list. Raw data for each group
+#'
+#' @importFrom methods new
+#' 
+#' @return An object of the TrustRaw class
+#' @export
+#'
+TrustRaw = setClass('TrustRaw', slots = c(
+  samples = 'list',
+  groups  = 'list'
+))
+
+#' Overview of the TrustRaw class
+#'
+#' @param TrustRaw class. An object of the TrustRaw class
+#' @param object   class.
+#'
+#' @importFrom methods show
+#'
+#' @return Brief information about a TrustRaw object
+#' @export
+#'
+setMethod('show', 'TrustRaw', function(object)
+  cat('TrustRaw object --', length(object@samples), 'samples in', length(object@groups), 'groups \n') )
 

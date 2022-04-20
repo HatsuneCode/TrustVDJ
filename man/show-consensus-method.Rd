@@ -12,7 +12,7 @@
 \item{consensus}{class. An object of the consensus class}
 }
 \value{
-Brief information about an consensus object
+Brief information about a consensus object
 }
 \description{
 Overview of the consensus class

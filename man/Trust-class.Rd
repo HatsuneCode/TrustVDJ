@@ -6,11 +6,11 @@
 \alias{Trust}
 \title{The Trust class}
 \value{
-An object of the trust4 class
+An object of the Trust class
 }
 \description{
 The Trust object is the center of each single-cell immune repertoire analysis.
-slots are listed below:
+Slots are listed below:
 }
 \section{Slots}{
 

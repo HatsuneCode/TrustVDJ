@@ -12,7 +12,7 @@
 \item{Trust}{class. An object of the Trust class}
 }
 \value{
-Brief information about an consensus object
+Brief information about a Trust object
 }
 \description{
 Overview of the Trust class

@@ -224,7 +224,9 @@ Read10x = function(airr_file      = NULL,
   airr
 }
 
-#' Waiting to process
+#' Read in batches via read10x
+#'
+#' waiting for process
 #'
 #' @param airr_files 
 #' @param contig_files 
@@ -239,14 +241,21 @@ Read10x = function(airr_file      = NULL,
 #'
 #' @examples
 #' 
-#' 
-Read10xs = function(airr_files = NULL, contig_files = NULL, consensus_files = NULL, clonotype_files = NULL, 
+Read10xs = function(airr_files = NULL, contig_files = NULL, consensus_files = NULL, clonotype_files = NULL,
                     names = NULL, group = NULL, verbose = TRUE) {
+  
   # check parameter
-  nfiles = max(length(airr_files), length(contig_files), length(consensus_files), length(clonotype_files))
+  nfile = max(length(airr_files), length(contig_files), length(consensus_files), length(clonotype_files))
+  names = as.character(names %|||% seq(nfile))
+  group = group %|||% list('Group' = names)
+  outer = setdiff(unlist(group), names)
+  if(length(outer))
+    stop('!!! ', timer(), ' group contains not available sample names: ', paste(outer, collapse = ','), ' !!!')
+  
   # consensus #
-  consenS = setNames(lapply(seq(nfiles), function(i) {
-    consen = Read10x(airr_file = airr_files[i], contig_file = contig_files[i], 
+  consenS = setNames(lapply(seq(nfile), function(i) {
+    if(verbose) cat('-->', timer(), 'read sample:', names[i], '<--\n')
+    consen = Read10x(airr_file = airr_files[i], contig_file = contig_files[i],
                      consensus_file = consensus_files[i], clonotype_file = clonotype_files[i])
     if(!is.null(consen$clonotype_id))
       consen$clonotype_id = paste0(names[i], '_', consen$clonotype_id)
@@ -254,22 +263,26 @@ Read10xs = function(airr_files = NULL, contig_files = NULL, consensus_files = NU
       consen$consensus_id = paste0(names[i], '_', consen$consensus_id)
     consen
   }), names)
+  
   # consen group
   consenG = setNames(lapply(names(group), function(n) {
+    if(verbose) cat('-->', timer(), 'process samples:', paste(group[[n]], collapse = ','), 'in group:', n, '<--\n')
     consen_gp = consenS[ group[[n]] ]
+    
     # clonotype id #
     clono_gp  = do.call(rbind, lapply(seq(consen_gp), function(i) {
       consen = consen_gp[[i]]
       sample = names(consen_gp)[i]
       do.call(rbind, lapply(unique(consen$clonotype_id), function(clo)
-        data.frame(sample = sample, id = clo, 
+        data.frame(sample = sample, id = clo,
                    nt = paste(sort(consen$cdr3_nt[consen$clonotype_id %in% clo]), collapse = ';')) ))
     }))
+    
     # unique id
     dup_clono = clono_gp[ clono_gp$nt %in% clono_gp$nt[duplicated(clono_gp$nt)], ]
     rm(clono_gp)
     if (nrow(dup_clono)) {
-      cat('-->', timer(), 'make clonotype_id unique <--\n')
+      if(verbose) cat('-->', timer(), 'make clonotype_id unique <--\n')
       for (nt in unique(dup_clono$nt)) {
         dup_id = dup_clono[ dup_clono$nt %in% nt, -3]
         for (i in 2:nrow(dup_id)) {
@@ -286,12 +299,13 @@ Read10xs = function(airr_files = NULL, contig_files = NULL, consensus_files = NU
         }
       }
     }
+    
     # consensus
-    consen_gp
+    do.call(rbind, consen_gp)
   }), names(group))
   
   # return
-  cat('-->', timer(), 'done <--\n')
-  consenG
+  if(verbose) cat('-->', timer(), 'done <--\n')
+  new('TrustRaw', samples = consenS, groups = consenG)
 }
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/read10x.r
 \name{Read10xs}
 \alias{Read10xs}
-\title{Waiting to process}
+\title{Read in batches via read10x}
 \usage{
 Read10xs(
   airr_files = NULL,
@@ -33,9 +33,8 @@ Read10xs(
 
 }
 \description{
-Waiting to process
+waiting for process
 }
 \examples{
-
 
 }
