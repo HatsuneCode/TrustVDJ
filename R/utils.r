@@ -131,3 +131,15 @@ cbinds = function(F1, F2, fill = 0) {
 #' 
 pick = function(x, f = 1, exct = '\\|') sapply(strsplit(x, exct), function(i) i[f])
 
+#' Dispersion normalization
+#'
+#' @param x numeric.
+#'
+#' @return data in [0,1] after linear transformation 
+#' @export
+#'
+#' @examples
+#' min.max(1:5)
+#' 
+min.max = function(x) (x - min(x)) / (max(x) - min(x))
+

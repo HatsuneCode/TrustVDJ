@@ -11,6 +11,10 @@ Read10xs(
   clonotype_files = NULL,
   names = NULL,
   group = NULL,
+  clonotype_colnames = NULL,
+  consensus_colnames = NULL,
+  cdr3nt_colnames = NULL,
+  cdr3aa_colnames = NULL,
   verbose = TRUE
 )
 }
