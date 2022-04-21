@@ -224,7 +224,7 @@ Read10x = function(airr_file      = NULL,
   airr
 }
 
-#' Read in batches via read10x
+#' Read10x in groups
 #'
 #' waiting for process
 #'
@@ -243,7 +243,8 @@ Read10x = function(airr_file      = NULL,
 #' 
 Read10xs = function(airr_files = NULL, contig_files = NULL, consensus_files = NULL, clonotype_files = NULL,
                     names = NULL, group = NULL, 
-                    clonotype_colnames = NULL, consensus_colnames = NULL, cdr3nt_colnames = NULL, cdr3aa_colnames = NULL,
+                    clonotype_colnames = NULL, consensus_colnames = NULL, 
+                    unique_clonotype_by_cdr3nt = TRUE, cdr3nt_colnames = NULL, cdr3aa_colnames = NULL,
                     verbose = TRUE) {
   
   # check parameter
@@ -263,8 +264,8 @@ Read10xs = function(airr_files = NULL, contig_files = NULL, consensus_files = NU
     if(verbose) cat('-->', timer(), 'read sample:', names[i], '<--\n')
     consen    = Read10x(airr_file = airr_files[i], contig_file = contig_files[i],
                         consensus_file = consensus_files[i], clonotype_file = clonotype_files[i])
-    clonoName = clonoNames[clonoNames %in% colnames(consen)][1]
-    conseName = conseNames[conseNames %in% colnames(consen)][1]
+    clonoName = clonoNames[clonoNames %in% colnames(consen)][1] %|||% NULL
+    conseName = conseNames[conseNames %in% colnames(consen)][1] %|||% NULL
     if(length(clonoName)) { 
       if(verbose) cat('-->', timer(), 'checked clonotype_id colname:', clonoName, 'give sample prefix <--')
       consen[[clonoName]] = paste0(names[i], '_', consen[[clonoName]])
@@ -283,17 +284,28 @@ Read10xs = function(airr_files = NULL, contig_files = NULL, consensus_files = NU
     
     # clonotype id #
     clono_gp  = do.call(rbind, lapply(seq(consen_gp), function(i) {
-      consen    = consen_gp[[i]]
-      sample    = names(consen_gp)[i]
-      clonoName = clonoNames[clonoNames %in% colnames(consen)][1]
-      conseName = conseNames[conseNames %in% colnames(consen)][1]
-      do.call(rbind, lapply(unique(consen[[clonoName]]), function(clo)
-        data.frame(sample = sample, id = clo,
-                   nt = paste(sort(consen$cdr3_nt[consen[[clonoName]] %in% clo]), collapse = ';')) ))
+      consen     = consen_gp[[i]]
+      sample     = names(consen_gp)[i]
+      clonoName  = clonoNames[clonoNames   %in% colnames(consen)][1] %|||% NULL
+      conseName  = conseNames[conseNames   %in% colnames(consen)][1] %|||% NULL
+      cdr3ntName = cdr3ntNames[cdr3ntNames %in% colnames(consen)][1] %|||% NULL
+      cdr3aaName = cdr3aaNames[cdr3aaNames %in% colnames(consen)][1] %|||% NULL
+      # clonotype by same cdr3nt or cdr3aa #
+      cdr3Name = if(length(cdr3ntName) & unique_clonotype_by_cdr3nt) {
+        if(verbose) cat('-->', timer(), 'check clonotype by cdr3-nt in sample:', sample, '<--')
+        cdr3ntName
+      } else if(length(cdr3aaName)) {
+        if(verbose) cat('--!', timer(), 'cdr3-nt not found, check clonotype by cdr3-aa in sample:', sample, '!--')
+        cdr3aaName
+      }
+      if(length(cdr3Name))
+        do.call(rbind, lapply(unique(consen[[clonoName]]), function(clo)
+          data.frame(sample = sample, id = clo, nt = 
+            paste(sort(consen[[cdr3Name]][consen[[clonoName]] %in% clo]), collapse = ';')) ))
     }))
     
     # unique id
-    dup_clono = data.frame( clono_gp[ clono_gp$nt %in% clono_gp$nt[duplicated(clono_gp$nt)], ] )
+    dup_clono = data.frame(clono_gp[ clono_gp$nt %in% clono_gp$nt[duplicated(clono_gp$nt)], ])
     rm(clono_gp)
     if (nrow(dup_clono)) {
       if(verbose) cat('-->', timer(), 'make clonotype_id unique <--\n')
@@ -303,13 +315,13 @@ Read10xs = function(airr_files = NULL, contig_files = NULL, consensus_files = NU
           sample = dup_id$sample[i]
           # dup -> replace
           d_clo  = dup_id$id[i]
-          d_idx  = which(consen_gp[[sample]]$clonotype_id %in% d_clo)
-          d_cons = consen_gp[[sample]]$consensus_id[d_idx]
+          d_idx  = which(consen_gp[[sample]][[clonoName]] %in% d_clo)
+          d_cons = if(length(conseName)) consen_gp[[sample]][[conseName]][d_idx]
           r_clo  = dup_id$id[1]
           r_cons = sub(d_clo, r_clo, d_cons)
           # change
           consen_gp[[sample]]$clonotype_id[d_idx] = r_clo
-          consen_gp[[sample]]$consensus_id[d_idx] = r_cons
+          if(length(conseName)) consen_gp[[sample]][[conseName]][d_idx] = r_cons
         }
       }
     }

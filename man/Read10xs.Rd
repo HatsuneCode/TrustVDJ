@@ -2,7 +2,7 @@
 % Please edit documentation in R/read10x.r
 \name{Read10xs}
 \alias{Read10xs}
-\title{Read in batches via read10x}
+\title{Read10x in groups}
 \usage{
 Read10xs(
   airr_files = NULL,
@@ -13,6 +13,7 @@ Read10xs(
   group = NULL,
   clonotype_colnames = NULL,
   consensus_colnames = NULL,
+  unique_clonotype_by_cdr3nt = TRUE,
   cdr3nt_colnames = NULL,
   cdr3aa_colnames = NULL,
   verbose = TRUE
