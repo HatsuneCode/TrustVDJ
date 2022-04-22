@@ -126,12 +126,13 @@ TrustRaw = setClass('TrustRaw', slots = c(
 #' @param object   class.
 #'
 #' @importFrom methods show
+#' @importFrom utils object.size
 #'
 #' @return Brief information about a TrustRaw object
 #' @export
 #'
 setMethod('show', 'TrustRaw', function(object) {
-  cat('TrustRaw object --', length(object@samples), 'samples in', length(object@groups), 'groups \n') 
+  cat('TrustRaw object', round(utils::object.size(object)/1024^2, 2), 'Mb --', length(object@samples), 'samples in', length(object@groups), 'groups \n')
   lapply(seq(object@info), function(i)
     cat(' ', names(object@info)[i], '-', paste(object@info[[i]], collapse = ','), '\n') )
 })
