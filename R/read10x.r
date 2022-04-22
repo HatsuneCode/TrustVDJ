@@ -307,9 +307,11 @@ Read10xs = function(airr_files = NULL, contig_files = NULL, consensus_files = NU
       } else 
         if(verbose) cat('--!', timer(), 'cdr3-nt and cdr3-aa not found, check clonotype ignored !--\n')
       if(length(cdr3Name))
-        do.call(rbind, lapply(unique(consen[[clonoName]]), function(clo)
-          data.frame(sample = sample, id = clo, nt = 
-            paste(sort(consen[[cdr3Name]][consen[[clonoName]] %in% clo]), collapse = ';')) ))
+        do.call(rbind, lapply(unique(consen[[clonoName]]), function(clo) {
+          nt = sort(consen[[cdr3Name]][consen[[clonoName]] %in% clo])
+          nt = nt[!nt %in% 'None' & !is.na(nt)]
+          if(length(nt)) data.frame(sample = sample, id = clo, nt = paste(nt, collapse = ';'))
+        }))
     }))
     
     # unique id
