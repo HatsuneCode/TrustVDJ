@@ -244,8 +244,9 @@ Read10x = function(airr_file      = NULL,
 Read10xs = function(airr_files = NULL, contig_files = NULL, consensus_files = NULL, clonotype_files = NULL,
                     names = NULL, group = NULL, 
                     clonotype_colnames = NULL, consensus_colnames = NULL, 
-                    unique_clonotype_by_cdr3nt = TRUE, cdr3nt_colnames = NULL, cdr3aa_colnames = NULL,
-                    verbose = TRUE) {
+                    unique_clonotype = TRUE, unique_clonotype_by_cdr3nt = TRUE, 
+                    cdr3nt_colnames = NULL, cdr3aa_colnames = NULL,
+                    verbose = TRUE ){
   
   # check parameter
   nfile = max(length(airr_files), length(contig_files), length(consensus_files), length(clonotype_files))
@@ -307,7 +308,7 @@ Read10xs = function(airr_files = NULL, contig_files = NULL, consensus_files = NU
     # unique id
     dup_clono = data.frame(clono_gp[ clono_gp$nt %in% clono_gp$nt[duplicated(clono_gp$nt)], ])
     rm(clono_gp)
-    if (nrow(dup_clono)) {
+    if (unique_clonotype & nrow(dup_clono)) {
       if(verbose) cat('-->', timer(), 'make clonotype_id unique <--\n')
       for (nt in unique(dup_clono$nt)) {
         dup_id = dup_clono[dup_clono$nt %in% nt, -3]
