@@ -13,6 +13,7 @@ Read10xs(
   group = NULL,
   clonotype_colnames = NULL,
   consensus_colnames = NULL,
+  unique_clonotype = TRUE,
   unique_clonotype_by_cdr3nt = TRUE,
   cdr3nt_colnames = NULL,
   cdr3aa_colnames = NULL,

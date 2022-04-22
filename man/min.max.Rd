@@ -10,7 +10,7 @@
 \item{x}{numeric.}
 }
 \value{
-data in \link{0,1} after linear transformation
+data in 0-1 after linear transformation
 }
 \description{
 Dispersion normalization

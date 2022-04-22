@@ -135,7 +135,7 @@ pick = function(x, f = 1, exct = '\\|') sapply(strsplit(x, exct), function(i) i[
 #'
 #' @param x numeric.
 #'
-#' @return data in [0,1] after linear transformation 
+#' @return data in 0-1 after linear transformation 
 #' @export
 #'
 #' @examples
