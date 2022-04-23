@@ -18,6 +18,7 @@ Collate:
     'download.r'
     'buildReference.r'
     'class.r'
+    'distribution.r'
     'read10x.r'
     'readTrust.r'
     'sequence.r'

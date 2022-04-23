@@ -192,7 +192,7 @@ pick = function(x, f = 1, exct = '\\|') sapply(strsplit(x, exct), function(i) i[
 #' @export
 #'
 #' @examples
-#' min.max(1:5)
+#' min_max(1:5)
 #' 
-min.max = function(x) (x - min(x)) / (max(x) - min(x))
+min_max = function(x) (x - min(x)) / (max(x) - min(x))
 
