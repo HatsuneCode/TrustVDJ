@@ -20,8 +20,9 @@ a combined data.frame
 Combine two data.frame by columns by filling in missing rows from each other based on \code{rownames}.
 }
 \examples{
-F1 = data.frame(A = seq(10), B = seq(10), row.names = seq(10))
-F2 = data.frame(C = seq(5),  D = seq(5),  row.names = 3:7)
-cbinds(F1, F2)
+F1 = data.frame(A = 1:10, B = 1:10, row.names = 1:10)
+F2 = data.frame(C = 1:5,  D = 1:5,  row.names = 3:7)
+F3 = data.frame(E = 1:7,  F = 1:7,  row.names = 5:11)
+Reduce(cbinds, list(F1, F2, F3))
 
 }

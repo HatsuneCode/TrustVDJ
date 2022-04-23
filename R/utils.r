@@ -49,7 +49,6 @@ timer = function() as.character(Sys.time())
 #'
 `%|||%` = function(x, y) if (is.null(x) || !length(x))  y else if(all(is.na(x))) y else x
 
-
 #' data.frame a single chain information
 #'
 #' @param chain list. trust4 single chain information in a list
@@ -76,9 +75,10 @@ df_chain = function(chain) setNames(data.frame(t(unlist(chain))), chainName)
 #' @export
 #'
 #' @examples
-#' F1 = data.frame(A = seq(10), B = seq(10), row.names = seq(10))
-#' F2 = data.frame(C = seq(5),  D = seq(5),  row.names = 3:7)
-#' cbinds(F1, F2)
+#' F1 = data.frame(A = 1:10, B = 1:10, row.names = 1:10)
+#' F2 = data.frame(C = 1:5,  D = 1:5,  row.names = 3:7)
+#' F3 = data.frame(E = 1:7,  F = 1:7,  row.names = 5:11)
+#' Reduce(cbinds, list(F1, F2, F3))
 #'
 cbinds = function(F1, F2, fill = 0) {
 
@@ -88,8 +88,8 @@ cbinds = function(F1, F2, fill = 0) {
 
   # rownames
   rowall = c(rownames(F1), rownames(F2))
-  dF1 = setdiff(rowall, rownames(F1))
-  dF2 = setdiff(rowall, rownames(F2))
+  dF1    = setdiff(rowall, rownames(F1))
+  dF2    = setdiff(rowall, rownames(F2))
 
   # fill F1
   if(length(dF1)){
@@ -114,6 +114,59 @@ cbinds = function(F1, F2, fill = 0) {
 
   # return
   cbind(F1, F2)
+}
+
+#' Combine Two Data-frame by Rows
+#'
+#' Combine two data.frame by rows by filling in missing column from each other based on \code{colnames}.
+#'
+#' @param F1 data.frame.
+#' @param F2 data.frame.
+#' @param fill character/numeric. Default 0
+#'
+#' @return a combined data.frame
+#' @export
+#'
+#' @examples
+#' F1 = data.frame(A = 1:3, B = 1:3)
+#' F2 = data.frame(B = 1:3, C = 1:3)
+#' F3 = data.frame(C = 1:3, D = 1:3)
+#' Reduce(rbinds, list(F1, F2, F3))
+#'
+rbinds = function(F1, F2, fill = 0) {
+  
+  # check dim
+  if(any(dim(F1) == 0)) return(F2)
+  if(any(dim(F2) == 0)) return(F1)
+  
+  # rownames
+  colall = c(colnames(F1), colnames(F2))
+  dF1    = setdiff(colall, colnames(F1))
+  dF2    = setdiff(colall, colnames(F2))
+  
+  # fill F1
+  if(length(dF1)){
+    SF1c           = matrix(fill, nrow = nrow(F1), ncol = length(setdiff(colall, colnames(F1))))
+    rownames(SF1c) = rownames(F1)
+    colnames(SF1c) = dF1
+    F1             = cbind(F1, SF1c)
+    rm(SF1c)
+  }
+  
+  # fill F2
+  if(length(dF2)){
+    SF2c           = matrix(fill, nrow = nrow(F2), ncol = length(setdiff(colall, colnames(F2))))
+    rownames(SF2c) = rownames(F2)
+    colnames(SF2c) = dF2
+    F2             = cbind(F2, SF2c)
+    rm(SF2c)
+  }
+  
+  # match
+  F2 = F2[, colnames(F1), drop = FALSE]
+  
+  # return
+  rbind(F1, F2)
 }
 
 #' Pick field

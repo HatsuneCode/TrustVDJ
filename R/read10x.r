@@ -332,6 +332,7 @@ Read10xs = function(airr_files = NULL, contig_files = NULL, consensus_files = NU
           r_clo  = dup_id$id[1]
           r_cons = sub(d_clo, r_clo, d_cons)
           # change
+          if(verbose) cat('-->', timer(), 'change clonotype_id', d_clo, 'to', r_clo, 'in sample:', sample, '<--\n')
           consen_gp[[sample]][[clonoName]][d_idx] = r_clo
           if(length(conseName)) consen_gp[[sample]][[conseName]][d_idx] = r_cons
         }
