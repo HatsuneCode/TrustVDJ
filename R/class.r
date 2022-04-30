@@ -2,7 +2,9 @@
 NULL
 
 #' The consensus class
-#'
+#' 
+#' @slot ID      character.     Consensus id, eg.: Sample1_consensus1
+#' @slot clonoID character.
 #' @slot Vgene   character.     V gene, eg.: TRAV1*01
 #' @slot Dgene   character.     D gene, eg.: TRAD1*01
 #' @slot Jgene   character.     J gene, eg.: TRAJ1*01
@@ -11,10 +13,22 @@ NULL
 #' @slot CDR2dna character.     CDR2 nucleic acid sequence, eg.: TTCCAGAATGAAGCTCAA
 #' @slot CDR3dna character.     CDR3 nucleic acid sequence, eg.: TGTGCCAGCAGCCTACGCAACGAGCAGTACTTC
 #' @slot CDR3aa  character.     CDR3 amino acid sequence, eg.: CASSPTPGEATDTQYF
-#' @slot Count   numeric.       Read counts, eg.: 200
-#' @slot ID      character.     Consensus id, eg.: Sample1_consensus1
+#' @slot fwr1dna character.
+#' @slot fwr1aa  character.
+#' @slot CDR1aa  character.
+#' @slot fwr2dna character.
+#' @slot fwr2aa  character.
+#' @slot CDR2aa  character.
+#' @slot fwr3dna character.
+#' @slot fwr3aa  character.
+#' @slot fwr4dna character.
+#' @slot fwr4aa  character.
+#' @slot UMI     numeric.
+#' @slot reads   numeric.
+#' @slot cells   numeric.
+#' @slot barcodes character.
+#' @slot fullLength logical.
 #' @slot CDR3germlineSimilarity numeric. CDR3 germline similarity score, eg.: 80
-#' @slot FullLength logical.    Whether the vdj gene is complete, eg.: TRUE
 #'
 #' @importFrom methods new
 #'
@@ -22,18 +36,32 @@ NULL
 #' @export
 #'
 consensus = setClass('consensus', slots = c(
+  ID      = 'character',
+  clonoID = 'character',
   Vgene   = 'character',
   Dgene   = 'character',
   Jgene   = 'character',
   Cgene   = 'character',
+  fwr1dna = 'character',
+  fwr1aa  = 'character',
   CDR1dna = 'character',
+  CDR1aa  = 'character',
+  fwr2dna = 'character',
+  fwr2aa  = 'character',
   CDR2dna = 'character',
+  CDR2aa  = 'character',
+  fwr3dna = 'character',
+  fwr3aa  = 'character',
   CDR3dna = 'character',
   CDR3aa  = 'character',
-  Count   = 'numeric',
-  ID      = 'character',
-  CDR3germlineSimilarity = 'numeric',
-  FullLength = 'logical'
+  fwr4dna = 'character',
+  fwr4aa  = 'character',
+  UMI     = 'numeric',
+  reads   = 'numeric',
+  cells   = 'numeric',
+  barcodes   = 'character',
+  fullLength = 'logical',
+  CDR3germlineSimilarity = 'numeric'
 ))
 
 #' Overview of the consensus class
@@ -93,16 +121,16 @@ Trust = setClass('Trust', slots = c(
 #' @export
 #'
 setMethod('show', 'Trust', function(object) {
-  cat('Trust object --', length(object@barcode), 'cells contain:\n celltype:',
+  cat('Trust object', objSize(object), '--', length(object@barcode), 'cells contain:\n celltype:',
       unlist(lapply(unique(object@celltype), function(cell)
         c(sum(object@celltype %in% cell), cell))) %|||% 'None', '\n')
   cat(' Alpha-chain(confident):', length(object@Achain@ID), 'consensus \n')
   cat(' Beta-chain (confident):', length(object@Bchain@ID), 'consensus \n')
 })
 
-#' The Trust raw data class
+#' The Trust main data class
 #' 
-#' The TrustRaw object is used for raw data storage.
+#' The TrustData object is used for data storage.
 #' Slots are listed below:
 #'
 #' @slot samples list. Raw data for each sample
@@ -111,29 +139,89 @@ setMethod('show', 'Trust', function(object) {
 #'
 #' @importFrom methods new
 #' 
-#' @return An object of the TrustRaw class
+#' @return An object of the TrustData class
 #' @export
 #'
-TrustRaw = setClass('TrustRaw', slots = c(
+TrustData = setClass('TrustData', slots = c(
   samples = 'list',
   groups  = 'list',
   info    = 'list'
 ))
 
-#' Overview of the TrustRaw class
+#' Overview of the TrustData class
 #'
-#' @param TrustRaw class. An object of the TrustRaw class
+#' @param TrustData class. An object of the TrustData class
 #' @param object   class.
 #'
 #' @importFrom methods show
-#' @importFrom utils object.size
 #'
-#' @return Brief information about a TrustRaw object
+#' @return Brief information about a TrustData object
 #' @export
 #'
-setMethod('show', 'TrustRaw', function(object) {
-  cat('TrustRaw object', round(utils::object.size(object)/1024^2, 2), 'Mb --', length(object@samples), 'samples in', length(object@groups), 'groups \n')
+setMethod('show', 'TrustData', function(object) {
+  cat('TrustData object', objSize(object), '--', length(object@samples), 'samples in', length(object@groups), 'groups \n')
   lapply(seq(object@info), function(i)
     cat(' ', names(object@info)[i], '<-', paste(object@info[[i]], collapse = ','), '\n') )
 })
+
+#' The Trust sample class
+#' 
+#' The TrustSample object is used for sample consensus and clonotype storage.
+#' Slots are listed below:
+#'
+#' @slot consensus list. 
+#' @slot clonotype list. 
+#' @slot name      character.
+#'
+#' @importFrom methods new
+#'
+#' @return An object of the TrustSample class
+#' @export
+#'
+TrustSample = setClass('TrustSample', slots = c(
+  consensus = 'list',
+  clonotype = 'list',
+  name      = 'character'
+))
+
+#' Overview of the TrustSample class
+#'
+#' @param TrustSample class. An object of the TrustSample class
+#' @param object      class.
+#'
+#' @importFrom methods show
+#'
+#' @return Brief information about a TrustSample object
+#' @export
+#'
+setMethod('show', 'TrustSample', function(object)
+  cat('TrustSample object', objSize(object), '-- named', object@name, '\n') )
+
+#' The Trust file class
+#'
+#' The TrustFile object is used for file information storage.
+#'
+#' @slot data list. 
+#' @slot type character. 
+#'
+#' @return An object of the TrustFile class
+#' @export
+#'
+setClass('TrustFile', slots = c(
+  data = 'list',
+  type = 'character'
+))
+
+#' Overview of the TrustFile class
+#'
+#' @param TrustFile class. An object of the TrustFile class
+#' @param object   class.
+#'
+#' @importFrom methods show
+#'
+#' @return Brief information about a TrustFile object
+#' @export
+#'
+setMethod('show', 'TrustFile', function(object)
+  cat('TrustFile object', objSize(object), '-- type', object@type, '\n') )
 

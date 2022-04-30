@@ -196,3 +196,32 @@ pick = function(x, f = 1, exct = '\\|') sapply(strsplit(x, exct), function(i) i[
 #' 
 min_max = function(x) (x - min(x)) / (max(x) - min(x))
 
+#' check a name in names
+#'
+#' @param obs vector.
+#' @param pool vector.
+#'
+#' @return a inner name or code\{NULL}
+#' @export
+#'
+#' @examples
+#' checkIn(2, 1:3)
+#' checkIn(4, 1:3)
+#' 
+checkIn = function(obs, pool) obs[obs %in% pool][1] %|||% NULL
+
+#' Report the Space Allocated for an Object in Mb
+#'
+#' @param obj an R object
+#'
+#' @return an estimate of the memory allocation attributable to the object in Mb.
+#' @export
+#'
+#' @importFrom utils object.size
+#'
+#' @examples
+#' obj = 1:1024^2
+#' objSize(obj)
+#' 
+objSize = function(obj) paste(round(utils::object.size(obj)/1024^2, 2), 'Mb')
+

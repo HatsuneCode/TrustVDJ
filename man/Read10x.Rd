@@ -43,7 +43,7 @@ clonotype file: clonotypes.csv.
 \code{Read10x} will ignore consensus/clonotype file when either AIRR or contig file is given.
 Note that when AIRR + all_contig, only contigs in AIRR will be return.
 \item consensus + clonotype (no AIRR nor contig):
-\code{Read10x} will ignore clonotype file when consensus file is given.
+\code{Read10x} will add clonotype frequency to consensus file.
 (Don't worry about the information of inkt/mait_evidence in clonotype, these can be reproduced in downstream analysis.)
 }
 }
@@ -61,6 +61,10 @@ clonotype_file = system.file('extdata', '10x_clonotypes.csv.gz', package = 'Trus
 data = Read10x(airr_file = airr_file, contig_file = contig_file)
 head(data)
 }
+
+# both consensus and clonotype
+data = Read10x(consensus_file = consensus_file, clonotype_file = clonotype_file)
+head(data)
 
 # only AIRR
 data = Read10x(airr_file = airr_file)
