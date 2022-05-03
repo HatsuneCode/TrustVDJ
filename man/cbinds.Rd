@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.r
 \name{cbinds}
 \alias{cbinds}
-\title{Combine Two Data-frame by Columns}
+\title{Combine Two Data Frame by Columns}
 \usage{
 cbinds(F1, F2, fill = 0)
 }

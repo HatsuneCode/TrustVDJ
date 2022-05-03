@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.r
 \name{min_max}
 \alias{min_max}
-\title{Dispersion normalization}
+\title{Dispersion Normalization}
 \usage{
 min_max(x)
 }
@@ -13,7 +13,7 @@ min_max(x)
 data in 0-1 after linear transformation
 }
 \description{
-Dispersion normalization
+Dispersion Normalization
 }
 \examples{
 min_max(1:5)

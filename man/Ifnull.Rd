@@ -3,7 +3,7 @@
 \name{Ifnull}
 \alias{Ifnull}
 \alias{\%||\%}
-\title{Default for NULL value}
+\title{Default for NULL Value}
 \usage{
 x \%||\% y
 }
@@ -16,7 +16,7 @@ x \%||\% y
 \code{\%||\%}: \code{x} unless \code{NULL}, otherwise \code{y}
 }
 \description{
-set default value for object, equal to \code{\%||\%} in rlang package
+Set default value for object, equal to \code{\%||\%} in rlang package
 }
 \examples{
 1    \%||\% 1

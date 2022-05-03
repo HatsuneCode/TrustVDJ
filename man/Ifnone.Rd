@@ -3,7 +3,7 @@
 \name{Ifnone}
 \alias{Ifnone}
 \alias{\%|||\%}
-\title{Default for NULL and NA value}
+\title{Default for NULL and NA Value}
 \usage{
 x \%|||\% y
 }
@@ -16,7 +16,7 @@ x \%|||\% y
 \code{\%|||\%}: \code{x} unless \code{NULL}, \code{NA} nor \code{length(x) == 0}, otherwise \code{y}
 }
 \description{
-set default value for object, including NULL and NA and length 0.
+Set default value for object, including NULL and NA and length 0.
 }
 \examples{
 1    \%|||\% 1

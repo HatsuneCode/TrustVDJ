@@ -2,18 +2,18 @@
 % Please edit documentation in R/class.r
 \name{show,consensus-method}
 \alias{show,consensus-method}
-\title{Overview of the consensus class}
+\title{Overview of the Consensus Class}
 \usage{
 \S4method{show}{consensus}(object)
 }
 \arguments{
 \item{object}{class.}
 
-\item{consensus}{class. An object of the consensus class}
+\item{consensus}{class. an object of the consensus class}
 }
 \value{
 Brief information about a consensus object
 }
 \description{
-Overview of the consensus class
+Overview of the Consensus Class
 }

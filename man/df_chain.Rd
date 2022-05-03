@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.r
 \name{df_chain}
 \alias{df_chain}
-\title{data.frame a single chain information}
+\title{Make a Single Chain Information}
 \usage{
 df_chain(chain)
 }
@@ -13,7 +13,7 @@ df_chain(chain)
 a data.frame named by \code{chainName}
 }
 \description{
-data.frame a single chain information
+Make a Single Chain Information
 }
 \examples{
 df_chain(list('V', 'D', 'J', 'C', 'CDR3nt', 'CDR3aa', '60', 'id1', '98', '1'))

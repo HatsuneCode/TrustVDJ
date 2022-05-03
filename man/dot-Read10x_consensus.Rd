@@ -2,7 +2,7 @@
 % Please edit documentation in R/read10x.r
 \name{.Read10x_consensus}
 \alias{.Read10x_consensus}
-\title{Read 10x consensus file}
+\title{Read 10x Consensus File}
 \usage{
 .Read10x_consensus(consensus_file, verbose = TRUE)
 }
@@ -15,11 +15,11 @@
 A VDJ information data.frame
 }
 \description{
-Read 10x consensus file
+Read 10x Consensus File
 }
 \examples{
 consensus_file = system.file('extdata', '10x_consensus_annotations.csv.gz', package = 'TrustVDJ')
-consensus = .Read10x_consensus(consensus_file = consensus_file)
+consensus      = .Read10x_consensus(consensus_file = consensus_file)
 head(consensus)
 
 }

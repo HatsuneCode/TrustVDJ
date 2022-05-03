@@ -19,8 +19,9 @@ Collate:
     'buildReference.r'
     'class.r'
     'distribution.r'
-    'read10x.r'
+    'object.r'
     'readTrust.r'
+    'read10x.r'
     'sequence.r'
     'test.r'
 Imports: 

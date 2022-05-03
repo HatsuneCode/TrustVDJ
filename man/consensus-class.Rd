@@ -4,38 +4,70 @@
 \name{consensus-class}
 \alias{consensus-class}
 \alias{consensus}
-\title{The consensus class}
+\title{The Consensus Class}
 \value{
-An object of the consensus class
+an object of the consensus class
 }
 \description{
-The consensus class
+The Consensus Class
 }
 \section{Slots}{
 
 \describe{
-\item{\code{Vgene}}{character.     V gene, eg.: TRAV1*01}
+\item{\code{ID}}{character.}
 
-\item{\code{Dgene}}{character.     D gene, eg.: TRAD1*01}
+\item{\code{ClonoID}}{character.}
 
-\item{\code{Jgene}}{character.     J gene, eg.: TRAJ1*01}
+\item{\code{Vgene}}{character.}
 
-\item{\code{Cgene}}{character.     C gene, eg.: TRAC1*01}
+\item{\code{Dgene}}{character.}
 
-\item{\code{CDR1dna}}{character.     CDR1 nucleic acid sequence, eg.: TCTGAACACAACCGC}
+\item{\code{Jgene}}{character.}
 
-\item{\code{CDR2dna}}{character.     CDR2 nucleic acid sequence, eg.: TTCCAGAATGAAGCTCAA}
+\item{\code{Cgene}}{character.}
 
-\item{\code{CDR3dna}}{character.     CDR3 nucleic acid sequence, eg.: TGTGCCAGCAGCCTACGCAACGAGCAGTACTTC}
+\item{\code{FWR1dna}}{character.}
 
-\item{\code{CDR3aa}}{character.     CDR3 amino acid sequence, eg.: CASSPTPGEATDTQYF}
+\item{\code{FWR1aa}}{character.}
 
-\item{\code{Count}}{numeric.       Read counts, eg.: 200}
+\item{\code{CDR1dna}}{character.}
 
-\item{\code{ID}}{character.     Consensus id, eg.: Sample1_consensus1}
+\item{\code{CDR1aa}}{character.}
 
-\item{\code{CDR3germlineSimilarity}}{numeric. CDR3 germline similarity score, eg.: 80}
+\item{\code{FWR2dna}}{character.}
 
-\item{\code{FullLength}}{logical.    Whether the vdj gene is complete, eg.: TRUE}
+\item{\code{FWR2aa}}{character.}
+
+\item{\code{CDR2dna}}{character.}
+
+\item{\code{CDR2aa}}{character.}
+
+\item{\code{FWR3dna}}{character.}
+
+\item{\code{FWR3aa}}{character.}
+
+\item{\code{CDR3dna}}{character.}
+
+\item{\code{CDR3aa}}{character.}
+
+\item{\code{FWR4dna}}{character.}
+
+\item{\code{FWR4aa}}{character.}
+
+\item{\code{iUMI}}{character.}
+
+\item{\code{UMIs}}{numeric.}
+
+\item{\code{iRead}}{character.}
+
+\item{\code{Reads}}{numeric.}
+
+\item{\code{Cells}}{numeric.}
+
+\item{\code{Barcodes}}{character.}
+
+\item{\code{FullLength}}{logical.}
+
+\item{\code{CDR3germlineSimilarity}}{numeric.}
 }}
 

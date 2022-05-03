@@ -2,7 +2,7 @@
 % Please edit documentation in R/class.r
 \name{show,Trust-method}
 \alias{show,Trust-method}
-\title{Overview of the Trust class}
+\title{Overview of the Trust Class}
 \usage{
 \S4method{show}{Trust}(object)
 }
@@ -15,5 +15,5 @@
 Brief information about a Trust object
 }
 \description{
-Overview of the Trust class
+Overview of the Trust Class
 }

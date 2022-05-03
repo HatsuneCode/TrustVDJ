@@ -4,14 +4,12 @@
 \alias{distribute}
 \title{distribution of round numeric}
 \usage{
-distribute(x, digits = NULL, plot = FALSE)
+distribute(x, digits = NULL)
 }
 \arguments{
 \item{x}{numeric.}
 
 \item{digits}{numeric.}
-
-\item{plot}{logical. Default \code{FALSE}}
 }
 \value{
 a data.frame of round frequency.

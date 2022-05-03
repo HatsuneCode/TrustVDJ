@@ -1,7 +1,7 @@
 #' @include constants.r
 NULL
 
-#' Time record
+#' Time Record
 #'
 #' @return character. Time now
 #' @export
@@ -11,9 +11,9 @@ NULL
 #'
 timer = function() as.character(Sys.time())
 
-#' Default for NULL value
+#' Default for NULL Value
 #'
-#' set default value for object, equal to \code{%||%} in rlang package
+#' Set default value for object, equal to \code{%||%} in rlang package
 #'
 #' @name Ifnull
 #'
@@ -30,9 +30,9 @@ timer = function() as.character(Sys.time())
 #'
 `%||%` = function(x, y) if (is.null(x)) y else x
 
-#' Default for NULL and NA value
+#' Default for NULL and NA Value
 #'
-#' set default value for object, including NULL and NA and length 0.
+#' Set default value for object, including NULL and NA and length 0.
 #'
 #' @name Ifnone
 #'
@@ -47,9 +47,9 @@ timer = function() as.character(Sys.time())
 #' NA   %|||% 1
 #' NULL %|||% 1
 #'
-`%|||%` = function(x, y) if (is.null(x) || !length(x))  y else if(all(is.na(x))) y else x
+`%|||%` = function(x, y) if (is.null(x) || !length(x))  y else if (all(is.na(x))) y else x
 
-#' data.frame a single chain information
+#' Make a Single Chain Information
 #'
 #' @param chain list. trust4 single chain information in a list
 #'
@@ -61,9 +61,9 @@ timer = function() as.character(Sys.time())
 #' @examples
 #' df_chain(list('V', 'D', 'J', 'C', 'CDR3nt', 'CDR3aa', '60', 'id1', '98', '1'))
 #'
-df_chain = function(chain) setNames(data.frame(t(unlist(chain))), chainName)
+df_chain = function(chain) stats::setNames(data.frame(t(unlist(chain))), chainName)
 
-#' Combine Two Data-frame by Columns
+#' Combine Two Data Frame by Columns
 #'
 #' Combine two data.frame by columns by filling in missing rows from each other based on \code{rownames}.
 #'
@@ -83,8 +83,8 @@ df_chain = function(chain) setNames(data.frame(t(unlist(chain))), chainName)
 cbinds = function(F1, F2, fill = 0) {
 
   # check dim
-  if(any(dim(F1) == 0)) return(F2)
-  if(any(dim(F2) == 0)) return(F1)
+  if (any(dim(F1) == 0)) return(F2)
+  if (any(dim(F2) == 0)) return(F1)
 
   # rownames
   rowall = c(rownames(F1), rownames(F2))
@@ -92,7 +92,7 @@ cbinds = function(F1, F2, fill = 0) {
   dF2    = setdiff(rowall, rownames(F2))
 
   # fill F1
-  if(length(dF1)){
+  if (length(dF1)) {
     SF1r           = matrix(fill, nrow = length(setdiff(rowall, rownames(F1))), ncol = ncol(F1))
     rownames(SF1r) = dF1
     colnames(SF1r) = colnames(F1)
@@ -101,7 +101,7 @@ cbinds = function(F1, F2, fill = 0) {
   }
 
   # fill F2
-  if(length(dF2)){
+  if (length(dF2)) {
     SF2r           = matrix(fill, nrow = length(setdiff(rowall, rownames(F2))), ncol = ncol(F2))
     rownames(SF2r) = dF2
     colnames(SF2r) = colnames(F2)
@@ -136,8 +136,8 @@ cbinds = function(F1, F2, fill = 0) {
 rbinds = function(F1, F2, fill = 0) {
   
   # check dim
-  if(any(dim(F1) == 0)) return(F2)
-  if(any(dim(F2) == 0)) return(F1)
+  if (any(dim(F1) == 0)) return(F2)
+  if (any(dim(F2) == 0)) return(F1)
   
   # rownames
   colall = c(colnames(F1), colnames(F2))
@@ -145,7 +145,7 @@ rbinds = function(F1, F2, fill = 0) {
   dF2    = setdiff(colall, colnames(F2))
   
   # fill F1
-  if(length(dF1)){
+  if (length(dF1)) {
     SF1c           = matrix(fill, nrow = nrow(F1), ncol = length(setdiff(colall, colnames(F1))))
     rownames(SF1c) = rownames(F1)
     colnames(SF1c) = dF1
@@ -154,7 +154,7 @@ rbinds = function(F1, F2, fill = 0) {
   }
   
   # fill F2
-  if(length(dF2)){
+  if (length(dF2)) {
     SF2c           = matrix(fill, nrow = nrow(F2), ncol = length(setdiff(colall, colnames(F2))))
     rownames(SF2c) = rownames(F2)
     colnames(SF2c) = dF2
@@ -169,7 +169,7 @@ rbinds = function(F1, F2, fill = 0) {
   rbind(F1, F2)
 }
 
-#' Pick field
+#' Pick Field
 #'
 #' @param x character.
 #' @param f numeric. target field. Default \code{1}
@@ -184,7 +184,7 @@ rbinds = function(F1, F2, fill = 0) {
 #' 
 pick = function(x, f = 1, exct = '\\|') sapply(strsplit(x, exct), function(i) i[f])
 
-#' Dispersion normalization
+#' Dispersion Normalization
 #'
 #' @param x numeric.
 #'
@@ -196,12 +196,12 @@ pick = function(x, f = 1, exct = '\\|') sapply(strsplit(x, exct), function(i) i[
 #' 
 min_max = function(x) (x - min(x)) / (max(x) - min(x))
 
-#' check a name in names
+#' Check a Name in Names
 #'
-#' @param obs vector.
+#' @param obs  vector.
 #' @param pool vector.
 #'
-#' @return a inner name or code\{NULL}
+#' @return a inner name or \code{NULL}
 #' @export
 #'
 #' @examples
@@ -209,6 +209,55 @@ min_max = function(x) (x - min(x)) / (max(x) - min(x))
 #' checkIn(4, 1:3)
 #' 
 checkIn = function(obs, pool) obs[obs %in% pool][1] %|||% NULL
+
+#' Check Duplicated Value
+#'
+#' @param x vector.
+#'
+#' @return a logical vector indicating which elements are duplicated.
+#' @export
+#'
+#' @examples
+#' checkDup(c(1:5, 2:10))
+#' 
+checkDup = function(x) x %in% x[duplicated(x)]
+
+#' Check Subset Value
+#'
+#' @param x vector.
+#' @param i index.
+#'
+#' @return a subset value
+#' @export
+#'
+#' @examples
+#' checkSub(NULL, 1)
+#' 
+checkSub = function(x, i) if(length(x)) x[i] else x
+
+#' Check Values
+#'
+#' @param x vector.
+#'
+#' @return value number
+#' @export
+#'
+#' @examples
+#' have(c(1:3, '', 5))
+#' 
+have = function(x) length(x[ x != '' ])
+
+#' Check NA Values in a Data Frame
+#'
+#' @param df data.frame
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' none(data.frame(c(1:3, 'None', 5), c(1, NA, '*', 4:5)))
+#' 
+none = function(df) is.na(df) | df == 'None' | df == '*' | df == ' '
 
 #' Report the Space Allocated for an Object in Mb
 #'
@@ -223,5 +272,5 @@ checkIn = function(obs, pool) obs[obs %in% pool][1] %|||% NULL
 #' obj = 1:1024^2
 #' objSize(obj)
 #' 
-objSize = function(obj) paste(round(utils::object.size(obj)/1024^2, 2), 'Mb')
+objSize = function(obj) paste(round(utils::object.size(obj) / 1024^2, 2), 'Mb')
 

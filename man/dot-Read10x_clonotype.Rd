@@ -2,7 +2,7 @@
 % Please edit documentation in R/read10x.r
 \name{.Read10x_clonotype}
 \alias{.Read10x_clonotype}
-\title{Read 10x clonotype file}
+\title{Read 10x Clonotype File}
 \usage{
 .Read10x_clonotype(clonotype_file, verbose = TRUE)
 }
@@ -15,11 +15,11 @@
 A VDJ information data.frame
 }
 \description{
-Read 10x clonotype file
+Read 10x Clonotype File
 }
 \examples{
 clonotype_file = system.file('extdata', '10x_clonotypes.csv.gz', package = 'TrustVDJ')
-clonotype = .Read10x_clonotype(clonotype_file = clonotype_file)
+clonotype      = .Read10x_clonotype(clonotype_file = clonotype_file)
 head(clonotype)
 
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/read10x.r
 \name{.Read10x_contig}
 \alias{.Read10x_contig}
-\title{Read 10x contig file}
+\title{Read 10x Contig File}
 \usage{
 .Read10x_contig(contig_file, verbose = TRUE)
 }
@@ -15,11 +15,11 @@
 A VDJ information data.frame
 }
 \description{
-Read 10x contig file
+Read 10x Contig File
 }
 \examples{
 contig_file = system.file('extdata', '10x_all_contig_annotations.csv.gz', package = 'TrustVDJ')
-contig = .Read10x_contig(contig_file = contig_file)
+contig      = .Read10x_contig(contig_file = contig_file)
 head(contig)
 
 }

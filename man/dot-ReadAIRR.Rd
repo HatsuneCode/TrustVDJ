@@ -2,14 +2,14 @@
 % Please edit documentation in R/readTrust.r
 \name{.ReadAIRR}
 \alias{.ReadAIRR}
-\title{Read AIRR file.}
+\title{Read AIRR File.}
 \usage{
 .ReadAIRR(airr_file = NULL, verbose = TRUE)
 }
 \arguments{
 \item{airr_file}{character. Path to AIRR file, eg. xx_airr.tsv or xx_barcode_airr.tsv.}
 
-\item{verbose}{logical. Print progress. Default is TRUE}
+\item{verbose}{logical.   Print progress. Default is TRUE}
 }
 \value{
 A VDJ information data.frame

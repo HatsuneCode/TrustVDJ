@@ -4,7 +4,7 @@
 \name{Trust-class}
 \alias{Trust-class}
 \alias{Trust}
-\title{The Trust class}
+\title{The Trust Class}
 \value{
 An object of the Trust class
 }

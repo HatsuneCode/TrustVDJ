@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.r
 \name{pick}
 \alias{pick}
-\title{Pick field}
+\title{Pick Field}
 \usage{
 pick(x, f = 1, exct = "\\\\|")
 }
@@ -17,7 +17,7 @@ pick(x, f = 1, exct = "\\\\|")
 A character vector.
 }
 \description{
-Pick field
+Pick Field
 }
 \examples{
 char = c('Hello, miku!', 'Love? Love!')
