@@ -6,7 +6,7 @@
 #' @param plot  logical.
 #' @param save  logical.
 #'
-#' @importFrom ggplot2
+#' @importFrom ggplot2 ggplot
 #'
 #' @return results of clone size
 #' @export
