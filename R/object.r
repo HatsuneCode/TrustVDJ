@@ -183,15 +183,16 @@ ClonotypeFromDataframe = function(Df, properties = NULL, verbose = TRUE) {
 
 #' Create a VDJ Sample Object from Data Frame
 #'
-#' @param Df         data.frame.
-#' @param properties list.
-#' @param name       character.
-#' @param verbose    logical.
+#' @param Df               data.frame.
+#' @param properties       list.
+#' @param name             character.
+#' @param unique_clonotype logical.
+#' @param verbose          logical.
 #'
 #' @return An object of VDJ sample
 #' @export
 #'
-CreateVdjSample = function(Df, properties = NULL, name = NULL, verbose = TRUE) {
+CreateVdjSample = function(Df, properties = NULL, name = NULL, unique_clonotype = TRUE, verbose = TRUE) {
   
   # check name
   name = as.character(name %|||% 'sample')
@@ -208,6 +209,40 @@ CreateVdjSample = function(Df, properties = NULL, name = NULL, verbose = TRUE) {
   # clonotype
   if (verbose) cat('-->', timer(), 'create clonotype object <-- \n')
   clonotype = ClonotypeFromDataframe(Df, properties = properties, verbose = verbose)
+
+  # unique clonotype
+  if (unique_clonotype) {
+    clonoPool = if (have(clonotype@CDR3dna)) {
+      # by same cdr3nt
+      if (verbose) cat('-->', timer(), 'check clonotype by cdr3nt in sample:', name, '<-- \n')
+      data.frame(id = clonotype@ID, nt = clonotype@CDR3dna)
+    } else if(have(clonotype@CDR3aa)) {
+      # by same cdr3aa
+      warning('--! ', timer(), ' cdr3nt missing, check clonotype by cdr3aa in sample: ', name, ' !--')
+      data.frame(id = clonotype@ID, nt = clonotype@CDR3aa)
+    } else {
+      warning('--! ', timer(), ' cdr3nt and cdr3aa missing, ignored to check clonotype in sample: ', name, ' !--')
+      NULL
+    }
+    dupClono = data.frame(clonoPool[checkDup(clonoPool$nt), ])
+    rm(clonoPool)
+    if (nrow(dupClono)) {
+      if (verbose) cat('-->', timer(), 'make duplicated clonotype_id unique <-- \n')
+      for (nt in unique(dupClono$nt)) {
+        dID = dupClono[dupClono$nt %in% nt, -3]
+        for (r in 2:nrow(dID)) {
+          i = dID$idx[r]
+          # dup -> replace
+          d_clo = dID$id[r]
+          r_clo = dID$id[1]
+          if (verbose) 
+            cat('-->', timer(), 'change clonotype_id', d_clo, 'to', r_clo, 'in sample:', name, '<-- \n')
+          clonotype@ID[      clonotype@ID      == d_clo ] = r_clo
+          consensus@ClonoID[ consensus@ClonoID == d_clo ] = r_clo
+        }}
+    }
+    rm(dupClono)
+  }
   
   # Sample object
   sample = new('VDJsample', consensus = consensus, clonotype = clonotype, name = name)
@@ -315,61 +350,64 @@ RenameVdjSample = function(sample, name = NULL, verbose = TRUE) {
 
 #' Merge VDJ Sample Objects
 #'
-#' @param samples list.
-#' @param name    character.
-#' @param verbose logical.
+#' @param samples          list.
+#' @param name             character.
+#' @param unique_clonotype logical.
+#' @param verbose          logical.
 #'
 #' @return An merged object of VDJ sample.
 #' @export
 #'
 #' @examples
 #' 
-MergeVdjSamples = function(samples, name = NULL, verbose = TRUE) {
+MergeVdjSamples = function(samples, name = NULL, unique_clonotype = TRUE, verbose = TRUE) {
   
   # check name 
   name = as.character(name %|||% 'merge')
   
   # check clonotype id
-  if (verbose) 
-    cat('-->', timer(), 'check clonotype_id in samples:', 
-        paste(unlist(lapply(samples, function(sample) sample@name)), collapse = ',' ), '<-- \n')
-  clonoPool = do.call(rbind, lapply(seq(samples), function(i) {
-    clono = samples[[i]]@clonotype
-    nm    = samples[[i]]@name
-    if (have(clono@CDR3dna)) {
-      # by same cdr3nt
-      if (verbose) cat('-->', timer(), 'check clonotype by cdr3-nt in sample:', nm, '<-- \n')
-      data.frame(idx = i, id = clono@ID, nt = clono@CDR3dna)
-    } else if (have(clono@CDR3aa)) {
-      # by same cdr3aa
-      warning('--! ', timer(), ' cdr3nt missing, check clonotype by cdr3aa in sample: ', nm, ' !--')
-      data.frame(idx = i, id = clono@ID, nt = clono@CDR3aa)
-    } else {
-      warning('--! ', timer(), ' cdr3nt and cdr3aa missing, ignored to check clonotype in sample: ', nm, ' !--')
-      NULL
+  if (unique_clonotype) {
+    if (verbose) 
+      cat('-->', timer(), 'check clonotype_id in samples:', 
+          paste(unlist(lapply(samples, function(sample) sample@name)), collapse = ',' ), '<-- \n')
+    clonoPool = do.call(rbind, lapply(seq(samples), function(i) {
+      clono = samples[[i]]@clonotype
+      nm    = samples[[i]]@name
+      if (have(clono@CDR3dna)) {
+        # by same cdr3nt
+        if (verbose) cat('-->', timer(), 'check clonotype by cdr3-nt in sample:', nm, '<-- \n')
+        data.frame(idx = i, id = clono@ID, nt = clono@CDR3dna)
+      } else if (have(clono@CDR3aa)) {
+        # by same cdr3aa
+        warning('--! ', timer(), ' cdr3nt missing, check clonotype by cdr3aa in sample: ', nm, ' !--')
+        data.frame(idx = i, id = clono@ID, nt = clono@CDR3aa)
+      } else {
+        warning('--! ', timer(), ' cdr3nt and cdr3aa missing, ignored to check clonotype in sample: ', nm, ' !--')
+        NULL
+      }
+    }))
+  
+    # unique clonotype id
+    dupClono = data.frame(clonoPool[checkDup(clonoPool$nt), ])
+    rm(clonoPool)
+    if (nrow(dupClono)) {
+      if (verbose) cat('-->', timer(), 'make duplicated clonotype_id unique <-- \n')
+      for (nt in unique(dupClono$nt)) {
+        dID = dupClono[dupClono$nt %in% nt, -3]
+        for (r in 2:nrow(dID)) {
+          i = dID$idx[r]
+          # dup -> replace
+          d_clo = dID$id[r]
+          r_clo = dID$id[1]
+          if (verbose) 
+            cat('-->', timer(), 'change clonotype_id', d_clo, 'to', r_clo, 'in sample:', samples[[i]]@name, '<-- \n')
+          samples[[i]]@clonotype@ID     [ samples[[i]]@clonotype@ID      == d_clo ] = r_clo
+          samples[[i]]@consensus@ClonoID[ samples[[i]]@consensus@ClonoID == d_clo ] = r_clo
+        }}
     }
-  }))
-  
-  # unique clonotype id
-  dupClono = data.frame(clonoPool[checkDup(clonoPool$nt), ])
-  rm(clonoPool)
-  if (nrow(dupClono)) {
-    if (verbose) cat('-->', timer(), 'make duplicated clonotype_id unique <-- \n')
-    for (nt in unique(dupClono$nt)) {
-      dID = dupClono[dupClono$nt %in% nt, -3]
-      for (r in 2:nrow(dID)) {
-        i = dID$idx[r]
-        # dup -> replace
-        d_clo = dID$id[r]
-        r_clo = dID$id[1]
-        if (verbose) 
-          cat('-->', timer(), 'change clonotype_id', d_clo, 'to', r_clo, 'in sample:', samples[[i]]@name, '<-- \n')
-        samples[[i]]@clonotype@ID     [ samples[[i]]@clonotype@ID      == d_clo ] = r_clo
-        samples[[i]]@consensus@ClonoID[ samples[[i]]@consensus@ClonoID == d_clo ] = r_clo
-      }}
+    rm(dupClono)
   }
-  rm(dupClono)
-  
+
   # consensus merge #
   consensus = MergeConsensus(samples, verbose = verbose)
   

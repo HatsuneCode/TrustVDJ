@@ -4,12 +4,14 @@
 \alias{MergeVdjSamples}
 \title{Merge VDJ Sample Objects}
 \usage{
-MergeVdjSamples(samples, name = NULL, verbose = TRUE)
+MergeVdjSamples(samples, name = NULL, unique_clonotype = TRUE, verbose = TRUE)
 }
 \arguments{
 \item{samples}{list.}
 
 \item{name}{character.}
+
+\item{unique_clonotype}{logical.}
 
 \item{verbose}{logical.}
 }

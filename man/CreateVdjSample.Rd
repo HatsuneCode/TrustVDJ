@@ -4,7 +4,13 @@
 \alias{CreateVdjSample}
 \title{Create a VDJ Sample Object from Data Frame}
 \usage{
-CreateVdjSample(Df, properties = NULL, name = NULL, verbose = TRUE)
+CreateVdjSample(
+  Df,
+  properties = NULL,
+  name = NULL,
+  unique_clonotype = TRUE,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{Df}{data.frame.}
@@ -12,6 +18,8 @@ CreateVdjSample(Df, properties = NULL, name = NULL, verbose = TRUE)
 \item{properties}{list.}
 
 \item{name}{character.}
+
+\item{unique_clonotype}{logical.}
 
 \item{verbose}{logical.}
 }
