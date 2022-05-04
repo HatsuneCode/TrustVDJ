@@ -242,8 +242,9 @@ CreateVdjSample = function(Df, properties = NULL, name = NULL, unique_clonotype 
         }}
     }
     rm(dupClono)
+    clonotype = UniqueClonotype(clonotype)
   }
-  
+
   # Sample object
   sample = new('VDJsample', consensus = consensus, clonotype = clonotype, name = name)
   sample = NameVdjSample(sample, name = name, verbose = verbose)
