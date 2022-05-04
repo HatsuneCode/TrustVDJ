@@ -246,6 +246,8 @@ CreateVdjSample = function(Df, properties = NULL, name = NULL, unique_clonotype 
   }
 
   # Sample object
+  if (have(consensus@Cells)) consensus = subsetConsensus(consensus, order(consensus@Cells, decreasing = TRUE))
+  if (have(clonotype@Cells)) clonotype = subsetClonotype(clonotype, order(clonotype@Cells, decreasing = TRUE))
   sample = new('VDJsample', consensus = consensus, clonotype = clonotype, name = name)
   sample = NameVdjSample(sample, name = name, verbose = verbose)
   
@@ -416,7 +418,9 @@ MergeVdjSamples = function(samples, name = NULL, unique_clonotype = TRUE, verbos
   clonotype = MergeClonotype( samples,   verbose = verbose)
   clonotype = UniqueClonotype(clonotype)
   
-  # VDJ sample #
+  # Sample object #
+  if (have(consensus@Cells)) consensus = subsetConsensus(consensus, order(consensus@Cells, decreasing = TRUE))
+  if (have(clonotype@Cells)) clonotype = subsetClonotype(clonotype, order(clonotype@Cells, decreasing = TRUE))
   new('VDJsample', consensus = consensus, clonotype = clonotype, name = name)
 }
 
