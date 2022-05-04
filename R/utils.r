@@ -292,17 +292,19 @@ sepInteger = function(x, sep = NULL) {
   
   # save value
   value = as.numeric(x)
-  
+  level = c()  
+
   # classify
   for (i in 1:length(sep)) {
     bef = sep[i]
     aft = sep[i+1] %|||% Inf
-    x[value >= bef & value < aft] = 
-      if (aft == Inf) paste('n ≥', bef) else if (!bef) paste('n ≤', aft) else 
-        if (aft-bef-1) paste(bef, '≤ n <', aft) else paste('n =', bef)
+    val = if (aft == Inf) paste('n ≥', bef) else if (!bef) paste('n ≤', aft) else 
+            if (aft-bef-1) paste(bef, '≤ n <', aft) else paste('n =', bef)
+    x[value >= bef & value < aft] = val
+    level = c(level, val)
   }
   
   # return
   rm(value)
-  x
+  droplevels(factor(x, level))
 }
