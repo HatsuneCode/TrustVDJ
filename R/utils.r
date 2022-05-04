@@ -274,3 +274,35 @@ none = function(df) is.na(df) | df == 'None' | df == '*' | df == ' '
 #' 
 objSize = function(obj) paste(round(utils::object.size(obj) / 1024^2, 2), 'Mb')
 
+#' Separate Positive Integer
+#'
+#' @param x   numeric.
+#' @param sep integer.
+#'
+#' @return classification
+#' @export
+#'
+#' @examples
+#' sepInteger(1:20, c(1,2,3))
+#' 
+sepInteger = function(x, sep = NULL) {
+  
+  # check sep
+  sep   = sort(unique(as.numeric( c(0, sep %|||% 0) )))
+  
+  # save value
+  value = as.numeric(x)
+  
+  # classify
+  for (i in 1:length(sep)) {
+    bef = sep[i]
+    aft = sep[i+1] %|||% Inf
+    x[value >= bef & value < aft] = 
+      if (aft == Inf) paste('n ≥', bef) else if (!bef) paste('n ≤', aft) else 
+        if (aft-bef-1) paste(bef, '≤ n <', aft) else paste('n =', bef)
+  }
+  
+  # return
+  rm(value)
+  x
+}
