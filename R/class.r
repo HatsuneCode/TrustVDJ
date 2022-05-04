@@ -269,7 +269,7 @@ subsetClonotype = function(clonotype, i) {
 UniqueClonotype = function(clonotype) {
   
   # check clonotype id
-  dupClono = clonotype@ID[ duplicated(clonotype@ID) ]
+  dupClono = unique(clonotype@ID[ duplicated(clonotype@ID) ])
   dupIndex = which(checkDup(clonotype@ID))
   if(!length(dupIndex)) return(clonotype)
   
