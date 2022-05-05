@@ -18,7 +18,7 @@ Collate:
     'download.r'
     'buildReference.r'
     'class.r'
-    'clonotypeFunc.r'
+    'cloneSize.r'
     'distribution.r'
     'object.r'
     'readTrust.r'
