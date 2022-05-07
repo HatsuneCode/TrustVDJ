@@ -1,3 +1,44 @@
+#' Subset clonotype by clone size
+#'
+#' @param vdj        an object of VDJ.
+#' @param names      character. sample or group names.
+#' @param clone.size vector. c(min, max)
+#'
+#' @return a subset clonotype VDJ object.
+#' @export
+#'
+#' @examples
+#' VDJ = readRDS('VDJ.rds')
+#' subsetCloneSize(vdj, clone.size = c(2, Inf))
+#' 
+subsetCloneSize = function(vdj, names = NULL, clone.size = NULL) {
+  
+  # check name
+  nms   = c(names(vdj@samples), names(vdj@groups))
+  names = as.character(names %|||% nms)
+  outer = setdiff(names, nms)
+  if (length(outer)) 
+    warning('--! There is no names: ', paste(outer, collapse = ','), ' in VDJ object !--')
+  
+  # check clone size
+  clone.size = as.numeric(clone.size %|||% c(0, Inf))
+  
+  # subset clonotype
+  for (n in names) {
+    if (n %in% names(vdj@samples)) if (have(vdj@samples[[n]]@clonotype@Cells))
+      vdj@samples[[n]]@clonotype = subsetClonotype(
+        vdj@samples[[n]]@clonotype,
+        vdj@samples[[n]]@clonotype@Cells >= clone.size[1] & vdj@samples[[n]]@clonotype@Cells <= clone.size[2] )
+    if (n %in% names(vdj@groups)) if (have(vdj@groups[[n]]@clonotype@Cells))
+      vdj@groups[[n]]@clonotype = subsetClonotype(
+        vdj@groups[[n]]@clonotype,
+        vdj@groups[[n]]@clonotype@Cells >= clone.size[1] & vdj@groups[[n]]@clonotype@Cells <= clone.size[2] )
+  }
+  
+  # return
+  vdj
+} 
+
 #' Estimate Clonotype clone size
 #'
 #' @param vdj   an object of VDJ.
@@ -21,7 +62,8 @@ CloneSize = function(vdj, names = NULL, sep = NULL, plot = TRUE, save = TRUE) {
   nms   = c(names(vdj@samples), names(vdj@groups))
   names = as.character(names %|||% nms)
   outer = setdiff(names, nms)
-  if (length(outer)) warning('--!')
+  if (length(outer)) 
+    warning('--! There is no names: ', paste(outer, collapse = ','), ' in VDJ object !--')
   
   # check size
   sep = sep %|||% 1:3
