@@ -74,8 +74,9 @@ CloneSize = function(vdj, names = NULL, sep = NULL, plot = TRUE, save = TRUE) {
   # catch clonotype
   clonotype = do.call(rbind, lapply(names, function(n) {
     if (n %in% names(vdj@samples))
-      data.frame( sample = factor(n), type = sepInteger(vdj@samples[[n]]@clonotype@Cells, sep) ) else
-        data.frame( sample = factor(n), type = sepInteger(vdj@groups[[n]]@clonotype@Cells, sep) )
+      return(data.frame( sample = factor(n), type = sepInteger(vdj@samples[[n]]@clonotype@Cells, sep) ))
+    if (n %in% names(vdj@groups ))
+      return(data.frame( sample = factor(n), type = sepInteger(vdj@groups[[n]]@clonotype@Cells, sep) ))
   }))
   
   # stat
@@ -239,7 +240,8 @@ topClonotypes = function(vdj, names = NULL, n.top = NULL, plot = TRUE, repel = T
       ggplot2::scale_color_brewer(palette = 'Set1') +
       ggplot2::labs(x = '', y = paste('Top', n.top, 'clonetypes ratio'), title = 'Clonal expansion') +
       ggplot2::theme_bw() + 
-      ggplot2::theme(plot.title = element_text(hjust = .5), text = element_text(size = 13), panel.grid.minor = element_blank())
+      ggplot2::theme(plot.title = ggplot2::element_text(hjust = .5), text = ggplot2::element_text(size = 13), 
+                     panel.grid.minor = ggplot2::element_blank())
     if(repel) p = p + ggrepel::geom_text_repel(ggplot2::aes(label = ID), box.padding = .1)
       suppressWarnings(print(p))
     if (save) suppressWarnings(ggsave(paste0('topClonotype/clonotype.top', n.top, '.pdf'), p, width = 7, height = 6))
@@ -249,3 +251,61 @@ topClonotypes = function(vdj, names = NULL, n.top = NULL, plot = TRUE, repel = T
   clonotype
 }
 
+#' Estimate clonotype abundance
+#'
+#' @param vdj   an object of VDJ.
+#' @param names character.
+#' @param plot  logical.
+#' @param save  logical.
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' 
+clonotypeAbundance = function(vdj, names = NULL, plot = TRUE, save = TRUE) {
+  
+  # check name
+  nms   = c(names(vdj@samples), names(vdj@groups))
+  names = as.character(names %|||% nms)
+  outer = setdiff(names, nms)
+  if (length(outer))
+    warning('--! There is no names: ', paste(outer, collapse = ','), ' in VDJ object !--')
+  
+  # catch clonotype
+  clonotype = do.call(rbind, lapply(names, function(n) {
+    if (n %in% names(vdj@samples))
+      if (have(vdj@samples[[n]]@clonotype@Cells)) 
+        return(data.frame(Names = factor(n), ID = vdj@samples[[n]]@clonotype@ID, 
+                          Freq = vdj@samples[[n]]@clonotype@Cells ))
+    if (n %in% names(vdj@groups))
+      if (have(vdj@groups[[n]]@clonotype@Cells)) 
+        return(data.frame(Names = factor(n), ID = vdj@groups[[n]]@clonotype@ID, 
+                          Freq = vdj@groups[[n]]@clonotype@Cells ))
+  }))
+  if (!nrow(clonotype) %||% 0) stop('!!! No clonotype freq !!!')
+  
+  # estimate abundance
+  Abun = alakazam::estimateAbundance(clonotype, 'ID', 'Freq', 'Names', min_n = 0)@abundance
+  if (save) {
+    dir.create('clonoAbundance', FALSE)
+    write.table(Abun, 'clonoAbundance/clonotypeAbundance.txt', row.names = F, sep = '\t', quote = F)
+  }
+  
+  # plot abundance
+  if (plot) {
+    p = ggplot2::ggplot(Abun, ggplot2::aes(rank, p, group = Names, fill = Names)) +
+      ggplot2::geom_ribbon(ggplot2::aes(ymin = lower, ymax = upper), alpha = .2) +
+      ggplot2::geom_line(ggplot2::aes(color = Names)) + 
+      ggplot2::scale_x_log10() +
+      ggplot2::labs(x = 'Rank (log)', y = 'Relative Abundance', title = 'Rank-abundance curve') +
+      ggplot2::theme_bw() + 
+      ggplot2::theme(panel.grid = ggplot2::element_blank(), text = ggplot2::element_text(size = 13), 
+                     plot.title = ggplot2::element_text(hjust = .5))
+    print(p)
+    if (save) ggplot2::ggsave('clonoAbundance/clonotypeAbundance.pdf', p, width = 7, height = 9, limitsize = F)
+  }
+  
+  # return
+  Abun
+}
