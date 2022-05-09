@@ -308,3 +308,39 @@ sepInteger = function(x, sep = NULL) {
   rm(value)
   droplevels(factor(x, level))
 }
+
+#' Find List Name
+#'
+#' @param x    character.
+#' @param list list.
+#'
+#' @return list name
+#' @export
+#'
+#' @examples
+#' list = list(N1 = c('a', 'b'), N2 = c('c', 'd'))
+#' findListName(c('a', 'c'), list)
+#' 
+findListName = function(x, list) {
+  df = do.call(rbind, lapply(seq(list), function(i) 
+    data.frame(Name = names(list)[i], Sample = list[[i]]) ))
+  unlist(lapply(x, function(i) df$Name[df$Sample %in% i][1] ))
+}
+
+#' Make Pair Names
+#'
+#' @param x character.
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' makePair(1:3)
+#' 
+makePair = function(x) {
+  df = do.call(rbind, lapply(seq(x), function(i)
+    do.call(rbind, lapply(i:length(x), function(j)
+      if(i!=j) c(x[i], x[j]) ))))
+  apply(df, 1, c, simplify = FALSE)
+}
+

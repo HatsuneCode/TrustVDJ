@@ -1,3 +1,6 @@
+#' @include utils.r
+NULL
+
 #' Subset clonotype by clone size
 #'
 #' @param vdj        an object of VDJ.
@@ -168,7 +171,81 @@ CloneSizeFisher = function(cloneSize, control = NULL, treatment = NULL, types = 
     print(p)
     if (save) ggplot2::ggsave('cloneSize/cloneSize.fisher.pdf', p, width = 7, height = 6)
   }
-  
+
+  # return 
   Fisher
+}
+
+#' Show Top Clonotypes
+#'
+#' @param vdj   an object of vdj.
+#' @param names character. 
+#' @param n.top numeric
+#' @param plot  logical.
+#' @param repel logical.
+#' @param save  logical.
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' 
+topClonotypes = function(vdj, names = NULL, n.top = NULL, plot = TRUE, repel = TRUE, save = TRUE) {
+  
+  # check name
+  nms   = c(names(vdj@samples), names(vdj@groups))
+  names = as.character(names %|||% nms)
+  outer = setdiff(names, nms)
+  if (length(outer))
+    warning('--! There is no names: ', paste(outer, collapse = ','), ' in VDJ object !--')
+  
+  # check top
+  n.top = as.numeric(n.top %|||% 5)
+  
+  # top clono in samples
+  clonotype = do.call(rbind, lapply(names, function(n) {
+    if (n %in% names(vdj@samples)) {
+      group = findListName(n, vdj@info)
+      cells = vdj@samples[[n]]@clonotype@Cells
+      if (have(cells)) {
+        props = cells / sum(cells)
+        top = order(cells, decreasing = T)[1:min(length(cells), n.top)]
+        return(data.frame(ID = vdj@samples[[n]]@clonotype@ID[top],
+                          Ratio = props[top], Sample = n, Group = group))
+      }
+    }
+    if (n %in% names(vdj@groups)) {
+      cells = vdj@groups[[n]]@clonotype@Cells
+      if (have(cells)) {
+        props = cells / sum(cells)
+        top = order(cells, decreasing = T)[1:min(length(cells), n.top)]
+        data.frame(ID = vdj@groups[[n]]@clonotype@ID[top],
+                   Ratio = props[top], Sample = n, Group = paste('Group', n))
+      }
+    }
+  }))
+  
+  # save
+  if (save) {
+    dir.create('topClonotype', FALSE)
+    write.table(clonotype, paste0('topClonotype/clonotype.top', n.top, '.xls'), sep = '\t', quote = FALSE, row.names = FALSE)
+  }
+  
+  # plot boxplot
+  if (plot) {
+    p = ggplot2::ggplot(clonotype, ggplot2::aes(Group, Ratio, color = Group)) +
+      ggplot2::geom_boxplot(outlier.color = NA) + ggplot2::geom_jitter(width = .2) +
+      ggpubr::stat_compare_means(comparisons = makePair(unique(clonotype$Group)), method = 't.test', label = 'p.signif') +
+      ggplot2::scale_color_brewer(palette = 'Set1') +
+      ggplot2::labs(x = '', y = paste('Top', n.top, 'clonetypes ratio'), title = 'Clonal expansion') +
+      ggplot2::theme_bw() + 
+      ggplot2::theme(plot.title = element_text(hjust = .5), text = element_text(size = 13), panel.grid.minor = element_blank())
+    if(repel) p = p + ggrepel::geom_text_repel(ggplot2::aes(label = ID), box.padding = .1)
+      suppressWarnings(print(p))
+    if (save) suppressWarnings(ggsave(paste0('topClonotype/clonotype.top', n.top, '.pdf'), p, width = 7, height = 6))
+  }
+  
+  # return
+  clonotype
 }
 
