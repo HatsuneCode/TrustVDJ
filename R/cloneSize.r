@@ -287,6 +287,7 @@ clonotypeAbundance = function(vdj, names = NULL, plot = TRUE, save = TRUE) {
   
   # estimate abundance
   Abun = alakazam::estimateAbundance(clonotype, 'ID', 'Freq', 'Names', min_n = 0)@abundance
+  Abun$Names = factor(Abun$Names, levels(clonotype$Names))
   if (save) {
     dir.create('clonoAbundance', FALSE)
     write.table(Abun, 'clonoAbundance/clonotypeAbundance.txt', row.names = F, sep = '\t', quote = F)
