@@ -310,3 +310,63 @@ clonotypeAbundance = function(vdj, names = NULL, plot = TRUE, save = TRUE) {
   # return
   Abun
 }
+
+#' Estimate Clonotype Shannon
+#'
+#' @param vdj 
+#' @param names 
+#' @param plot 
+#' @param save 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' 
+clonotypeShanno = function(vdj, names = NULL, plot = TRUE, save = TRUE) {
+  
+  # check name
+  nms   = c(names(vdj@samples), names(vdj@groups))
+  names = as.character(names %|||% nms)
+  outer = setdiff(names, nms)
+  if (length(outer))
+    warning('--! There is no names: ', paste(outer, collapse = ','), ' in VDJ object !--')
+  
+  # shanno
+  shanno = do.call(rbind, lapply(names, function(n) {
+    if (n %in% names(vdj@samples)) {
+      cells = vdj@samples[[n]]@clonotype@Cells
+      if (have(cells)) {
+        props = cells / sum(cells, na.rm = TRUE)
+        return(data.frame(Names = factor(n), Shanno = sum( -props * log2(props), na.rm = TRUE) ))
+      }
+    }
+    if (n %in% names(vdj@groups)) {
+      cells = vdj@groups[[n]]@clonotype@Cells
+      if (have(cells)) {
+        props = cells / sum(cells, na.rm = TRUE)
+        return(data.frame(Names = factor(n), Shanno = sum( -props * log2(props), na.rm = TRUE) ))
+      }
+    }
+  }))
+  
+  if (save) {
+    dir.create('clonoShanno', FALSE)
+    write.table(shanno, 'clonoShanno/clonotypeShannon.txt', sep = '\t', row.names = FALSE, quote = FALSE)
+  }
+  
+  # plot
+  if (plot) {
+    p = ggplot(shanno, aes(Names, Shanno, fill = Name)) +
+      geom_bar(stat = 'identity', position = 'stack', width = .8) +
+      labs(x = '', y = 'Shannon enteopy', title = '') +
+      scale_fill_manual(values = colorRampPalette(TrustVDJ:::color20)(length(levels(shanno$Name))) ) +
+      scale_y_continuous(expand = expansion(c(.01, .05))) +
+      theme_classic() +
+      theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1), plot.title = element_text(hjust = .5))
+    if (save) ggsave('clonoShanno/clonotypeShannon.pdf', p, width = 7, height = 5)
+  }
+  
+  # return
+  shanno 
+}
