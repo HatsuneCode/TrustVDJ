@@ -298,8 +298,8 @@ sepInteger = function(x, sep = NULL) {
   for (i in 1:length(sep)) {
     bef = sep[i]
     aft = sep[i+1] %|||% Inf
-    val = if (aft == Inf) paste('n ≥', bef) else if (!bef) paste('n ≤', aft) else 
-            if (aft-bef-1) paste(bef, '≤ n <', aft) else paste('n =', bef)
+    val = if (aft == Inf) paste('n >=', bef) else if (!bef) paste('n =<', aft) else 
+            if (aft-bef-1) paste(bef, '=< n <', aft) else paste('n =', bef)
     x[value >= bef & value < aft] = val
     level = c(level, val)
   }
@@ -331,7 +331,7 @@ findListName = function(x, list) {
 #'
 #' @param x character.
 #'
-#' @return
+#' @return a paried name list
 #' @export
 #'
 #' @examples

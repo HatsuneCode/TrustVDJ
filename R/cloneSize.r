@@ -44,11 +44,12 @@ subsetCloneSize = function(vdj, names = NULL, clone.size = NULL) {
 
 #' Estimate Clonotype clone size
 #'
-#' @param vdj   an object of VDJ.
-#' @param names character. sample or group names.
-#' @param sep   integer.
-#' @param plot  logical.
-#' @param save  logical.
+#' @param vdj    an object of VDJ.
+#' @param names  character. sample or group names.
+#' @param sep    integer.
+#' @param plot   logical.
+#' @param save   logical.
+#' @param colors character.
 #'
 #' @importFrom ggplot2 ggplot
 #'
@@ -59,7 +60,7 @@ subsetCloneSize = function(vdj, names = NULL, clone.size = NULL) {
 #' VDJ = readRDS('VDJ.rds')
 #' CloneSize(VDJ)
 #' 
-CloneSize = function(vdj, names = NULL, sep = NULL, plot = TRUE, save = TRUE) {
+CloneSize = function(vdj, names = NULL, sep = NULL, plot = TRUE, colors = NULL, save = TRUE) {
   
   # check name
   nms   = c(names(vdj@samples), names(vdj@groups))
@@ -78,7 +79,8 @@ CloneSize = function(vdj, names = NULL, sep = NULL, plot = TRUE, save = TRUE) {
     if (n %in% names(vdj@groups ))
       return(data.frame( sample = factor(n), type = sepInteger(vdj@groups[[n]]@clonotype@Cells, sep) ))
   }))
-  
+  colors = colorRampPalette(rev(colors) %|||% c('#FC8D62', '#8DA0CB', '#66C2A5'))( length(unique(clonotype$type)) )  
+
   # stat
   stat = data.frame(cbind(table(clonotype$sample, clonotype$type)), check.names = FALSE)
   if (save) {
@@ -90,14 +92,14 @@ CloneSize = function(vdj, names = NULL, sep = NULL, plot = TRUE, save = TRUE) {
   if (plot) {
     p1 = ggplot2::ggplot(clonotype, ggplot2::aes(x = sample , fill = factor(type, rev(levels(type))))) +
       ggplot2::geom_bar(stat = 'count' , position = 'fill') +
-      ggplot2::scale_fill_brewer('Clone Size', palette = 'Set2', direction = -1) +
+      ggplot2::scale_fill_manual('Clone Size', values = colors) +
       ggplot2::scale_y_continuous(expand = ggplot2::expansion(c(.01, .05))) +
       ggplot2::labs(y = 'Proportion', x = '',title = '') +
       ggplot2::theme_classic() +
       ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45,vjust = 1, hjust = 1), legend.position = 'right')
     p2 = ggplot2::ggplot(clonotype, ggplot2::aes(x = sample , fill = factor(type, rev(levels(type))))) +
       ggplot2::geom_bar(stat = 'count') +
-      ggplot2::scale_fill_brewer('Clone Size', palette = 'Set2', direction = -1) +
+      ggplot2::scale_fill_manual('Clone Size', values = colors) +
       ggplot2::scale_y_continuous(expand = ggplot2::expansion(c(.01, .05))) +
       ggplot2::labs(y = 'Frequency', x = '',title = '') +
       ggplot2::theme_classic() +
@@ -257,6 +259,8 @@ topClonotypes = function(vdj, names = NULL, n.top = NULL, plot = TRUE, repel = T
 #' @param names character.
 #' @param plot  logical.
 #' @param save  logical.
+#'
+#' @importFrom alakazam estimateAbundance
 #'
 #' @return
 #' @export
