@@ -96,14 +96,14 @@ CloneSize = function(vdj, names = NULL, sep = NULL, plot = TRUE, colors = NULL, 
       ggplot2::scale_y_continuous(expand = ggplot2::expansion(c(.01, .05))) +
       ggplot2::labs(y = 'Proportion', x = '',title = '') +
       ggplot2::theme_classic() +
-      ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45,vjust = 1, hjust = 1), legend.position = 'right')
+      ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, vjust = 1, hjust = 1), legend.position = 'bottom')
     p2 = ggplot2::ggplot(clonotype, ggplot2::aes(x = sample , fill = factor(type, rev(levels(type))))) +
       ggplot2::geom_bar(stat = 'count') +
       ggplot2::scale_fill_manual('Clone Size', values = colors) +
       ggplot2::scale_y_continuous(expand = ggplot2::expansion(c(.01, .05))) +
       ggplot2::labs(y = 'Frequency', x = '',title = '') +
       ggplot2::theme_classic() +
-      ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45,vjust = 1, hjust = 1), legend.position = 'right')
+      ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, vjust = 1, hjust = 1), legend.position = 'bottom')
     print(patchwork::wrap_plots(list(p1, p2)))
     if (save) {
       ggplot2::ggsave('cloneSize/cloneSize.pct.pdf', p1, width = 7, height = 6)
@@ -155,7 +155,7 @@ CloneSizeFisher = function(cloneSize, control = NULL, treatment = NULL, types = 
         fisher$Class = factor(type)
         fisher
       })) })) }))
-  Fisher$Type = ifelse(Fisher$Pval < pval, paste('P <', pval), paste('P ≥', pval))
+  Fisher$Type = ifelse(Fisher$Pval < pval, paste('P <', pval), paste('P >=', pval))
   if (save) {
     dir.create('cloneSize', FALSE)
     write.table(Fisher, 'cloneSize/cloneSize.fisher.txt', sep = '\t', row.names = FALSE, quote = FALSE)
@@ -167,7 +167,7 @@ CloneSizeFisher = function(cloneSize, control = NULL, treatment = NULL, types = 
       geom_vline(xintercept = 1, lty = 2, size = .7) +
       geom_errorbar(aes(xmin = ConfMin, xmax = ConfMax), width = .2, size = .7, color = 'grey') +
       geom_point(aes(color = Type), size = 4) +
-      scale_color_manual(values = c(if(sum(grepl('<', Fisher$Type))) 'red', if(sum(grepl('≥', Fisher$Type))) 'grey')) +
+      scale_color_manual(values = c(if(sum(grepl('<', Fisher$Type))) 'red', if(sum(grepl('>=', Fisher$Type))) 'grey')) +
       facet_wrap(~ Class, nrow = 1) +
       labs(x = 'Odds Ratio', y = '', color = '', title = '') +
       theme_bw() + theme(panel.grid = element_blank(), text = element_text(size = 13))
@@ -374,3 +374,53 @@ clonotypeShanno = function(vdj, names = NULL, plot = TRUE, save = TRUE) {
   # return
   shanno 
 }
+
+##
+cloneSimilar = function(vdj, names = NULL, plot = TRUE, save = TRUE) {
+ 
+  # check name
+  nms   = c(names(vdj@samples), names(vdj@groups))
+  names = as.character(names %|||% nms)
+  
+  # catch clonotype
+  clonotype = do.call(rbind, lapply(names, function(n) {
+    if (n %in% names(vdj@samples))
+      return(data.frame(sample = factor(n), 
+                        clono  = vdj@samples[[n]]@clonotype@CDR3aa, 
+                        prop   = vdj@samples[[n]]@clonotype@Cells / sum(vdj@samples[[n]]@clonotype@Cells, na.rm = TRUE) ))
+    if (n %in% names(vdj@groups ))
+      return(data.frame(sample = factor(n), 
+                        clono  = vdj@groups[[n]]@clonotype@CDR3aa,
+                        prop   = vdj@groups[[n]]@clonotype@Cells / sum(vdj@groups[[n]]@clonotype@Cells, na.rm = TRUE) ))
+  }))
+  
+  # between pos and neg
+  Simi = do.call(rbind, lapply(seq(names), function(i) do.call(rbind, lapply(i:length(names), function(j) {
+    pos   = clonotype[clonotype$sample %in% names[i], ] %>% group_by(clono = clono) %>% summarise(prop = sum(prop))
+    neg   = clonotype[clonotype$sample %in% names[j], ] %>% group_by(clono = clono) %>% summarise(prop = sum(prop))
+    share = intersect(pos$clono, neg$clono)
+    simi  = sum(sqrt(pos$prop[match(share, pos$clono)] * neg$prop[match(share, neg$clono)]))
+    data.frame(pos = factor(names[i]), neg = factor(names[j]), simi = simi)
+  } ))))
+  
+  Simi$simi[round(Simi$simi, 10) == 1] = NA
+  stat = reshape2::acast(Simi, pos ~ neg, value.var = 'simi')
+ 
+  if (save) {
+    dir.create('cloneSimilar', FALSE)
+    write.table(cbind(Name = rownames(stat), stat), 'cloneSimilar/cloneSimilar.stat.xls', sep = '\t', quote = FALSE, row.names = FALSE)
+  }
+
+  # plot clone size
+  if (plot) {
+    p = quickcor(cor_tbl(stat), type = 'upper') + geom_circle2() + 
+      scale_fill_gradientn(colors = c('pink', 'red')) +
+      scale_radius_area(limits = c(0, max(stat, na.rm = T)*1.2))
+   print(p)
+   if (save) ggplot2::ggsave('cloneSimilar/cloneSimilar.pdf', p, width = 7, height = 6)
+  }
+  
+  # return
+  stat
+}
+
