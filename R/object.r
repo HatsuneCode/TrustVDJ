@@ -110,8 +110,11 @@ ConsensusFromDataframe = function(Df, properties = NULL, verbose = TRUE) {
   # check chain
   consen@Chain = unlist(lapply(seq(consen@ID), function(i) {
     for (chain in chainType)
-     if (sum(grepl(chain, c(consen@Vgene[i], consen@Dgene[i], consen@Jgene[i], consen@Cgene[i]), ignore.case = T))) chain else ''
+     type = if (sum(grepl(chain, c(consen@Vgene[i], consen@Dgene[i], consen@Jgene[i], consen@Cgene[i]), ignore.case = T))) chain else ''
+    type
   }))
+
+  # return
   consen
 }
 
