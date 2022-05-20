@@ -9,6 +9,7 @@ NULL
 #' @slot Dgene   character. 
 #' @slot Jgene   character. 
 #' @slot Cgene   character. 
+#' @slot Chain   character.
 #' @slot FWR1dna character. 
 #' @slot FWR1aa  character. 
 #' @slot CDR1dna character. 
@@ -44,6 +45,7 @@ consensus = setClass('consensus', slots = c(
   Dgene   = 'character',
   Jgene   = 'character',
   Cgene   = 'character',
+  Chain   = 'character',
   FWR1dna = 'character',
   FWR1aa  = 'character',
   CDR1dna = 'character',
@@ -111,6 +113,7 @@ addConsensus = function(consensus, consensus2) {
   consensus@Dgene   = c(consensus@Dgene,   consensus2@Dgene)
   consensus@Jgene   = c(consensus@Jgene,   consensus2@Jgene)
   consensus@Cgene   = c(consensus@Cgene,   consensus2@Cgene)
+  consensus@Chain   = c(consensus@Chain,   consensus2@Chain)
   consensus@FWR1dna = c(consensus@FWR1dna, consensus2@FWR1dna)
   consensus@FWR1aa  = c(consensus@FWR1aa,  consensus2@FWR1aa)
   consensus@CDR1dna = c(consensus@CDR1dna, consensus2@CDR1dna)
@@ -154,6 +157,7 @@ subsetConsensus = function(consensus, i) {
   consensus@Dgene   = checkSub(consensus@Dgene,   i)
   consensus@Jgene   = checkSub(consensus@Jgene,   i)
   consensus@Cgene   = checkSub(consensus@Cgene,   i)
+  consensus@Chain   = checkSub(consensus@Chain,   i)
   consensus@FWR1dna = checkSub(consensus@FWR1dna, i)
   consensus@FWR1aa  = checkSub(consensus@FWR1aa,  i)
   consensus@CDR1dna = checkSub(consensus@CDR1dna, i)
@@ -391,6 +395,7 @@ MergeConsensus = function(samples, verbose = TRUE) {
       Dgene    = unlist(lapply(samples, function(sample) sample@consensus@Dgene )),
       Jgene    = unlist(lapply(samples, function(sample) sample@consensus@Jgene )),
       Cgene    = unlist(lapply(samples, function(sample) sample@consensus@Cgene )),
+      Chain    = unlist(lapply(samples, function(sample) sample@consensus@Chain )),
       FWR1dna  = unlist(lapply(samples, function(sample) sample@consensus@FWR1dna )),
       FWR1aa   = unlist(lapply(samples, function(sample) sample@consensus@FWR1aa )),
       CDR1dna  = unlist(lapply(samples, function(sample) sample@consensus@CDR1dna )),

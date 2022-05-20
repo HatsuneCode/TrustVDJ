@@ -10,7 +10,7 @@ makePair(x)
 \item{x}{character.}
 }
 \value{
-
+a paried name list
 }
 \description{
 Make Pair Names

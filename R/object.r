@@ -74,10 +74,10 @@ ConsensusFromDataframe = function(Df, properties = NULL, verbose = TRUE) {
     consen$Reads = unlist(lapply(strsplit(consen$Reads, ';;;'), function(i) 
       sum(as.numeric(i), na.rm = TRUE) ))
   }
-  
+
   # make consensus object #
   def = rep('', nrow(consen) %||% 0)
-  new('consensus', 
+  consen = new('consensus', 
       ID       = as.character(consen$ConsenID   %|||% def), 
       ClonoID  = as.character(consen$ClonoID    %|||% def),
       Vgene    = as.character(consen$Vgene      %|||% def),
@@ -106,6 +106,13 @@ ConsensusFromDataframe = function(Df, properties = NULL, verbose = TRUE) {
       Barcodes = as.character(consen$Barcode    %|||% def),
       FullLength = as.logical(consen$FullLength %|||% def),
       CDR3germlineSimilarity =  as.numeric(consen$CDR3germlineSimilarity %|||% def) )
+ 
+  # check chain
+  consen@Chain = unlist(lapply(seq(consen@ID), function(i) {
+    for (chain in chainType)
+     if (sum(grepl(chain, c(consen@Vgene[i], consen@Dgene[i], consen@Jgene[i], consen@Cgene[i]), ignore.case = T))) chain else ''
+  }))
+  consen
 }
 
 #' Create Clonotype Object from Data Frame

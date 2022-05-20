@@ -424,3 +424,55 @@ cloneSimilar = function(vdj, names = NULL, plot = TRUE, save = TRUE) {
   stat
 }
 
+##
+cloneVenn = function(vdj, names = NULL, type = NULL, save = TRUE) {
+  
+  # check name
+  nms   = c(names(vdj@samples), names(vdj@groups))
+  names = as.character(names %|||% nms)
+  
+  # check type
+  type  = as.character(type %|||% 'CDR3dna')
+  
+  # catch clonotype
+  clonotype = if ('CDR3dna' %in% type) setNames(lapply(names, function(n) {
+      if (n %in% names(vdj@samples)) if (have(vdj@samples[[n]]@clonotype@CDR3dna))
+        return(unique(vdj@samples[[n]]@clonotype@CDR3dna))
+      if (n %in% names(vdj@groups )) if (have(vdj@groups[[n]]@clonotype@CDR3dna))
+        return(unique(vdj@groups[[n]]@clonotype@CDR3dna))
+    }), names) else if ('CDR3aa' %in% type) setNames(lapply(names, function(n) {
+      if (n %in% names(vdj@samples)) if (have(vdj@samples[[n]]@clonotype@CDR3aa))
+        return(unique(vdj@samples[[n]]@clonotype@CDR3aa))
+      if (n %in% names(vdj@groups )) if (have(vdj@groups[[n]]@clonotype@CDR3aa))
+        return(unique(vdj@groups[[n]]@clonotype@CDR3aa))
+    }), names) else 
+      stop('!!! ', timer(), ' Not available type: ', type, ' !!!')
+  clonotype = clonotype[sapply(clonotype, length) > 0]
+  
+  # venn
+  dir.create('cloneVenn')
+  data = do.call(rbind, lapply(seq(clonotype), function(i) 
+    data.frame(Sample = factor(names(clonotype)[i]), Clono = clonotype[[i]], In = 1) ))
+  if (length(clonotype) > 5) {
+    pdata = dcast(data, Clono ~ Sample, value.var = 'In', fill = 0)
+    pdf('cloneVenn/cloneVenn.pdf', width = 14, height = 8)
+    print(upset(pdata, nsets = length(clonotype), nintersects = NA, 
+          mainbar.y.label = 'Shared clonotypes\n', sets.x.label = 'Clonotypes'), newpage = F)
+    dev.off()
+    rm(pdata)
+  } else {
+    vn = lapply(c('svg', 'png'), function(f) 
+      venn.diagram(clonotype, paste0('cloneVenn/cloneVenn.', f), category.names = names(clonotype),
+                   fill = scales::hue_pal()(length(clonotype)), margin = 0.05, col = NA) )
+    rm = file.remove(list.files('cloneVenn', 'log$', full.names = T))
+  }
+  
+  # save
+  data = acast(data, Clono ~ Sample, value.var = 'In', fill = 0)
+  if (save) 
+    write.table(cbind(CDR = rownames(data), data), 'cloneVenn/cloneVenn.stat.txt', sep = '\t', row.names = F, quote = F)
+  
+  # return
+  as(data, 'dgCMatrix')
+}
+

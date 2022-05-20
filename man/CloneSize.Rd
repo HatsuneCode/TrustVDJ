@@ -4,7 +4,14 @@
 \alias{CloneSize}
 \title{Estimate Clonotype clone size}
 \usage{
-CloneSize(vdj, names = NULL, sep = NULL, plot = TRUE, save = TRUE)
+CloneSize(
+  vdj,
+  names = NULL,
+  sep = NULL,
+  plot = TRUE,
+  colors = NULL,
+  save = TRUE
+)
 }
 \arguments{
 \item{vdj}{an object of VDJ.}
@@ -14,6 +21,8 @@ CloneSize(vdj, names = NULL, sep = NULL, plot = TRUE, save = TRUE)
 \item{sep}{integer.}
 
 \item{plot}{logical.}
+
+\item{colors}{character.}
 
 \item{save}{logical.}
 }

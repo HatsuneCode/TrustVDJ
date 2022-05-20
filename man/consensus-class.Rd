@@ -26,6 +26,8 @@ The Consensus Class
 
 \item{\code{Cgene}}{character.}
 
+\item{\code{Chain}}{character.}
+
 \item{\code{FWR1dna}}{character.}
 
 \item{\code{FWR1aa}}{character.}
