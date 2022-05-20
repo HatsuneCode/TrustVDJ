@@ -381,6 +381,9 @@ cloneSimilar = function(vdj, names = NULL, plot = TRUE, save = TRUE) {
   # check name
   nms   = c(names(vdj@samples), names(vdj@groups))
   names = as.character(names %|||% nms)
+  outer = setdiff(names, nms)
+  if (length(outer))
+    warning('--! There is no names: ', paste(outer, collapse = ','), ' in VDJ object !--')
   
   # catch clonotype
   clonotype = do.call(rbind, lapply(names, function(n) {
@@ -430,6 +433,9 @@ cloneVenn = function(vdj, names = NULL, type = NULL, save = TRUE) {
   # check name
   nms   = c(names(vdj@samples), names(vdj@groups))
   names = as.character(names %|||% nms)
+  outer = setdiff(names, nms)
+  if (length(outer))
+    warning('--! There is no names: ', paste(outer, collapse = ','), ' in VDJ object !--')
   
   # check type
   type  = as.character(type %|||% 'CDR3dna')
