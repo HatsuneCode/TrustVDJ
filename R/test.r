@@ -78,8 +78,8 @@ corTest = function(x, y, method = 'both', adj_method = 'BH', rm0 = TRUE, verbose
 
 #' Fisher's Exact Test
 #'
-#' @param control numeric.
 #' @param treatment numeric.
+#' @param control numeric.
 #' @param base numeric. Default \code{2}
 #'
 #' @importFrom stats setNames
@@ -88,11 +88,11 @@ corTest = function(x, y, method = 'both', adj_method = 'BH', rm0 = TRUE, verbose
 #' @export
 #'
 #' @examples
-#' control   = c(1:10)
 #' treatment = c(10:1)
-#' Fisher(control, treatment)
+#' control   = c(1:10)
+#' Fisher(treatment, control)
 #' 
-Fisher = function(control, treatment, base = 2) {
+Fisher = function(treatment, control, base = 2) {
   
   # check numeric #
   control   = as.numeric(control)
@@ -105,8 +105,8 @@ Fisher = function(control, treatment, base = 2) {
   # fisher test #
   do.call(rbind, lapply(seq(control), function(i) {
     fish  = fisher.test(matrix(c(
-      control[i], sum(control)-control[i], treatment[i], sum(treatment)-treatment[i]), ncol = 2))
-    stats::setNames(data.frame(as.numeric(fish$estimate), fish$conf.int[1], fish$conf.int[2], log(control[i]/treatment[i], base = base), fish$p.value), 
+      treatment[i], sum(treatment) - treatment[i], control[i], sum(control) - control[i]), ncol = 2))
+    stats::setNames(data.frame(as.numeric(fish$estimate), fish$conf.int[1], fish$conf.int[2], log(treatment[i]/control[i], base = base), fish$p.value), 
       c('Odds', 'ConfMin', 'ConfMax', paste0('Log', base, 'Fc'), 'Pval') )
   }))
 }

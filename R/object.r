@@ -5,6 +5,7 @@ NULL
 #'
 #' @param Df         data.frame.
 #' @param properties list.
+#' @param rm_allele  logical. remove allele, such as TRA1-1*01 to TRA1-1.
 #' @param verbose    logical.
 #'
 #' @importFrom stats setNames
@@ -25,7 +26,7 @@ NULL
 #'  UMIs = 'duplicate_count', Reads = 'consensus_count') )
 #' consensus
 #' 
-ConsensusFromDataframe = function(Df, properties = NULL, verbose = TRUE) {
+ConsensusFromDataframe = function(Df, properties = NULL, rm_allele = FALSE, verbose = TRUE) {
   
   # check Df
   if (!nrow(Df) %||% 0) stop('!!! ', timer(), ' data frame not available !!!')
@@ -106,7 +107,15 @@ ConsensusFromDataframe = function(Df, properties = NULL, verbose = TRUE) {
       Barcodes = as.character(consen$Barcode    %|||% def),
       FullLength = as.logical(consen$FullLength %|||% def),
       CDR3germlineSimilarity =  as.numeric(consen$CDR3germlineSimilarity %|||% def) )
- 
+
+  # remove allele
+  if (rm_allele) {
+    consen@Vgene = sub('\\*.*', '', consen@Vgene)
+    consen@Dgene = sub('\\*.*', '', consen@Dgene)
+    consen@Jgene = sub('\\*.*', '', consen@Jgene)
+    consen@Cgene = sub('\\*.*', '', consen@Cgene)
+  }
+
   # check chain
   consen@Chain = unlist(lapply(seq(consen@ID), function(i) {
     type = ''
@@ -198,13 +207,14 @@ ClonotypeFromDataframe = function(Df, properties = NULL, verbose = TRUE) {
 #' @param Df               data.frame.
 #' @param properties       list.
 #' @param name             character.
+#' @param rm_allele        logical.
 #' @param unique_clonotype logical.
 #' @param verbose          logical.
 #'
 #' @return An object of VDJ sample
 #' @export
 #'
-CreateVdjSample = function(Df, properties = NULL, name = NULL, unique_clonotype = TRUE, verbose = TRUE) {
+CreateVdjSample = function(Df, properties = NULL, name = NULL, rm_allele = FALSE, unique_clonotype = TRUE, verbose = TRUE) {
   
   # check name
   name = as.character(name %|||% 'sample')
@@ -216,7 +226,7 @@ CreateVdjSample = function(Df, properties = NULL, name = NULL, unique_clonotype 
   if (verbose) cat('-->', timer(), 'create VDJ sample object for:', name, '<-- \n')
   # consensus
   if (verbose) cat('-->', timer(), 'create consensus object <-- \n')
-  consensus = ConsensusFromDataframe(Df, properties = properties, verbose = verbose)
+  consensus = ConsensusFromDataframe(Df, properties = properties, rm_allele = rm_allele, verbose = verbose)
   
   # clonotype
   if (verbose) cat('-->', timer(), 'create clonotype object <-- \n')
