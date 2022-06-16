@@ -8,6 +8,7 @@ CreateVdjSample(
   Df,
   properties = NULL,
   name = NULL,
+  rm_allele = FALSE,
   unique_clonotype = TRUE,
   verbose = TRUE
 )
@@ -18,6 +19,8 @@ CreateVdjSample(
 \item{properties}{list.}
 
 \item{name}{character.}
+
+\item{rm_allele}{logical.}
 
 \item{unique_clonotype}{logical.}
 

@@ -477,3 +477,4 @@ setMethod('show', 'VDJ', function(object) {
   lapply(seq(object@info), function(i)
     cat(' ', names(object@info)[i], '<-', paste(object@info[[i]], collapse = ','), '\n') )
 })
+

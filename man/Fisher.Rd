@@ -4,12 +4,12 @@
 \alias{Fisher}
 \title{Fisher's Exact Test}
 \usage{
-Fisher(control, treatment, base = 2)
+Fisher(treatment, control, base = 2)
 }
 \arguments{
-\item{control}{numeric.}
-
 \item{treatment}{numeric.}
+
+\item{control}{numeric.}
 
 \item{base}{numeric. Default \code{2}}
 }
@@ -20,8 +20,8 @@ a data.frame of Fisher's exact test results.
 Fisher's Exact Test
 }
 \examples{
-control   = c(1:10)
 treatment = c(10:1)
-Fisher(control, treatment)
+control   = c(1:10)
+Fisher(treatment, control)
 
 }

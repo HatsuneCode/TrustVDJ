@@ -4,12 +4,19 @@
 \alias{ConsensusFromDataframe}
 \title{Create Consensus Object from Data Frame}
 \usage{
-ConsensusFromDataframe(Df, properties = NULL, verbose = TRUE)
+ConsensusFromDataframe(
+  Df,
+  properties = NULL,
+  rm_allele = FALSE,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{Df}{data.frame.}
 
 \item{properties}{list.}
+
+\item{rm_allele}{logical. remove allele, such as TRA1-1*01 to TRA1-1.}
 
 \item{verbose}{logical.}
 }

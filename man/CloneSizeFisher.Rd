@@ -11,7 +11,8 @@ CloneSizeFisher(
   types = NULL,
   pval = 0.05,
   plot = TRUE,
-  save = TRUE
+  save = TRUE,
+  out.pref = NULL
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ CloneSizeFisher(
 \item{plot}{logical.}
 
 \item{save}{logical.}
+
+\item{out.pref}{character.}
 }
 \value{
 a fisher test data.frame

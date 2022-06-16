@@ -101,7 +101,7 @@ NULL
   # 2. process clonotype
   clonotype[ none(clonotype) ] = ''
   if (verbose) p = utils::txtProgressBar(style = 3)
-  clonotype_data = do.call(rbind, lapply(seq(clonotype$clonotype_id), function(i) {
+  clonotype = do.call(rbind, lapply(seq(clonotype$clonotype_id), function(i) {
     id     = clonotype$clonotype_id[i]
     cdr3nt = sub('.*?:', '', unlist(strsplit(clonotype$cdr3s_nt[i], ';')) )
     cdr3aa = sub('.*?:', '', unlist(strsplit(clonotype$cdr3s_aa[i], ';')) )
@@ -113,11 +113,10 @@ NULL
       cdr3nt, cdr3aa, clonotype$inkt_evidence[i], clonotype$mait_evidence[i]
       ), consensusName)
   }))
-  rm(clonotype)
 
   # return
   if (verbose) cat('-->', timer(), 'done <-- \n')
-  clonotype_data
+  clonotype
 }
 
 #' Read AIRR/10x Report Files

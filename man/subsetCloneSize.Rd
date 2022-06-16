@@ -4,7 +4,7 @@
 \alias{subsetCloneSize}
 \title{Subset clonotype by clone size}
 \usage{
-subsetCloneSize(vdj, names = NULL, clone.size = NULL)
+subsetCloneSize(vdj, names = NULL, clone.size = c(1, Inf))
 }
 \arguments{
 \item{vdj}{an object of VDJ.}

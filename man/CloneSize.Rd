@@ -7,10 +7,11 @@
 CloneSize(
   vdj,
   names = NULL,
-  sep = NULL,
+  sep = 1:3,
   plot = TRUE,
   colors = NULL,
-  save = TRUE
+  save = TRUE,
+  out.pref = NULL
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ CloneSize(
 \item{colors}{character.}
 
 \item{save}{logical.}
+
+\item{out.pref}{character.}
 }
 \value{
 results of clone size

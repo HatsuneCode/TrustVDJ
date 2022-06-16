@@ -347,7 +347,7 @@ cloneAbundance = function(vdj, names = NULL, plot = TRUE, save = TRUE, out.pref 
 #' @param save     logical
 #' @param out.pref character
 #'
-#' @importFrom ggplot2
+#' @importFrom ggplot2 ggplot
 #'
 #' @return
 #' @export
@@ -517,6 +517,7 @@ cloneVenn = function(vdj, names = NULL, type = NULL, save = TRUE, out.pref = NUL
   as(data, 'dgCMatrix')
 }
 
+##
 showClonotype = function(vdj, names = NULL, top = NULL, plot = TRUE, colors = NULL, save = TRUE, out.pref = NULL) {
   
   # check name

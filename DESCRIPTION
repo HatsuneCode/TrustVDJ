@@ -19,7 +19,7 @@ Collate:
     'buildReference.r'
     'class.r'
     'cloneSize.r'
-    'distribution.r'
+    'consenSize.r'
     'object.r'
     'readTrust.r'
     'read10x.r'
