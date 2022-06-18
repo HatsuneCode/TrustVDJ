@@ -501,3 +501,22 @@ CreateVdjObject = function(samples, group = NULL, project = NULL, verbose = TRUE
       project = project)
 }
 
+#' Check Name in an VDJ Object 
+#'
+#' @param vdj  an object of vdj.
+#' @param name character.
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' 
+checkName = function(vdj, name = NULL) {
+  nms   = c(names(vdj@samples), names(vdj@groups))
+  name  = as.character(name %|||% nms)
+  outer = setdiff(name, nms)
+  if (length(outer)) 
+    warning('--! There is no names: ', paste(outer, collapse = ','), ' in VDJ object !--')
+  intersect(name, nms)
+}
+
