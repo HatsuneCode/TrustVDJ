@@ -2,12 +2,7 @@
 showCdr3Length = function(vdj, names = NULL, outpref = NULL, type = NULL, chain = NULL, plot = TRUE, compare = TRUE, save = TRUE) {
   
   # check name
-  nms   = c(names(vdj@samples), names(vdj@groups))
-  names = as.character(names %|||% nms)
-  outer = setdiff(names, nms)
-  if (length(outer))
-    warning('--! There is no names: ', paste(outer, collapse = ','), ' in VDJ object !--')
-  names = intersect(names, nms)
+  names = checkName(vdj, names) 
   
   # check type
   type  = as.character(type  %|||% 'CDR3dna')

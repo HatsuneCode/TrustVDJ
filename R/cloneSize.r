@@ -17,12 +17,8 @@ NULL
 subsetCloneSize = function(vdj, names = NULL, clone.size = c(1, Inf)) {
   
   # check name
-  nms   = c(names(vdj@samples), names(vdj@groups))
-  names = as.character(names %|||% nms)
-  outer = setdiff(names, nms)
-  if (length(outer)) 
-    warning('--! There is no names: ', paste(outer, collapse = ','), ' in VDJ object !--')
-  
+  names = checkName(vdj, names)  
+
   # check clone size
   clone.size = as.numeric(clone.size %|||% c(1, Inf))
   
@@ -65,12 +61,7 @@ subsetCloneSize = function(vdj, names = NULL, clone.size = c(1, Inf)) {
 CloneSize = function(vdj, names = NULL, sep = 1:3, plot = TRUE, colors = NULL, save = TRUE, out.pref = NULL) {
   
   # check name
-  nms   = c(names(vdj@samples), names(vdj@groups))
-  names = as.character(names %|||% nms)
-  outer = setdiff(names, nms)
-  if (length(outer)) 
-    warning('--! There is no names: ', paste(outer, collapse = ','), ' in VDJ object !--')
-  names = intersect(names, nms)
+  names = checkName(vdj, names)
 
   # check size
   sep      = sep %|||% 1:3
@@ -211,12 +202,7 @@ CloneSizeFisher = function(cloneSize, control = NULL, treatment = NULL, types = 
 topClone = function(vdj, names = NULL, n.top = 5, plot = TRUE, repel = TRUE, save = TRUE, out.pref = NULL) {
   
   # check name
-  nms   = c(names(vdj@samples), names(vdj@groups))
-  names = as.character(names %|||% nms)
-  outer = setdiff(names, nms)
-  if (length(outer))
-    warning('--! There is no names: ', paste(outer, collapse = ','), ' in VDJ object !--')
-  names = intersect(names, nms)  
+  names = checkName(vdj, names)
 
   # check top
   n.top    = as.numeric(n.top %|||% 5)
@@ -290,12 +276,7 @@ topClone = function(vdj, names = NULL, n.top = 5, plot = TRUE, repel = TRUE, sav
 cloneAbundance = function(vdj, names = NULL, plot = TRUE, save = TRUE, out.pref = NULL) {
   
   # check name
-  nms   = c(names(vdj@samples), names(vdj@groups))
-  names = as.character(names %|||% nms)
-  outer = setdiff(names, nms)
-  if (length(outer))
-    warning('--! There is no names: ', paste(outer, collapse = ','), ' in VDJ object !--')
-  names = intersect(names, nms)  
+  names = checkName(vdj, names)
 
   # check out.pref
   out.pref = as.character(out.pref %|||% paste(names, collapse = '-'))
@@ -357,13 +338,8 @@ cloneAbundance = function(vdj, names = NULL, plot = TRUE, save = TRUE, out.pref 
 cloneShanno = function(vdj, names = NULL, plot = TRUE, colors = NULL, save = TRUE, out.pref = NULL) {
   
   # check name
-  nms   = c(names(vdj@samples), names(vdj@groups))
-  names = as.character(names %|||% nms)
-  outer = setdiff(names, nms)
-  if (length(outer))
-    warning('--! There is no names: ', paste(outer, collapse = ','), ' in VDJ object !--')
-  names = intersect(names, nms)
-  
+  names = checkName(vdj, names)  
+
   # check color
   colors   = as.character(colors %|||% color20)  
   out.pref = paste(names, collapse = '-')
@@ -411,13 +387,8 @@ cloneShanno = function(vdj, names = NULL, plot = TRUE, colors = NULL, save = TRU
 cloneSimilar = function(vdj, names = NULL, plot = TRUE, save = TRUE) {
  
   # check name
-  nms   = c(names(vdj@samples), names(vdj@groups))
-  names = as.character(names %|||% nms)
-  outer = setdiff(names, nms)
-  if (length(outer))
-    warning('--! There is no names: ', paste(outer, collapse = ','), ' in VDJ object !--')
-  names = intersect(names, nms) 
- 
+  names = checkName(vdj, names) 
+
   # catch clonotype
   clonotype = do.call(rbind, lapply(names, function(n) {
     if (n %in% names(vdj@samples))
@@ -464,12 +435,7 @@ cloneSimilar = function(vdj, names = NULL, plot = TRUE, save = TRUE) {
 cloneVenn = function(vdj, names = NULL, type = NULL, save = TRUE, out.pref = NULL) {
   
   # check name
-  nms   = c(names(vdj@samples), names(vdj@groups))
-  names = as.character(names %|||% nms)
-  outer = setdiff(names, nms)
-  if (length(outer))
-    warning('--! There is no names: ', paste(outer, collapse = ','), ' in VDJ object !--')
-  names = intersect(names, nms)  
+  names = checkName(vdj, names)
 
   # check type
   type     = as.character(type %|||% 'CDR3dna')
@@ -521,13 +487,8 @@ cloneVenn = function(vdj, names = NULL, type = NULL, save = TRUE, out.pref = NUL
 showClonotype = function(vdj, names = NULL, top = NULL, plot = TRUE, colors = NULL, save = TRUE, out.pref = NULL) {
   
   # check name
-  nms   = c(names(vdj@samples), names(vdj@groups))
-  names = as.character(names %|||% nms)
-  outer = setdiff(names, nms)
-  if (length(outer))
-    warning('--! There is no names: ', paste(outer, collapse = ','), ' in VDJ object !--')
-  names = intersect(names, nms)
-  
+  names = checkName(vdj, names)  
+
   # check para
   top      = as.numeric(top %|||% 20)
   out.pref = as.character(out.pref %|||% paste(names, collapse = '-'))
@@ -586,3 +547,4 @@ showClonotype = function(vdj, names = NULL, top = NULL, plot = TRUE, colors = NU
   # return
   clonotype
 }
+
