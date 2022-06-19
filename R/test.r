@@ -106,9 +106,10 @@ Fisher = function(treatment, control, base = 2) {
   do.call(rbind, lapply(seq(control), function(i) {
     fish  = fisher.test(matrix(c(
       treatment[i], sum(treatment) - treatment[i], control[i], sum(control) - control[i]), ncol = 2))
-    stats::setNames(data.frame(treatment[i] / sum(treatment), control[i] / sum(control),
-                               as.numeric(fish$estimate), fish$conf.int[1], fish$conf.int[2], 
-                               log(treatment[i]/control[i], base = base), fish$p.value), 
+    t_pct = treatment[i] / sum(treatment)
+    c_pct = control[i]   / sum(control)
+    stats::setNames(data.frame(t_pct, c_pct, as.numeric(fish$estimate), fish$conf.int[1], fish$conf.int[2], 
+                               log(t_pct / c_pct, base = base), fish$p.value), 
       c('Treatment_proportion', 'Control_proportion', 'Odds', 'ConfMin', 'ConfMax', 
         paste0('Log', round(base, 2), 'Fc'), 'Pval') )
   }))
