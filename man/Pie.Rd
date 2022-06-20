@@ -4,7 +4,7 @@
 \alias{Pie}
 \title{Plot Pie}
 \usage{
-Pie(x, y, fill = c("white", "#f8766d"), color = NULL)
+Pie(x, y, fill = c("white", "#f8766d"), color = "grey")
 }
 \arguments{
 \item{x}{vector}

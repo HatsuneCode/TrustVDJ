@@ -11,7 +11,7 @@
 #' @examples
 #' Pie(1:10, 5:12)
 #'
-Pie = function(x, y, fill = c('white', '#f8766d'), color = NULL) {
+Pie = function(x, y, fill = c('white', '#f8766d'), color = 'grey') {
   color  = as.character(color %|||% NA)
   fill   = as.character(fill  %|||% c('white', '#f8766d'))
   p      = data.frame(t = c('unique', 'shared'),
