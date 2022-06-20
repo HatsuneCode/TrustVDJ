@@ -344,3 +344,19 @@ makePair = function(x) {
   apply(df, 1, c, simplify = FALSE)
 }
 
+#' Show as a percentage
+#' 
+#' @param x      vector 
+#' @param digits numeric
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' makePct(.253)
+#' 
+makePct = function(x , digits = 3) {
+  if (!anyNA(as.numeric(x))) x = paste0(round(as.numeric(x), digits = digits) *100, '%')
+  x
+}
+
