@@ -30,8 +30,8 @@ TableVDJ = function(vdj, target = NULL, type = NULL, names = NULL, save = TRUE, 
   
   # fetch gene
   gene = do.call(rbind, lapply(names, function(n) {
-    if (n %in% names(vdj@samples)) return( cbind(Name = n, fetchVDJ(vdj@samples[[n]]@consensus, type)) )
-    if (n %in% names(vdj@groups))  return( cbind(Name = n, fetchVDJ(vdj@groups [[n]]@consensus, type)) )
+    if (n %in% names(vdj@samples)) return( cbind(Name = factor(n), fetchVDJ(vdj@samples[[n]]@consensus, type)) )
+    if (n %in% names(vdj@groups))  return( cbind(Name = factor(n), fetchVDJ(vdj@groups [[n]]@consensus, type)) )
   }))
   gene = reshape2::dcast(gene, Gene ~ Name, value.var = 'Cells', fun.aggregate = function(i) sum(i, na.rm = TRUE) )
   TotalCell = Matrix::rowSums(gene[-1])
