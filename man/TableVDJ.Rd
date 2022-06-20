@@ -14,17 +14,17 @@ TableVDJ(
 )
 }
 \arguments{
-\item{vdj}{}
+\item{vdj}{object.}
 
-\item{target}{}
+\item{target}{character.}
 
-\item{type}{}
+\item{type}{character.}
 
-\item{names}{}
+\item{names}{character.}
 
-\item{save}{}
+\item{save}{logical.}
 
-\item{out.pref}{}
+\item{out.pref}{character.}
 }
 \value{
 
@@ -33,5 +33,7 @@ TableVDJ(
 Table VDJ Genes in Each Name
 }
 \examples{
+data = TableVDJ(VDJ, vdj)
+head(data)
 
 }

@@ -3,18 +3,20 @@ NULL
 
 #' Table VDJ Genes in Each Name
 #'
-#' @param vdj 
-#' @param target 
-#' @param type 
-#' @param names 
-#' @param save 
-#' @param out.pref 
+#' @param vdj      object.
+#' @param target   character.
+#' @param type     character.
+#' @param names    character.
+#' @param save     logical.
+#' @param out.pref character.
 #'
 #' @return
 #' @export
 #'
 #' @examples
-#' 
+#' data = TableVDJ(VDJ, vdj)
+#' head(data)
+#'
 TableVDJ = function(vdj, target = NULL, type = NULL, names = NULL, save = TRUE, out.pref = NULL) {
   
   # check name
@@ -23,13 +25,13 @@ TableVDJ = function(vdj, target = NULL, type = NULL, names = NULL, save = TRUE, 
   # check para
   type     = as.character(type     %|||% c('V', 'D', 'J', 'C'))
   target   = as.character(target   %|||% NULL)
-  out.pref = as.character(out.pref %|||% paste0(if(have(target)) 
+  out.pref = as.character(out.pref %|||% paste0(if (have(target)) 
     paste0(target, '.'), paste(names, collapse = '-'), '.', paste(type, collapse = '-')) )
   
   # fetch gene
   gene = do.call(rbind, lapply(names, function(n) {
-    if (n %in% names(vdj@samples)) return(cbind(Name = n, fetchVDJ(vdj@samples[[n]]@consensus, type))
-    if (n %in% names(vdj@groups))  return(cbind(Name = n, fetchVDJ(vdj@groups [[n]]@consensus, type))
+    if (n %in% names(vdj@samples)) return( cbind(Name = n, fetchVDJ(vdj@samples[[n]]@consensus, type)) )
+    if (n %in% names(vdj@groups))  return( cbind(Name = n, fetchVDJ(vdj@groups [[n]]@consensus, type)) )
   }))
   gene = reshape2::dcast(gene, Gene ~ Name, value.var = 'Cells', fun.aggregate = function(i) sum(i, na.rm = TRUE) )
   TotalCell = Matrix::rowSums(gene[-1])
