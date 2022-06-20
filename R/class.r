@@ -184,6 +184,28 @@ subsetConsensus = function(consensus, i) {
   consensus
 }
 
+#' Fetch VDJ Genes in a Consensus Class
+#'
+#' @param consensus class. an object of the consensus class
+#' @param type      character. Among \code{V, D, J, C}
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' gene = fetchVDJ(consensus)
+#' head(gene)
+#' 
+fetchVDJ = function(consensus, type = c('V', 'D', 'J', 'C')) {
+  gene = rbind(if ('V' %in% type) data.frame(Gene = consensus@Vgene, Cells = consensus@Cells),
+               if ('D' %in% type) data.frame(Gene = consensus@Dgene, Cells = consensus@Cells),
+               if ('J' %in% type) data.frame(Gene = consensus@Jgene, Cells = consensus@Cells),
+               if ('C' %in% type) data.frame(Gene = consensus@Cgene, Cells = consensus@Cells) )
+  gene = gene[gene$Gene != '', ]
+  stats::setNames(aggregate(gene$Cells, list(gene$Gene), function(i) 
+    sum(i, na.rm = TRUE) ), c('Gene', 'Cells'))
+}
+
 #' The Clonotype Class
 #'
 #' @slot ID       character. 

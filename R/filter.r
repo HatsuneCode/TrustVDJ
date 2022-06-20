@@ -27,33 +27,11 @@ TableVDJ = function(vdj, target = NULL, type = NULL, names = NULL, save = TRUE, 
     paste0(target, '.'), paste(names, collapse = '-'), '.', paste(type, collapse = '-')) )
   
   # fetch gene
-  V = if ('V' %in% type) do.call(rbind, lapply(names, function(n) {
-    if (n %in% names(vdj@samples)) return(
-      data.frame(Name = n, Gene = vdj@samples[[n]]@consensus@Vgene, Cells = vdj@samples[[n]]@consensus@Cells) )
-    if (n %in% names(vdj@groups))  return(
-      data.frame(Name = n, Gene = vdj@groups[[n]]@consensus@Vgene, Cells = vdj@groups[[n]]@consensus@Cells) )
+  gene = do.call(rbind, lapply(names, function(n) {
+    if (n %in% names(vdj@samples)) return(cbind(Name = n, fetchVDJ(vdj@samples[[n]]@consensus, type))
+    if (n %in% names(vdj@groups))  return(cbind(Name = n, fetchVDJ(vdj@groups [[n]]@consensus, type))
   }))
-  D = if ('D' %in% type) do.call(rbind, lapply(names, function(n) {
-    if (n %in% names(vdj@samples)) return(
-      data.frame(Name = n, Gene = vdj@samples[[n]]@consensus@Dgene, Cells = vdj@samples[[n]]@consensus@Cells) )
-    if (n %in% names(vdj@groups))  return(
-      data.frame(Name = n, Gene = vdj@groups[[n]]@consensus@Dgene, Cells = vdj@groups[[n]]@consensus@Cells) )
-  }))
-  J = if ('V' %in% type) do.call(rbind, lapply(names, function(n) {
-    if (n %in% names(vdj@samples)) return(
-      data.frame(Name = n, Gene = vdj@samples[[n]]@consensus@Jgene, Cells = vdj@samples[[n]]@consensus@Cells) )
-    if (n %in% names(vdj@groups))  return(
-      data.frame(Name = n, Gene = vdj@groups[[n]]@consensus@Jgene, Cells = vdj@groups[[n]]@consensus@Cells) )
-  }))
-  C = if ('C' %in% type) do.call(rbind, lapply(names, function(n) {
-    if (n %in% names(vdj@samples)) return(
-      data.frame(Name = n, Gene = vdj@samples[[n]]@consensus@Cgene, Cells = vdj@samples[[n]]@consensus@Cells) )
-    if (n %in% names(vdj@groups))  return(
-      data.frame(Name = n, Gene = vdj@groups[[n]]@consensus@Cgene, Cells = vdj@groups[[n]]@consensus@Cells ) )
-  }))
-  gene = rbind(V, D, J, C)
-  gene = reshape2::dcast(gene[gene$Gene != '', ], Gene ~ Name, value.var = 'Cells', 
-                         fun.aggregate = function(i) sum(i, na.rm = TRUE) )
+  gene = reshape2::dcast(gene, Gene ~ Name, value.var = 'Cells', fun.aggregate = function(i) sum(i, na.rm = TRUE) )
   TotalCell = Matrix::rowSums(gene[-1])
   TotalName = apply(gene[-1], 1, function(i) sum(!!i) )
   gene$TotalCell = TotalCell
