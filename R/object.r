@@ -110,10 +110,10 @@ ConsensusFromDataframe = function(Df, properties = NULL, rm_allele = FALSE, verb
 
   # remove allele
   if (rm_allele) {
-    consen@Vgene = sub('\\*.*', '', consen@Vgene)
-    consen@Dgene = sub('\\*.*', '', consen@Dgene)
-    consen@Jgene = sub('\\*.*', '', consen@Jgene)
-    consen@Cgene = sub('\\*.*', '', consen@Cgene)
+    consen@Vgene = gsub('/', '', sub('\\*.*', '', consen@Vgene))
+    consen@Dgene = gsub('/', '', sub('\\*.*', '', consen@Dgene))
+    consen@Jgene = gsub('/', '', sub('\\*.*', '', consen@Jgene))
+    consen@Cgene = gsub('/', '', sub('\\*.*', '', consen@Cgene))
   }
 
   # check chain
