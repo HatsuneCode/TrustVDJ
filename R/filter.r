@@ -26,7 +26,7 @@ TableVDJ = function(vdj, target = NULL, type = NULL, names = NULL, save = TRUE, 
   type     = as.character(type     %|||% c('V', 'D', 'J', 'C'))
   target   = as.character(target   %|||% NULL)
   out.pref = as.character(out.pref %|||% paste0(if (have(target)) 
-    paste0(target, '.'), paste(names, collapse = '-'), '.', paste(type, collapse = '-')) )
+    paste0(target, '.', collapse = ''), paste(names, collapse = '-'), '.', paste(type, collapse = '-')) )
   
   # fetch gene
   gene = do.call(rbind, lapply(names, function(n) {
