@@ -14,7 +14,7 @@ NULL
 #' @export
 #'
 #' @examples
-#' data = TableVDJ(VDJ, vdj)
+#' data = TableVDJ(vdj)
 #' head(data)
 #'
 TableVDJ = function(vdj, target = NULL, type = NULL, names = NULL, save = TRUE, out.pref = NULL) {
@@ -50,3 +50,49 @@ TableVDJ = function(vdj, target = NULL, type = NULL, names = NULL, save = TRUE, 
   gene
 }
 
+#' Table VJ Pairs in Each Name
+#'
+#' @param vdj      object.
+#' @param target   character.
+#' @param names    character.
+#' @param save     logical.
+#' @param out.pref character.
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' data = TableVJpair(vdj)
+#' head(data)
+#' 
+TableVJpair = function(vdj, target = NULL, names = NULL, save = TRUE, out.pref = NULL) {
+  
+  # check name
+  names = checkName(vdj, names)  
+  
+  # check para
+  target   = as.character(target   %|||% NULL)
+  out.pref = as.character(out.pref %|||% paste0(if (have(target)) 
+    paste0(target, '.', collapse = ''), paste(names, collapse = '-'), '.') )
+  
+  # fetch VJ pair
+  vj = do.call(rbind, lapply(names, function(n) {
+    if (n %in% names(vdj@samples)) return( cbind(Name = factor(n), fetchVJpair(vdj@samples[[n]]@consensus)) )
+    if (n %in% names(vdj@groups))  return( cbind(Name = factor(n), fetchVJpair(vdj@groups [[n]]@consensus)) )
+  }))
+  vj = reshape2::dcast(vj, VJ ~ Name, value.var = 'Cells', fun.aggregate = function(i) sum(i, na.rm = TRUE) )
+  TotalCell = Matrix::rowSums(vj[-1])
+  TotalName = apply(vj[-1], 1, function(i) sum(!!i) )
+  vj$TotalCell = TotalCell
+  vj$TotalName = TotalName
+  vj = vj[order(-TotalName, -TotalCell),]
+  if (have(target)) vj = vj[vj$VJ %in% target,]
+  
+  # stat
+  if (save) {
+    dir.create('TableVJpair', FALSE)
+    write.table(vj, paste0('TableVJpair/', out.pref, '.TableVJpair.txt'), sep = '\t', row.names = FALSE)
+  }
+  
+  vj
+}

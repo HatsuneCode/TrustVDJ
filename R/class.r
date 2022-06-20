@@ -206,6 +206,25 @@ fetchVDJ = function(consensus, type = c('V', 'D', 'J', 'C')) {
     sum(i, na.rm = TRUE) ), c('Gene', 'Cells'))
 }
 
+#' Fetch VJ Pair in a Consensus Class
+#'
+#' @param consensus class. an object of the consensus class
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' vj = fetchVJpair(consensus)
+#' head(vj)
+#' 
+fetchVJpair = function(consensus) {
+  i  = consensus@Vgene != '' & consensus@Jgene != ''
+  vj = data.frame(VJ    = paste0(consensus@Vgene[i], '~', consensus@Jgene[i]),
+                  Cells = consensus@Cells[i])
+  stats::setNames(aggregate(vj$Cells, list(vj$VJ), function(i)
+    sum(i, na.rm = TRUE) ), c('VJ', 'Cells'))
+}
+
 #' The Clonotype Class
 #'
 #' @slot ID       character. 
