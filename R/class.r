@@ -302,6 +302,31 @@ subsetClonotype = function(clonotype, i) {
   clonotype
 }
 
+#' Fetch VJ-AB in a Consensus Class
+#'
+#' @param consensus class. an object of the consensus class
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' vjAB = fetchVJab(consensus, clonotype)
+#' head(vjAB)
+#' 
+fetchVJab = function(consensus, clonotype) {
+  consensus = subsetConsensus(consensus, consensus@Vgene != '' & consensus@Jgene != '')
+  do.call(rbind, lapply(unique(consensus@ClonoID), function(id) {
+    consen = subsetConsensus(consensus, consensus@ClonoID == id)
+    chain  = sort(unique(consen@Chain))
+    if (length(chain) > 1)
+      data.frame(ID    = id,
+                 VJab  = paste(consen@Vgene[consen@Chain == chain[1]][1], consen@Jgene[consen@Chain == chain[1]][1], 
+                               consen@Vgene[consen@Chain == chain[2]][1], consen@Jgene[consen@Chain == chain[2]][1],
+                               sep = '~'),
+                 Cells = clonotype@Cells[clonotype@ID == id] )
+  }))
+}
+
 #' Unique Clonotype Object
 #'
 #' @param clonotype class.
