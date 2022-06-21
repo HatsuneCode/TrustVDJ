@@ -96,3 +96,53 @@ TableVJpair = function(vdj, target = NULL, names = NULL, save = TRUE, out.pref =
   
   vj
 }
+
+#' Table VJ-AB in Each Name
+#'
+#' @param vdj      object.
+#' @param target   character.
+#' @param names    character.
+#' @param save     logical.
+#' @param out.pref character.
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' data = TableVJab(vdj)
+#' head(data)
+#' 
+TableVJab = function(vdj, target = NULL, names = NULL, save = TRUE, out.pref = NULL) {
+  
+  # check name
+  names = checkName(vdj, names)  
+  
+  # check para
+  target   = as.character(target   %|||% NULL)
+  out.pref = as.character(out.pref %|||% paste0(if (have(target)) 
+    paste0(target, '.', collapse = ''), paste(names, collapse = '-'), '.') )
+  
+  # fetch VJ-AB
+  ab = do.call(rbind, lapply(names, function(n) {
+    if (n %in% names(vdj@samples)) return(cbind(
+      Name = factor(n), fetchVJab(vdj@samples[[n]]@consensus, vdj@samples[[n]]@clonotype)) )
+    if (n %in% names(vdj@groups))  return(cbind(
+      Name = factor(n), fetchVJab(vdj@groups [[n]]@consensus, vdj@groups [[n]]@clonotype)) )
+  }))
+  ab = reshape2::dcast(ab, VJab ~ Name, value.var = 'Cells', fun.aggregate = function(i) sum(i, na.rm = TRUE) )
+  TotalCell = Matrix::rowSums(ab[-1])
+  TotalName = apply(ab[-1], 1, function(i) sum(!!i) )
+  ab$TotalCell = TotalCell
+  ab$TotalName = TotalName
+  ab = ab[order(-TotalName, -TotalCell),]
+  if (have(target)) ab = ab[ab$VJab %in% target,]
+  
+  # stat
+  if (save) {
+    dir.create('TableVJab', FALSE)
+    write.table(ab, paste0('TableVJab/', out.pref, '.TableVJab.txt'), sep = '\t', row.names = FALSE)
+  }
+  
+  ab
+}
+
