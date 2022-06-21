@@ -73,7 +73,7 @@ TableVJpair = function(vdj, target = NULL, names = NULL, save = TRUE, out.pref =
   # check para
   target   = as.character(target   %|||% NULL)
   out.pref = as.character(out.pref %|||% paste0(if (have(target)) 
-    paste0(target, '.', collapse = ''), paste(names, collapse = '-'), '.') )
+    paste0(target, '.', collapse = ''), paste(names, collapse = '-')) )
   
   # fetch VJ pair
   vj = do.call(rbind, lapply(names, function(n) {
