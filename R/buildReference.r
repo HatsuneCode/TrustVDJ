@@ -70,7 +70,7 @@ build_IMGT_reference = function(outdir = NULL, method = NULL, verbose = TRUE) {
       # return
       return(sp)
 
-    } else if(verbose) warning('--! ', timer(), ' no fa content in: ', sp, ' !--')
+    } else if(verbose) warning('--! ', timer(), ' no fa content in: ', sp, ' !--', call. = FALSE)
 
     # return
     NULL
@@ -214,7 +214,7 @@ build_Ensembl_reference = function(outdir = NULL, species = NULL, method = NULL,
       Download(paste0(URL_ftp, c('fasta', 'gtf'), '/', sp, c('/dna', ''), '/', files),
                files, outdir = paste0(outdir, '/', sp), method = ftp_method, verbose = FALSE)
     } else {
-      warning('--! ', timer(), ' no fasta | gtf in species: ', sp, ' !--')
+      warning('--! ', timer(), ' no fasta | gtf in species: ', sp, ' !--', call. = FALSE)
       sp = NULL
     }
     
