@@ -125,6 +125,7 @@ TableVJab = function(vdj, target = NULL, names = NULL, save = TRUE, out.pref = N
   
   # fetch VJ-AB
   ab = do.call(rbind, lapply(names, function(n) {
+    if (verbose) cat('-->', timer(), 'fetch VJab in:', n,  '<-- \n')
     if (n %in% names(vdj@samples)) return(cbind(
       Name = factor(n), fetchVJab(vdj@samples[[n]]@consensus, vdj@samples[[n]]@clonotype, verbose = verbose)) )
     if (n %in% names(vdj@groups))  return(cbind(
