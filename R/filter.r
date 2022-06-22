@@ -129,12 +129,12 @@ TableVJab = function(vdj, target = NULL, names = NULL, save = TRUE, out.pref = N
     if (n %in% names(vdj@samples)) {
       ab = fetchVJab(vdj@samples[[n]]@consensus, vdj@samples[[n]]@clonotype, verbose = verbose)
       if (length(ab)) return(cbind(Name = factor(n), ab)) else
-        warning('--! ', timer(), ' no VJab found in sample: ', n, ' !--')
+        warning('--! ', timer(), ' no VJab found in sample: ', n, ' !--', call. = FALSE)
     }
     if (n %in% names(vdj@groups)) {
       ab = fetchVJab(vdj@groups [[n]]@consensus, vdj@groups [[n]]@clonotype, verbose = verbose)
       if (length(ab)) return(cbind(Name = factor(n), ab)) else
-        warning('--! ', timer(), ' no VJab found in group: ', n, ' !--')
+        warning('--! ', timer(), ' no VJab found in group: ',  n, ' !--', call. = FALSE)
     }
     NULL
   }))
