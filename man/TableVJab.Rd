@@ -4,7 +4,14 @@
 \alias{TableVJab}
 \title{Table VJ-AB in Each Name}
 \usage{
-TableVJab(vdj, target = NULL, names = NULL, save = TRUE, out.pref = NULL)
+TableVJab(
+  vdj,
+  target = NULL,
+  names = NULL,
+  save = TRUE,
+  out.pref = NULL,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{vdj}{object.}
@@ -16,6 +23,8 @@ TableVJab(vdj, target = NULL, names = NULL, save = TRUE, out.pref = NULL)
 \item{save}{logical.}
 
 \item{out.pref}{character.}
+
+\item{verbose}{logical.}
 }
 \value{
 

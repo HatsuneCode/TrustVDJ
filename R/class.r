@@ -107,32 +107,32 @@ setMethod('show', 'consensus', function(object) {
 #' @examples
 #' 
 addConsensus = function(consensus, consensus2) {
-  consensus@ID      = c(consensus@ID,      consensus2@ID)
-  consensus@ClonoID = c(consensus@ClonoID, consensus2@ClonoID)
-  consensus@Vgene   = c(consensus@Vgene,   consensus2@Vgene)
-  consensus@Dgene   = c(consensus@Dgene,   consensus2@Dgene)
-  consensus@Jgene   = c(consensus@Jgene,   consensus2@Jgene)
-  consensus@Cgene   = c(consensus@Cgene,   consensus2@Cgene)
-  consensus@Chain   = c(consensus@Chain,   consensus2@Chain)
-  consensus@FWR1dna = c(consensus@FWR1dna, consensus2@FWR1dna)
-  consensus@FWR1aa  = c(consensus@FWR1aa,  consensus2@FWR1aa)
-  consensus@CDR1dna = c(consensus@CDR1dna, consensus2@CDR1dna)
-  consensus@CDR1aa  = c(consensus@CDR1aa,  consensus2@CDR1aa)
-  consensus@FWR2dna = c(consensus@FWR2dna, consensus2@FWR2dna)
-  consensus@FWR2aa  = c(consensus@FWR2aa,  consensus2@FWR2aa)
-  consensus@CDR2dna = c(consensus@CDR2dna, consensus2@CDR2dna)
-  consensus@CDR2aa  = c(consensus@CDR2aa,  consensus2@CDR2aa)
-  consensus@FWR3dna = c(consensus@FWR3dna, consensus2@FWR3dna)
-  consensus@FWR3aa  = c(consensus@FWR3aa,  consensus2@FWR3aa)
-  consensus@CDR3dna = c(consensus@CDR3dna, consensus2@CDR3dna)
-  consensus@CDR3aa  = c(consensus@CDR3aa,  consensus2@CDR3aa)
-  consensus@FWR4dna = c(consensus@FWR4dna, consensus2@FWR4dna)
-  consensus@FWR4aa  = c(consensus@FWR4aa,  consensus2@FWR4aa)
-  consensus@iUMI    = c(consensus@iUMI,    consensus2@iUMI)
-  consensus@UMIs    = c(consensus@UMIs,    consensus2@UMIs)
-  consensus@iRead   = c(consensus@iRead,   consensus2@iRead)
-  consensus@Reads   = c(consensus@Reads,   consensus2@Reads)
-  consensus@Cells   = c(consensus@Cells,   consensus2@Cells)
+  consensus@ID         = c(consensus@ID,         consensus2@ID)
+  consensus@ClonoID    = c(consensus@ClonoID,    consensus2@ClonoID)
+  consensus@Vgene      = c(consensus@Vgene,      consensus2@Vgene)
+  consensus@Dgene      = c(consensus@Dgene,      consensus2@Dgene)
+  consensus@Jgene      = c(consensus@Jgene,      consensus2@Jgene)
+  consensus@Cgene      = c(consensus@Cgene,      consensus2@Cgene)
+  consensus@Chain      = c(consensus@Chain,      consensus2@Chain)
+  consensus@FWR1dna    = c(consensus@FWR1dna,    consensus2@FWR1dna)
+  consensus@FWR1aa     = c(consensus@FWR1aa,     consensus2@FWR1aa)
+  consensus@CDR1dna    = c(consensus@CDR1dna,    consensus2@CDR1dna)
+  consensus@CDR1aa     = c(consensus@CDR1aa,     consensus2@CDR1aa)
+  consensus@FWR2dna    = c(consensus@FWR2dna,    consensus2@FWR2dna)
+  consensus@FWR2aa     = c(consensus@FWR2aa,     consensus2@FWR2aa)
+  consensus@CDR2dna    = c(consensus@CDR2dna,    consensus2@CDR2dna)
+  consensus@CDR2aa     = c(consensus@CDR2aa,     consensus2@CDR2aa)
+  consensus@FWR3dna    = c(consensus@FWR3dna,    consensus2@FWR3dna)
+  consensus@FWR3aa     = c(consensus@FWR3aa,     consensus2@FWR3aa)
+  consensus@CDR3dna    = c(consensus@CDR3dna,    consensus2@CDR3dna)
+  consensus@CDR3aa     = c(consensus@CDR3aa,     consensus2@CDR3aa)
+  consensus@FWR4dna    = c(consensus@FWR4dna,    consensus2@FWR4dna)
+  consensus@FWR4aa     = c(consensus@FWR4aa,     consensus2@FWR4aa)
+  consensus@iUMI       = c(consensus@iUMI,       consensus2@iUMI)
+  consensus@UMIs       = c(consensus@UMIs,       consensus2@UMIs)
+  consensus@iRead      = c(consensus@iRead,      consensus2@iRead)
+  consensus@Reads      = c(consensus@Reads,      consensus2@Reads)
+  consensus@Cells      = c(consensus@Cells,      consensus2@Cells)
   consensus@Barcodes   = c(consensus@Barcodes,   consensus2@Barcodes)
   consensus@FullLength = c(consensus@FullLength, consensus2@FullLength)
   consensus@CDR3germlineSimilarity = c(
@@ -151,32 +151,32 @@ addConsensus = function(consensus, consensus2) {
 #' @examples
 #' 
 subsetConsensus = function(consensus, i) {
-  consensus@ID      = checkSub(consensus@ID,      i)
-  consensus@ClonoID = checkSub(consensus@ClonoID, i)
-  consensus@Vgene   = checkSub(consensus@Vgene,   i)
-  consensus@Dgene   = checkSub(consensus@Dgene,   i)
-  consensus@Jgene   = checkSub(consensus@Jgene,   i)
-  consensus@Cgene   = checkSub(consensus@Cgene,   i)
-  consensus@Chain   = checkSub(consensus@Chain,   i)
-  consensus@FWR1dna = checkSub(consensus@FWR1dna, i)
-  consensus@FWR1aa  = checkSub(consensus@FWR1aa,  i)
-  consensus@CDR1dna = checkSub(consensus@CDR1dna, i)
-  consensus@CDR1aa  = checkSub(consensus@CDR1aa,  i)
-  consensus@FWR2dna = checkSub(consensus@FWR2dna, i)
-  consensus@FWR2aa  = checkSub(consensus@FWR2aa,  i)
-  consensus@CDR2dna = checkSub(consensus@CDR2dna, i)
-  consensus@CDR2aa  = checkSub(consensus@CDR2aa,  i)
-  consensus@FWR3dna = checkSub(consensus@FWR3dna, i)
-  consensus@FWR3aa  = checkSub(consensus@FWR3aa,  i)
-  consensus@CDR3dna = checkSub(consensus@CDR3dna, i)
-  consensus@CDR3aa  = checkSub(consensus@CDR3aa,  i)
-  consensus@FWR4dna = checkSub(consensus@FWR4dna, i)
-  consensus@FWR4aa  = checkSub(consensus@FWR4aa,  i)
-  consensus@iUMI    = checkSub(consensus@iUMI,    i)
-  consensus@UMIs    = checkSub(consensus@UMIs,    i)
-  consensus@iRead   = checkSub(consensus@iRead,   i)
-  consensus@Reads   = checkSub(consensus@Reads,   i)
-  consensus@Cells   = checkSub(consensus@Cells,   i)
+  consensus@ID         = checkSub(consensus@ID,         i)
+  consensus@ClonoID    = checkSub(consensus@ClonoID,    i)
+  consensus@Vgene      = checkSub(consensus@Vgene,      i)
+  consensus@Dgene      = checkSub(consensus@Dgene,      i)
+  consensus@Jgene      = checkSub(consensus@Jgene,      i)
+  consensus@Cgene      = checkSub(consensus@Cgene,      i)
+  consensus@Chain      = checkSub(consensus@Chain,      i)
+  consensus@FWR1dna    = checkSub(consensus@FWR1dna,    i)
+  consensus@FWR1aa     = checkSub(consensus@FWR1aa,     i)
+  consensus@CDR1dna    = checkSub(consensus@CDR1dna,    i)
+  consensus@CDR1aa     = checkSub(consensus@CDR1aa,     i)
+  consensus@FWR2dna    = checkSub(consensus@FWR2dna,    i)
+  consensus@FWR2aa     = checkSub(consensus@FWR2aa,     i)
+  consensus@CDR2dna    = checkSub(consensus@CDR2dna,    i)
+  consensus@CDR2aa     = checkSub(consensus@CDR2aa,     i)
+  consensus@FWR3dna    = checkSub(consensus@FWR3dna,    i)
+  consensus@FWR3aa     = checkSub(consensus@FWR3aa,     i)
+  consensus@CDR3dna    = checkSub(consensus@CDR3dna,    i)
+  consensus@CDR3aa     = checkSub(consensus@CDR3aa,     i)
+  consensus@FWR4dna    = checkSub(consensus@FWR4dna,    i)
+  consensus@FWR4aa     = checkSub(consensus@FWR4aa,     i)
+  consensus@iUMI       = checkSub(consensus@iUMI,       i)
+  consensus@UMIs       = checkSub(consensus@UMIs,       i)
+  consensus@iRead      = checkSub(consensus@iRead,      i)
+  consensus@Reads      = checkSub(consensus@Reads,      i)
+  consensus@Cells      = checkSub(consensus@Cells,      i)
   consensus@Barcodes   = checkSub(consensus@Barcodes,   i)
   consensus@FullLength = checkSub(consensus@FullLength, i)
   consensus@CDR3germlineSimilarity = checkSub(
@@ -304,8 +304,10 @@ subsetClonotype = function(clonotype, i) {
 
 #' Fetch VJ-AB in a Consensus Class
 #'
-#' @param consensus class. an object of the consensus class
-#'
+#' @param consensus class.   an object of the consensus class
+#' @param clonotype class.   an object of the clonotype class
+#' @param verbose   logical.
+#’
 #' @return
 #' @export
 #'
@@ -313,10 +315,13 @@ subsetClonotype = function(clonotype, i) {
 #' vjAB = fetchVJab(consensus, clonotype)
 #' head(vjAB)
 #' 
-fetchVJab = function(consensus, clonotype) {
+fetchVJab = function(consensus, clonotype, verbose = TRUE) {
   consensus = subsetConsensus(consensus, consensus@Vgene != '' & consensus@Jgene != '')
-  do.call(rbind, lapply(unique(consensus@ClonoID), function(id) {
-    consen = subsetConsensus(consensus, consensus@ClonoID == id)
+  if (verbose) p = utils::txtProgressBar(style = 3)
+  id = unique(consensus@ClonoID)
+  ab = do.call(rbind, lapply(seq(id), function(i) {
+    consen = subsetConsensus(consensus, consensus@ClonoID == id[i])
+    if (verbose) utils::setTxtProgressBar(p, i/length(id))
     chain  = sort(unique(consen@Chain))
     if (length(chain) > 1)
       data.frame(ID    = id,
@@ -325,6 +330,8 @@ fetchVJab = function(consensus, clonotype) {
                                sep = '~'),
                  Cells = clonotype@Cells[clonotype@ID == id] )
   }))
+  if (verbose) close(p)
+  ab
 }
 
 #' Unique Clonotype Object

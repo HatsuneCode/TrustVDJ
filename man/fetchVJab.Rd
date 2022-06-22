@@ -4,10 +4,14 @@
 \alias{fetchVJab}
 \title{Fetch VJ-AB in a Consensus Class}
 \usage{
-fetchVJab(consensus, clonotype)
+fetchVJab(consensus, clonotype, verbose = TRUE)
 }
 \arguments{
-\item{consensus}{class. an object of the consensus class}
+\item{consensus}{class.   an object of the consensus class}
+
+\item{clonotype}{class.   an object of the clonotype class}
+
+\item{verbose}{logical.}
 }
 \value{
 
