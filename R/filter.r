@@ -126,10 +126,17 @@ TableVJab = function(vdj, target = NULL, names = NULL, save = TRUE, out.pref = N
   # fetch VJ-AB
   ab = do.call(rbind, lapply(names, function(n) {
     if (verbose) cat('-->', timer(), 'fetch VJab in:', n,  '<-- \n')
-    if (n %in% names(vdj@samples)) return(cbind(
-      Name = factor(n), fetchVJab(vdj@samples[[n]]@consensus, vdj@samples[[n]]@clonotype, verbose = verbose)) )
-    if (n %in% names(vdj@groups))  return(cbind(
-      Name = factor(n), fetchVJab(vdj@groups [[n]]@consensus, vdj@groups [[n]]@clonotype, verbose = verbose)) )
+    if (n %in% names(vdj@samples)) {
+      ab = fetchVJab(vdj@samples[[n]]@consensus, vdj@samples[[n]]@clonotype, verbose = verbose)
+      if (length(ab)) return(cbind(Name = factor(n), ab)) else
+        warning('--! ', timer(), ' no VJab found in sample: ', n, ' !--')
+    }
+    if (n %in% names(vdj@groups)) {
+      ab = fetchVJab(vdj@groups [[n]]@consensus, vdj@groups [[n]]@clonotype, verbose = verbose)
+      if (length(ab)) return(cbind(Name = factor(n), ab)) else
+        warning('--! ', timer(), ' no VJab found in group: ', n, ' !--')
+    }
+    NULL
   }))
   ab = reshape2::dcast(ab, VJab ~ Name, value.var = 'Cells', fun.aggregate = function(i) sum(i, na.rm = TRUE) )
   TotalCell = Matrix::rowSums(ab[-1])
