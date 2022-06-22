@@ -30,9 +30,21 @@ TableVDJ = function(vdj, target = NULL, type = NULL, names = NULL, save = TRUE, 
   
   # fetch gene
   gene = do.call(rbind, lapply(names, function(n) {
-    if (n %in% names(vdj@samples)) return( cbind(Name = factor(n), fetchVDJ(vdj@samples[[n]]@consensus, type)) )
-    if (n %in% names(vdj@groups))  return( cbind(Name = factor(n), fetchVDJ(vdj@groups [[n]]@consensus, type)) )
+    if (n %in% names(vdj@samples)) {
+      vdj = fetchVDJ(vdj@samples[[n]]@consensus, type)
+      if (length(vdj)) return(cbind(Name = factor(n), vdj)) else
+        warning('--! ', timer(), ' no ', paste(type, collapse = ''), ' found in sample: ', n, ' !--', call. = FALSE)
+    }
+    if (n %in% names(vdj@groups)) {
+      vdj = fetchVDJ(vdj@groups [[n]]@consensus, type)
+      if (length(vdj)) return(cbind(Name = factor(n), vdj)) else
+        warning('--! ', timer(), ' no ', paste(type, collapse = ''), ' found in group: ',  n, ' !--', call. = FALSE)
+    }
+    NULL
   }))
+  if (!length(gene)) return()
+
+  # total
   gene = reshape2::dcast(gene, Gene ~ Name, value.var = 'Cells', fun.aggregate = function(i) sum(i, na.rm = TRUE) )
   TotalCell = Matrix::rowSums(gene[-1])
   TotalName = apply(gene[-1], 1, function(i) sum(!!i) )
@@ -41,7 +53,7 @@ TableVDJ = function(vdj, target = NULL, type = NULL, names = NULL, save = TRUE, 
   gene = gene[order(-TotalName, -TotalCell),]
   if (have(target)) gene = gene[gene$Gene %in% target,]
   
-  # stat
+  # save
   if (save) {
     dir.create('TableVDJ', FALSE)
     write.table(gene, paste0('TableVDJ/', out.pref, '.TableVDJ.txt'), sep = '\t', row.names = FALSE)
@@ -77,9 +89,21 @@ TableVJpair = function(vdj, target = NULL, names = NULL, save = TRUE, out.pref =
   
   # fetch VJ pair
   vj = do.call(rbind, lapply(names, function(n) {
-    if (n %in% names(vdj@samples)) return( cbind(Name = factor(n), fetchVJpair(vdj@samples[[n]]@consensus)) )
-    if (n %in% names(vdj@groups))  return( cbind(Name = factor(n), fetchVJpair(vdj@groups [[n]]@consensus)) )
+    if (n %in% names(vdj@samples)) {
+      pair = fetchVJpair(vdj@samples[[n]]@consensus)
+      if (length(pair)) return(cbind(Name = factor(n), pair)) else
+        warning('--! ', timer(), ' no VJ pair found in sample: ', n, ' !--', call. = FALSE)
+    }
+    if (n %in% names(vdj@groups)) {
+      pair = fetchVJpair(vdj@groups [[n]]@consensus)
+      if (length(pair)) return(cbind(Name = factor(n), pair)) else
+        warning('--! ', timer(), ' no VJ pair found in group: ',  n, ' !--', call. = FALSE)
+    }
+    NULL
   }))
+  if (!length(vj)) return()
+
+  # total
   vj = reshape2::dcast(vj, VJ ~ Name, value.var = 'Cells', fun.aggregate = function(i) sum(i, na.rm = TRUE) )
   TotalCell = Matrix::rowSums(vj[-1])
   TotalName = apply(vj[-1], 1, function(i) sum(!!i) )
@@ -88,7 +112,7 @@ TableVJpair = function(vdj, target = NULL, names = NULL, save = TRUE, out.pref =
   vj = vj[order(-TotalName, -TotalCell),]
   if (have(target)) vj = vj[vj$VJ %in% target,]
   
-  # stat
+  # save
   if (save) {
     dir.create('TableVJpair', FALSE)
     write.table(vj, paste0('TableVJpair/', out.pref, '.TableVJpair.txt'), sep = '\t', row.names = FALSE)
@@ -138,6 +162,9 @@ TableVJab = function(vdj, target = NULL, names = NULL, save = TRUE, out.pref = N
     }
     NULL
   }))
+  if (!length(ab)) return()
+
+  # total
   ab = reshape2::dcast(ab, VJab ~ Name, value.var = 'Cells', fun.aggregate = function(i) sum(i, na.rm = TRUE) )
   TotalCell = Matrix::rowSums(ab[-1])
   TotalName = apply(ab[-1], 1, function(i) sum(!!i) )
@@ -146,7 +173,7 @@ TableVJab = function(vdj, target = NULL, names = NULL, save = TRUE, out.pref = N
   ab = ab[order(-TotalName, -TotalCell),]
   if (have(target)) ab = ab[ab$VJab %in% target,]
   
-  # stat
+  # save
   if (save) {
     dir.create('TableVJab', FALSE)
     write.table(ab, paste0('TableVJab/', out.pref, '.TableVJab.txt'), sep = '\t', row.names = FALSE)
