@@ -21,6 +21,7 @@ Get HTML text content
 \donttest{
 Download('http://www.virusite.org', 'test.html')
 content = htmlText('test.html')
+file.remove('test.html')
 head(content)
 }
 

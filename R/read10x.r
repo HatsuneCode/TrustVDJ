@@ -31,7 +31,7 @@ NULL
 
   # return
   if (verbose) cat('-->', timer(), 'done <-- \n')
-  contig[ none(contig) ] = ''
+  contig[none(contig)] = ''
   contig
 }
 
@@ -65,7 +65,7 @@ NULL
 
   # return
   if (verbose) cat('-->', timer(), 'done <-- \n')
-  consensus[ none(consensus) ] = ''
+  consensus[none(consensus)] = ''
   consensus
 }
 
@@ -99,7 +99,7 @@ NULL
     stop('!!! ', timer(), ' There is no content in 10x clonotypes file !!!')
 
   # 2. process clonotype
-  clonotype[ none(clonotype) ] = ''
+  clonotype[none(clonotype)] = ''
   if (verbose) p = utils::txtProgressBar(style = 3)
   clonotype = do.call(rbind, lapply(seq(clonotype$clonotype_id), function(i) {
     id     = clonotype$clonotype_id[i]
@@ -247,3 +247,4 @@ Read10x = function(airr_file      = NULL,
   # return
   airr
 }
+

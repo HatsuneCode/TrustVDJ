@@ -34,7 +34,7 @@ corTest = function(x, y, method = 'both', adj_method = 'BH', rm0 = TRUE, verbose
   # pearson
   Pearson = data.frame()
   if (sum(c('both', 'pearson') %in% method)) {
-    if (verbose) cat('-->', timer(), 'Pearson cor.test <--\n')
+    if (verbose) cat('-->', timer(), 'Pearson cor.test <-- \n')
     Pearson = apply(x, 1, function(i) apply(y, 1, function(j)
         if (rm0)
           stats::cor.test(as.numeric(i[which(i != 0 & j != 0)]), as.numeric(j[which(i != 0 & j != 0)]),
@@ -46,9 +46,9 @@ corTest = function(x, y, method = 'both', adj_method = 'BH', rm0 = TRUE, verbose
       re$CorName_P = rownames(re)
       re
     }))
-    Pearson$MainName_P = rep(rownames(x), each = nrow(y))
+    Pearson$MainName_P   = rep(rownames(x), each = nrow(y))
     Pearson$Padj_pearson = stats::p.adjust(Pearson$Pvalue_pearson, method = adj_method)
-    Pearson = Pearson[c(4, 3, 1, 2, 5)]
+    Pearson              = Pearson[c(4, 3, 1, 2, 5)]
   }
 
   # spearman
@@ -66,13 +66,13 @@ corTest = function(x, y, method = 'both', adj_method = 'BH', rm0 = TRUE, verbose
       re$CorName_S = rownames(re)
       re
     }))
-    Spearman$MainName_S = rep(rownames(x), each = nrow(y))
+    Spearman$MainName_S    = rep(rownames(x), each = nrow(y))
     Spearman$Padj_spearman = stats::p.adjust(Spearman$Pvalue_spearman, method = adj_method)
-    Spearman = Spearman[c(4, 3, 1, 2, 5)]
+    Spearman               = Spearman[c(4, 3, 1, 2, 5)]
   }
 
   # return
-  if (verbose) cat('-->', timer(), 'Done <--\n')
+  if (verbose) cat('-->', timer(), 'Done <-- \n')
   cbinds(Pearson, Spearman)
 }
 

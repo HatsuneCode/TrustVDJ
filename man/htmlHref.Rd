@@ -21,6 +21,7 @@ Get HTML href content
 \donttest{
 Download('https://ftp.ensembl.org/pub', 'test.html')
 content = htmlHref('test.html')
+file.remove('test.html')
 head(content)
 }
 

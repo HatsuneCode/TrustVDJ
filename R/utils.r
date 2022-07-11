@@ -87,7 +87,7 @@ cbinds = function(F1, F2, fill = 0) {
   if (any(dim(F2) == 0)) return(F1)
 
   # rownames
-  rowall = c(rownames(F1), rownames(F2))
+  rowall = union(rownames(F1), rownames(F2))
   dF1    = setdiff(rowall, rownames(F1))
   dF2    = setdiff(rowall, rownames(F2))
 
@@ -251,7 +251,7 @@ have = function(x) length(x[ x != '' ])
 #'
 #' @param df data.frame
 #'
-#' @return
+#' @return NA values position
 #' @export
 #'
 #' @examples
@@ -344,12 +344,12 @@ makePair = function(x) {
   apply(df, 1, c, simplify = FALSE)
 }
 
-#' Show as a percentage
+#' Show Number as Percentage
 #' 
-#' @param x      vector 
-#' @param digits numeric
+#' @param x      vector.  a vector of number
+#' @param digits numeric. default \code{3}
 #'
-#' @return
+#' @return percentage
 #' @export
 #'
 #' @examples

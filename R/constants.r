@@ -18,20 +18,20 @@ consensusName = c('clonotype_id', 'consensus_id', 'clonotype_frequency', 'clonot
 
 # consensus properties
 consensusAttributeName = list(
-  ConsenID = 'consensus_id', ClonoID = 'clonotype_id', 
-  Vgene   = 'v_gene',  Dgene  = 'd_gene', Jgene = 'j_gene',  Cgene  = 'c_gene',
-  FWR1dna = 'fwr1_nt', FWR1aa = 'fwr1', CDR1dna = 'cdr1_nt', CDR1aa = 'cdr1',
-  FWR2dna = 'fwr2_nt', FWR2aa = 'fwr2', CDR2dna = 'cdr2_nt', CDR2aa = 'cdr2',
-  FWR3dna = 'fwr3_nt', FWR3aa = 'fwr3', CDR3dna = 'cdr3_nt', CDR3aa = 'cdr3',
-  FWR4dna = 'fwr4_nt', FWR4aa = 'fwr4',
-  UMIs = 'umis', Reads = 'reads', Barcode = 'barcode', 
-  FullLength = 'full_length', CDR3germlineSimilarity = 'cdr3_germline_similarity'
+  ConsenID   = 'consensus_id', ClonoID = 'clonotype_id', 
+  Vgene      = 'v_gene',       Dgene   = 'd_gene', Jgene   = 'j_gene',  Cgene  = 'c_gene',
+  FWR1dna    = 'fwr1_nt',      FWR1aa  = 'fwr1',   CDR1dna = 'cdr1_nt', CDR1aa = 'cdr1',
+  FWR2dna    = 'fwr2_nt',      FWR2aa  = 'fwr2',   CDR2dna = 'cdr2_nt', CDR2aa = 'cdr2',
+  FWR3dna    = 'fwr3_nt',      FWR3aa  = 'fwr3',   CDR3dna = 'cdr3_nt', CDR3aa = 'cdr3',
+  FWR4dna    = 'fwr4_nt',      FWR4aa  = 'fwr4',
+  UMIs       = 'umis',         Reads   = 'reads',  Barcode = 'barcode', 
+  FullLength = 'full_length',  CDR3germlineSimilarity = 'cdr3_germline_similarity'
 )
 
 # clonotype properties
 clonotypeAttributeName = list(
   ConsenID = 'consensus_id', ClonoID = 'clonotype_id',
-  CDR3dna = 'cdr3_nt', CDR3aa = 'cdr3',
-  Barcode = 'barcode'
+  CDR3dna  = 'cdr3_nt',      CDR3aa  = 'cdr3',
+  Barcode  = 'barcode'
 )
 

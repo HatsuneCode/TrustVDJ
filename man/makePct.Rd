@@ -2,20 +2,20 @@
 % Please edit documentation in R/utils.r
 \name{makePct}
 \alias{makePct}
-\title{Show as a percentage}
+\title{Show Number as Percentage}
 \usage{
 makePct(x, digits = 3)
 }
 \arguments{
-\item{x}{vector}
+\item{x}{vector.  a vector of number}
 
-\item{digits}{numeric}
+\item{digits}{numeric. default \code{3}}
 }
 \value{
-
+percentage
 }
 \description{
-Show as a percentage
+Show Number as Percentage
 }
 \examples{
 makePct(.253)

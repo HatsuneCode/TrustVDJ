@@ -33,5 +33,8 @@ if success, return \code{TRUE}
 \examples{
 fa = system.file('extdata', 'IMGT_Homo_sapiens.fa.gz', package = 'TrustVDJ')
 filterFasta(fa, c('IGHD1-1*01', 'TRDD1*01'), 'filter.fa')
+fa = readLines('filter.fa')
+file.remove('filter.fa')
+cat(paste(fa, '\n', collapse = ''))
 
 }

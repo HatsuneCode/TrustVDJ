@@ -27,5 +27,8 @@ if success, return \code{TRUE}
 \examples{
 gtf = system.file('extdata', 'IMGT_Homo_sapiens.gtf.gz', package = 'TrustVDJ')
 filterGtf(gtf, c('IGHD1-1*01', 'TRDD1*01'), 'filter.gtf')
+gtf = readLines('filter.gtf')
+file.remove('filter.gtf')
+cat(paste(gtf, '\n', collapse = ''))
 
 }

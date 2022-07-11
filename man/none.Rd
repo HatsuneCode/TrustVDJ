@@ -10,7 +10,7 @@ none(df)
 \item{df}{data.frame}
 }
 \value{
-
+NA values position
 }
 \description{
 Check NA Values in a Data Frame

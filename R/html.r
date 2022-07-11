@@ -12,6 +12,7 @@
 #' \donttest{
 #' Download('https://ftp.ensembl.org/pub', 'test.html')
 #' content = htmlHref('test.html')
+#' file.remove('test.html')
 #' head(content)
 #' }
 #' 
@@ -32,6 +33,7 @@ htmlHref = function(file, css = 'body a')
 #' \donttest{
 #' Download('http://www.virusite.org', 'test.html')
 #' content = htmlText('test.html')
+#' file.remove('test.html')
 #' head(content)
 #' }
 #' 

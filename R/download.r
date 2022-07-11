@@ -16,7 +16,10 @@ NULL
 #' @export
 #'
 #' @examples
-#' \donttest{Download('http://ftp.ensembl.org/pub', 'test.html')}
+#' \donttest{
+#' Download('http://ftp.ensembl.org/pub', 'test.html')
+#' file.remove('test.html')
+#' }
 #'
 Download = function(URLs, names = NULL, method = NULL, sleep = NULL, outdir = NULL, verbose = TRUE){
 
@@ -72,3 +75,4 @@ Download = function(URLs, names = NULL, method = NULL, sleep = NULL, outdir = NU
   if(verbose) cat('-->', timer(), 'done <--\n')
   file.remove(log)
 }
+

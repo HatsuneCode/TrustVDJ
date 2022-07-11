@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 
 # TrustVDJ
 
-The goal of TrustVDJ is to read immune repertoire data, especially from TRUST4, 10x Genomics cellranger or AIRR format results.
+The goal of TrustVDJ is to read and analyze immune repertoire data, especially from TRUST4, 10x Genomics cellranger or AIRR format results.
 
 ## Installation
 
@@ -62,3 +62,358 @@ bcTrust   = system.file('extdata', 'TRUST4_barcode_report.tsv.gz', package = 'Tr
 vdjTrust  = ReadTrust(airr_file = airrTrust, barcode_report_file = bcTrust, verbose = FALSE)
 summary(vdjTrust[,1:3])
 ```
+
+## Demo analyze
+0. Library
+```{r}
+# detach('package:TrustVDJ', unload = T)
+# devtools::install_github('HatsuneCode/TrustVDJ')
+suppressMessages(library(TrustVDJ))
+```
+1. Perpare data
+```{r}
+# setwd('D:/TrustVDJ')
+name    = c('GSM5160432_H1 GSM5160434_H2 GSM5160435_H3', 
+            'GSM5160417_P1 GSM5160420_P2 GSM5160422_P3 GSM5160424_P4 GSM5160427_P5 GSM5160430_P6',
+            'CMV COVID-19 EBV HSV-2 InfluenzaA')
+name    = unlist(strsplit(name, ' '))
+samples = sub('.*_', '', name)
+groups  = list(H = samples[1:3], P = samples[4:9], V = samples[10:14])
+paths   = system.file('extdata', 
+                      c(paste0(name[1:9], '_TCR_filtered_contig_annotations.csv.gz'),
+                        paste0(name[10:14], '.virus.tsv.gz')), 
+                      package = 'TrustVDJ')
+rm(name)
+print(groups)
+```
+2. Read data
+```{r}
+property = list( ConsenID = c('raw_consensus_id'),
+                 ClonoID  = c('raw_clonotype_id', 'complex.id'),
+                 Vgene    = c('v_gene', 'V'),
+                 Jgene    = c('j_gene', 'J'),
+                 CDR3aa   = c('cdr3', 'CDR3'),
+                 Barcode  = c('barcode', 'complex.id') )
+samples  = lapply(seq(paths), function(i) {
+  cat('--> read:', samples[i], '<--\n')
+  data = Read10x(contig_file = paths[i], verbose = F)
+  if('complex.id' %in% colnames(data))
+    data$complex.id[ data$complex.id == 0 ] = make.unique(as.character(
+      data$complex.id[ data$complex.id == 0 ] ))
+  CreateVdjSample(data, property, name = samples[i], rm_allele = T, verbose = F)
+})
+vdj = CreateVdjObject(samples, groups, verbose = F)
+rm(samples, property)
+# saveRDS(vdj, 'vdj.object.rds')
+print(vdj)
+```
+3. Filter vdj
+Table VDJ genes:
+```{r}
+P_gene = TableVDJ(vdj, names = vdj@info$P, out.pref = 'P')
+H_gene = TableVDJ(vdj, names = vdj@info$H, out.pref = 'H')
+head(H_gene)
+```
+Filter > 2 sample:
+```{r}
+P_gene = P_gene$Gene[P_gene$TotalName > 2]
+H_gene = H_gene$Gene[H_gene$TotalName > 2]
+# venn
+venn   = VennDiagram::venn.diagram(list(P = P_gene, H = H_gene),
+                                   col             = scales::hue_pal()(2),
+                                   margin          = 0.05,
+                                   fontfamily      = 'sans',
+                                   cat.fontfamily  = 'sans',
+                                   filename        = NULL,
+                                   disable.logging = T)
+grid::grid.draw(venn)
+dev.off()
+# pie
+pie = Pie(P_gene, H_gene) + Pie(H_gene, P_gene, fill = c('white', '#00BFC4'))
+# ggsave('P-H.VDJ.uniquePie.pdf', pie, w = 4, h = 4)
+print(pie)
+share = intersect(P_gene, H_gene)
+# writeLines(share, 'P-H.VDJ.share.txt')
+rm(P_gene, H_gene, venn, pie)
+cat('shared genes:', share[1:3], '...')
+```
+4. Compare shared genes
+TRAV fisher.test:
+```{r}
+chain   = 'TRA'
+genes   = grep(paste0(chain, 'V'), share, value = T)
+PH      = TableVDJ(vdj, target = genes, names = c('P', 'H'), out.pref = 'PH.TRAV.share')
+PH      = PH[order(-PH$P), c('Gene', 'P', 'H')]
+PH      = cbind(PH, Fisher(PH$P, PH$H))
+PH$Type = factor(ifelse(PH$Pval < .05, ifelse(PH$Log2Fc > 0, 'Up', 'Down'), 'Not'),
+                 c('Up', 'Down', 'Not'))
+# write.table(PH, paste0('P-H.', chain, 'V.fisher.txt'), sep = '\t', row.names = F)
+rm(genes)
+head(PH)
+```
+Volcano plot:
+```{r}
+suppressMessages(library(ggplot2))
+p = ggplot(PH, aes(Log2Fc, -log10(Pval))) +
+  geom_point(aes(color = Type)) +
+  geom_hline(yintercept = -log10(.05), lty = 2, color = 'grey') +
+  geom_vline(xintercept = 0, lty = 2, color = 'grey') +
+  labs(x     = 'Fold Change (log2)',
+       y     = expression(-log[10](Pvalue)),
+       title = paste0(chain, 'V')) +
+  scale_color_manual(values = c(if('Up'   %in% PH$Type) 'red',
+                                if('Down' %in% PH$Type) 'blue', 'black')) +
+  xlim(-1, 1) + ylim(0, 10) + theme_bw() +
+  theme(panel.grid = element_blank(),
+        plot.title = element_text(hjust = .5))
+suppressWarnings(ggsave(paste0('P-H.', chain, 'V.volcano.pdf'), p, w = 6, h = 5))
+suppressWarnings(print(p))
+```
+Heatmap and fisher plot:
+```{r}
+suppressMessages(library(ggheatmap))
+col_func  = colorRampPalette(rev(
+  RColorBrewer::brewer.pal(n = 7, name = "RdYlBu") ))(100)
+heatData  = setNames(PH[grep('proportion', names(PH))], c('P', 'H'))
+rownames(heatData) = PH$Gene
+# heatmap
+p1 = ggheatmap(heatData,
+               levels_rows        = rev(rownames(heatData)),
+               levels_cols        = colnames(heatData),
+               legendName         = 'Proportion',
+               text_position_rows = 'left',
+               border             = 'lightgrey',
+               color              = col_func) +
+  theme(legend.position           = 'left',
+        legend.justification      = c(0, .05),
+        legend.title              = element_text(angle = 90, hjust = .5),
+        text                      = element_text(size = 13)) +
+  guides(fill                     = guide_colorbar(title.position = 'left'))
+rm(heatData)
+# fisher
+PH$Sig = ifelse(PH$Type == 'Not', 'Not', 'Sig')
+p2 = ggplot(PH,  aes(Odds, Gene)) +
+  geom_vline(xintercept = 1, lty = 2) +
+  geom_errorbar(aes(xmin = ConfMin, xmax = ConfMax), width = .3, color = 'grey') +
+  geom_point(aes(color = Sig), size = 4) +
+  scale_color_manual(values = c(if('Sig' %in% PH$Sig) 'red', 'grey'),
+                     labels = c(if('Sig' %in% PH$Sig) 'P < 0.05', 'P > 0.05')) +
+  labs(y = '', x = '') +
+  theme(axis.text.y          = element_blank(),
+        axis.ticks.y         = element_blank(),
+        axis.line.x          = element_line(),
+        panel.grid           = element_blank(),
+        panel.background     = element_blank(),
+        text                 = element_text(size = 13),
+        legend.key           = element_rect(fill = 'white'),
+        legend.title         = element_blank(),
+        legend.position      = 'right',
+        legend.justification = c(1, 1))
+p = p1 + p2
+# ggsave(paste0('P-H.', chain, 'V.heatFisher.pdf'), p, width = 7, height = 9)
+print(p)
+```
+Heatmap in samples:
+```{r}
+suppressMessages(library(ComplexHeatmap))
+samples   = c(vdj@info$P, vdj@info$H)
+PH_sig    = TableVDJ(vdj, target = PH$Gene[PH$Sig == 'Sig'], names = samples,
+                     save = F)[seq(length(samples)+1)]
+heatData  = t(apply(sweep(PH_sig[-1], 2, colSums(PH_sig[-1]), FUN = '/'), 1, scale))
+col_func  = circlize::colorRamp2(c(-2,0,2), c('#116dac', 'white', '#b81e34'))
+top_annot = HeatmapAnnotation(df  = data.frame(Group = sub('.$', '', samples)),
+                              col = list(Group = c(P = '#b81e34', H = '#116dac')),
+                              gap = unit(1, 'mm'),
+                              show_legend          = F,
+                              show_annotation_name = F )
+p = Heatmap(heatData,
+            col                   = col_func,
+            rect_gp               = gpar(col = 'grey', lwd = 1),
+            cluster_rows          = F,
+            cluster_columns       = F,
+            top_annotation        = top_annot,
+            row_names_side        = 'right',
+            column_names_rot      = 0,
+            column_labels         = samples,
+            row_labels            = PH_sig$Gene,
+            column_names_side     = 'top',
+            column_names_centered = T,
+            heatmap_legend_param  = list(title = '', direction = 'horizontal'),
+            cell_fun              = function(i, j, x, y, width, height, fill)
+              grid.text(PH_sig[-1][j, i], x, y, gp = gpar(fontsize = 10)) )
+# pdf(paste0('P-H.', chain, 'V.heatSamples.pdf'), width = 10, height = 8)
+draw(p, heatmap_legend_side = 'bottom') # ; dev.off()
+```
+5. Filter vj-pair
+Table VJ-pairs:
+```{r}
+P_vj = TableVJpair(vdj, names = vdj@info$P, out.pref = 'P')
+H_vj = TableVJpair(vdj, names = vdj@info$H, out.pref = 'H')
+head(H_vj)
+```
+Filter > 2 sample:
+```{r}
+P_vj = P_vj$VJ[P_vj$TotalName > 2]
+H_vj = H_vj$VJ[H_vj$TotalName > 2]
+# venn
+venn   = VennDiagram::venn.diagram(list(P = P_vj, H = H_vj),
+                                   col             = scales::hue_pal()(2),
+                                   margin          = 0.05,
+                                   fontfamily      = 'sans',
+                                   cat.fontfamily  = 'sans',
+                                   filename        = NULL,
+                                   disable.logging = T)
+grid::grid.draw(venn)
+dev.off()
+# pie
+pie = Pie(P_vj, H_vj) + Pie(H_vj, P_vj, fill = c('white', '#00BFC4'))
+# ggsave('P-H.VJpair.uniquePie.pdf', pie, w = 4, h = 4)
+print(pie)
+share = intersect(P_vj, H_vj)
+# writeLines(share, 'P-H.VJpair.share.txt')
+rm(P_vj, H_vj, venn, pie)
+cat('shared VJ-pairs:', share[1:3], '...')
+```
+6. Compare shared vj-pairs
+TRA V-J fisher.test:
+```{r}
+chain   = 'TRA'
+genes   = grep(chain, share, value = T)
+PH      = TableVJpair(vdj, target = genes, names = c('P', 'H'), out.pref = 'PH_TRA-VJ.share')
+PH      = PH[order(-PH$P), c('VJ', 'P', 'H')]
+PH      = cbind(PH, Fisher(PH$P, PH$H))
+PH$Type = factor(ifelse(PH$Pval < .05, ifelse(PH$Log2Fc > 0, 'Up', 'Down'), 'Not'),
+                 c('Up', 'Down', 'Not'))
+# write.table(PH, paste0('P-H.', chain, '-VJ.fisher.txt'), sep = '\t', row.names = F)
+head(PH)
+```
+Volcano plot:
+```{r}
+suppressMessages(library(ggplot2))
+p = ggplot(PH, aes(Log2Fc, -log10(Pval))) +
+  geom_point(aes(color = Type)) +
+  geom_hline(yintercept = -log10(.05), lty = 2, color = 'grey') +
+  geom_vline(xintercept = 0, lty = 2, color = 'grey') +
+  labs(x     = 'Fold Change (log2)',
+       y     = expression(-log[10](Pvalue)),
+       title = paste(chain, 'V-J')) +
+  scale_color_manual(values = c(if('Up'   %in% PH$Type) 'red',
+                                if('Down' %in% PH$Type) 'blue', 'black')) +
+  xlim(-4.5, 4.5) + ylim(0, 55) + theme_bw() +
+  theme(panel.grid = element_blank(),
+        plot.title = element_text(hjust = .5))
+suppressWarnings(ggsave(paste0('P-H.', chain, '-VJ.volcano.pdf'), p, w = 6, h = 5))
+suppressWarnings(print(p))
+```
+Heatmap and fisher plot:
+```{r}
+suppressMessages(library(ggheatmap))
+col_func  = colorRampPalette(rev(
+  RColorBrewer::brewer.pal(n = 7, name = 'RdYlBu') ))(100)
+heatData  = setNames(PH[grep('proportion', names(PH))], c('P', 'H'))
+rownames(heatData) = PH$VJ
+i         = seq(min(40, nrow(PH)))
+heatData  = heatData[i, ]
+p1 = ggheatmap(heatData, 
+               levels_rows        = rev(rownames(heatData)),
+               levels_cols        = colnames(heatData),
+               legendName         = 'Proportion',
+               text_position_rows = 'left',
+               border             = 'lightgrey',
+               color              = col_func) +
+  theme(legend.position      = 'left',
+        legend.justification = c(0, .05),
+        legend.title         = element_text(angle = 90, hjust = .5),
+        text                 = element_text(size = 13)) +
+  guides(fill                = guide_colorbar(title.position = 'left'))
+rm(heatData)
+PH$Sig = ifelse(PH$Type == 'Not', 'Not', 'Sig')
+p2 = ggplot(PH[i, ],  aes(Odds, VJ)) +
+  geom_vline(xintercept = 1, lty = 2) +
+  geom_errorbar(aes(xmin = ConfMin, xmax = ConfMax), width = .3, color = 'grey') +
+  geom_point(aes(color = Sig), size = 4) +
+  scale_color_manual(values = c(if('Sig' %in% PH$Sig[i]) 'red', 'grey'),
+                     labels = c(if('Sig' %in% PH$Sig[i]) 'P < 0.05', 'P > 0.05')) +
+  labs(y = '', x = '') +
+  theme(axis.text.y          = element_blank(),
+        axis.ticks.y         = element_blank(),
+        axis.line.x          = element_line(),
+        panel.grid           = element_blank(),
+        panel.background     = element_blank(),
+        text                 = element_text(size = 13),
+        legend.key           = element_rect(fill = 'white'),
+        legend.title         = element_blank(),
+        legend.position      = 'right',
+        legend.justification = c(1, 1))
+p = p1 + p2
+# ggsave(paste0('P-H.', chain, '-VJ.heatFisher.pdf'), p, width = 7, height = 9)
+print(p)
+```
+Heatmap in samples:
+```{r}
+suppressMessages(library(ComplexHeatmap))
+samples   = c(vdj@info$P, vdj@info$H)
+PH_sig    = TableVJpair(vdj, target = PH$VJ[PH$Sig == 'Sig'], names = samples,
+                        save = F)[seq(length(samples)+1)]
+heatData  = t(apply(sweep(PH_sig[-1], 2, colSums(PH_sig[-1]), FUN = '/'), 1, scale))
+col_func  = circlize::colorRamp2(c(-2,0,2), c('#116dac', 'white', '#b81e34'))
+top_annot = HeatmapAnnotation(df  = data.frame(Group = sub('.$', '', samples)),
+                              col = list(Group = c(P = '#b81e34', H = '#116dac')),
+                              gap = unit(1, 'mm'),
+                              show_legend          = F,
+                              show_annotation_name = F )
+p = Heatmap(heatData,
+            col                   = col_func,
+            rect_gp               = gpar(col = 'grey', lwd = 1),
+            cluster_rows          = F,
+            cluster_columns       = F,
+            top_annotation        = top_annot,
+            row_names_side        = 'right',
+            column_names_rot      = 0,
+            column_labels         = samples,
+            row_labels            = PH_sig$VJ,
+            column_names_side     = 'top',
+            column_names_centered = T,
+            heatmap_legend_param  = list(title = '', direction = 'horizontal'),
+            cell_fun              = function(i, j, x, y, width, height, fill)
+              grid.text(PH_sig[-1][j, i], x, y, gp = gpar(fontsize = 10)) )
+# pdf(paste0('P-H.', chain, '-VJ.heatSamples.pdf'), width = 10, height = 8)
+draw(p, heatmap_legend_side = 'bottom') # ; dev.off()
+```
+7. Filter vjAB
+Table vjAB:
+```{r}
+P_ab = TableVJab(vdj, names = vdj@info$P, out.pref = 'P')
+H_ab = TableVJab(vdj, names = vdj@info$H, out.pref = 'H')
+head(H_ab)
+```
+Filter > 2 sample:
+```{r}
+P_ab = P_ab$VJab[P_ab$TotalName > 2]
+H_ab = H_ab$VJab[H_ab$TotalName > 2]
+# venn
+venn   = VennDiagram::venn.diagram(list(P = P_ab, H = H_ab),
+                                   col             = scales::hue_pal()(2),
+                                   margin          = 0.05,
+                                   fontfamily      = 'sans',
+                                   cat.fontfamily  = 'sans',
+                                   filename        = NULL,
+                                   disable.logging = T)
+grid::grid.draw(venn)
+dev.off()
+# pie
+pie    = Pie(P_ab, H_ab) + Pie(H_ab, P_ab, fill = c('white', '#00BFC4'))
+# ggsave('P-H.vjAB.uniquePie.pdf', pie, w = 4, h = 4)
+print(pie)
+P_uAB  = setdiff(P_ab, H_ab)
+# writeLines(P_uAB, 'P-H.vjAB.unique.txt')
+rm(P_ab, H_ab, venn, pie)
+cat('differ VJab:', P_uAB[1:3], '...')
+```
+8. Compare virus
+UpSet virus:
+```{r}
+Pu = TableVJab(vdj, target = P_uAB, names = c('P', vdj@info$V), out.pref = 'PV.unique')
+head(Pu)
+```
+
