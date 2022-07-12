@@ -1,3 +1,6 @@
+#' @include utils.r
+NULL
+
 #' Plot Pie
 #'
 #' @param x     vector 
@@ -69,5 +72,42 @@ Sankey = function(VJab, out = NULL) {
     ggplot2::theme(legend.position = 'none')
   if(have(out)) ggplot2::ggsave(as.character(out), p, w = 16, h = 12) 
   print(p)
+}
+
+#' Plot UpSet
+#'
+#' @param x     list. a named list
+#' @param title character.
+#' @param out   character.
+#' @param w     numeric.
+#' @param h     numeric.
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' Upset(list(A = 1:5, B = 2:6, C = 3:10))
+#' 
+#' 
+Upset = function(x, title = NULL, out = NULL, w = 10, h = 6) {
+  # check
+  title = as.character(title %|||% '')
+  w     = as.numeric(w       %|||% 10)
+  h     = as.numeric(h       %|||% 6 )
+  # plot
+  pdata = reshape2::dcast(do.call(rbind, lapply(seq(x), function(i) 
+    data.frame(Sample = names(x)[i], Clono = x[[i]], In = 1) )),
+    Clono ~ Sample, value.var = 'In', fill = 0)
+  p = UpSetR::upset(pdata, sets = names(x), nintersects = NA, keep.order = TRUE,
+                    sets.bar.color = colorRampPalette(color20)(length(x)),
+                    mainbar.y.label = paste('Shared', title, '\n'), 
+                    sets.x.label = sub('.', toupper(substr(title, 1, 1)), title))
+  # save
+  if (have(out)) {
+    pdf(out, width = w, height = h)
+    print(p, newpage = FALSE)
+    dev.off() 
+  }
+  print(p, newpage = FALSE)
 }
 
