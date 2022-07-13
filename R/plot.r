@@ -111,3 +111,30 @@ Upset = function(x, title = NULL, out = NULL, w = 10, h = 6) {
   print(p, newpage = FALSE)
 }
 
+#' Plot Circos
+#'
+#' @param VJpair character.
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' VJpair = c('TRAV12-1~TRAJ35', 'TRAV12-1~TRAJ35',  'TRAV19~TRAJ35', 
+#'            'TRAV41~TRAJ35',   'TRAV36DV7~TRAJ21', 'TRAV8-3~TRAJ35')
+#' Circos(VJpair)
+#' 
+Circos = function(VJpair) {
+  data = data.frame(do.call(rbind, strsplit(VJpair, '~')))
+  name = unique(as.character(unlist(data)))
+  mar  = strwidth(name[which.max(nchar(name))], cex = .5, units = 'inches') * 1.2 / (7/2)
+  circlize::circos.par('canvas.xlim' = c(-1 - mar, 1 + mar), 'canvas.ylim' = c(-1 - mar, 1 + mar), points.overflow.warning = FALSE)
+  circlize::chordDiagram(data, annotationTrack = 'grid', grid.col = colorRampPalette(
+    rev(color20))(length(name)), link.sort = TRUE)
+  circlize::circos.track(track.index = 1, bg.border = NA, panel.fun = function(x, y)
+    circlize::circos.text(circlize::CELL_META$xcenter, 
+                          circlize::CELL_META$ylim[2] + .2, 
+                          circlize::CELL_META$sector.index, 
+                          facing = 'clockwise', cex = .5, adj = c(0, .5), niceFacing = TRUE) )
+  circlize::circos.clear()
+}
+
