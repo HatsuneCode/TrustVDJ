@@ -32,12 +32,12 @@ TableVDJ = function(vdj, names = NULL, type = NULL, target = NULL, save = TRUE, 
   gene = do.call(rbind, lapply(names, function(n) {
     if (n %in% names(vdj@samples)) {
       vdj = fetchVDJ(vdj@samples[[n]]@consensus, type)
-      if (length(vdj)) return(cbind(Name = factor(n), vdj)) else
+      if (nrow(vdj)) return(cbind(Name = factor(n), vdj)) else
         warning('--! ', timer(), ' no ', paste(type, collapse = ''), ' found in sample: ', n, ' !--', call. = FALSE)
     }
     if (n %in% names(vdj@groups)) {
       vdj = fetchVDJ(vdj@groups [[n]]@consensus, type)
-      if (length(vdj)) return(cbind(Name = factor(n), vdj)) else
+      if (nrow(vdj)) return(cbind(Name = factor(n), vdj)) else
         warning('--! ', timer(), ' no ', paste(type, collapse = ''), ' found in group: ',  n, ' !--', call. = FALSE)
     }
     NULL
@@ -92,12 +92,12 @@ TableVJpair = function(vdj, names = NULL, target = NULL, save = TRUE, out.pref =
   vj = do.call(rbind, lapply(names, function(n) {
     if (n %in% names(vdj@samples)) {
       pair = fetchVJpair(vdj@samples[[n]]@consensus)
-      if (length(pair)) return(cbind(Name = factor(n), pair)) else
+      if (nrow(pair)) return(cbind(Name = factor(n), pair)) else
         warning('--! ', timer(), ' no VJ pair found in sample: ', n, ' !--', call. = FALSE)
     }
     if (n %in% names(vdj@groups)) {
       pair = fetchVJpair(vdj@groups [[n]]@consensus)
-      if (length(pair)) return(cbind(Name = factor(n), pair)) else
+      if (nrow(pair)) return(cbind(Name = factor(n), pair)) else
         warning('--! ', timer(), ' no VJ pair found in group: ',  n, ' !--', call. = FALSE)
     }
     NULL
@@ -215,12 +215,12 @@ TableCDR3 = function(vdj, names = NULL, type = NULL, target = NULL, save = TRUE,
   CDR3 = do.call(rbind, lapply(names, function(n) {
     if (n %in% names(vdj@samples)) {
       cdr3 = fetchCdr3(vdj@samples[[n]]@consensus)
-      if (length(cdr3)) return(cbind(Name = factor(n), cdr3)) else
+      if (nrow(cdr3)) return(cbind(Name = factor(n), cdr3)) else
         warning('--! ', timer(), ' no CDR3 found in sample: ', n, ' !--', call. = FALSE)
     }
     if (n %in% names(vdj@groups)) {
       cdr3 = fetchCdr3(vdj@groups [[n]]@consensus)
-      if (length(cdr3)) return(cbind(Name = factor(n), cdr3)) else
+      if (nrow(cdr3)) return(cbind(Name = factor(n), cdr3)) else
         warning('--! ', timer(), ' no CDR3 found in group: ',  n, ' !--', call. = FALSE)
     }
     NULL

@@ -200,7 +200,8 @@ fetchVDJ = function(consensus, type = c('V', 'D', 'J', 'C')) {
   gene = rbind(if ('V' %in% type) data.frame(Gene = consensus@Vgene, Cells = consensus@Cells),
                if ('D' %in% type) data.frame(Gene = consensus@Dgene, Cells = consensus@Cells),
                if ('J' %in% type) data.frame(Gene = consensus@Jgene, Cells = consensus@Cells),
-               if ('C' %in% type) data.frame(Gene = consensus@Cgene, Cells = consensus@Cells) )
+               if ('C' %in% type) data.frame(Gene = consensus@Cgene, Cells = consensus@Cells),
+                                  data.frame(Gene = ''[F],           Cells = 0[F]) )
   gene = gene[gene$Gene != '', ]
   if (nrow(gene)) gene = stats::setNames(aggregate(gene$Cells, list(gene$Gene), function(i) 
     sum(i, na.rm = TRUE) ), c('Gene', 'Cells'))
