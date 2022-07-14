@@ -6,8 +6,8 @@
 \usage{
 TableVJab(
   vdj,
-  target = NULL,
   names = NULL,
+  target = NULL,
   save = TRUE,
   out.pref = NULL,
   verbose = TRUE
@@ -16,9 +16,9 @@ TableVJab(
 \arguments{
 \item{vdj}{object.}
 
-\item{target}{character.}
-
 \item{names}{character.}
+
+\item{target}{character.}
 
 \item{save}{logical.}
 

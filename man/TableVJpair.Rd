@@ -4,14 +4,14 @@
 \alias{TableVJpair}
 \title{Table VJ Pairs in Each Name}
 \usage{
-TableVJpair(vdj, target = NULL, names = NULL, save = TRUE, out.pref = NULL)
+TableVJpair(vdj, names = NULL, target = NULL, save = TRUE, out.pref = NULL)
 }
 \arguments{
 \item{vdj}{object.}
 
-\item{target}{character.}
-
 \item{names}{character.}
+
+\item{target}{character.}
 
 \item{save}{logical.}
 

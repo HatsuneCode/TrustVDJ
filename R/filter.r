@@ -4,9 +4,9 @@ NULL
 #' Table VDJ Genes in Each Name
 #'
 #' @param vdj      object.
-#' @param target   character.
-#' @param type     character.
 #' @param names    character.
+#' @param type     character.
+#' @param target   character.
 #' @param save     logical.
 #' @param out.pref character.
 #'
@@ -17,7 +17,7 @@ NULL
 #' data = TableVDJ(vdj)
 #' head(data)
 #'
-TableVDJ = function(vdj, target = NULL, type = NULL, names = NULL, save = TRUE, out.pref = NULL) {
+TableVDJ = function(vdj, names = NULL, type = NULL, target = NULL, save = TRUE, out.pref = NULL) {
   
   # check name
   names = checkName(vdj, names)  
@@ -45,12 +45,13 @@ TableVDJ = function(vdj, target = NULL, type = NULL, names = NULL, save = TRUE, 
   if (!length(gene)) return()
 
   # total
-  gene = reshape2::dcast(gene, Gene ~ Name, value.var = 'Cells', fun.aggregate = function(i) sum(i, na.rm = TRUE) )
-  TotalCell = Matrix::rowSums(gene[-1])
-  TotalName = apply(gene[-1], 1, function(i) sum(!!i) )
+  gene           = reshape2::dcast(gene, Gene ~ Name, value.var = 'Cells', fun.aggregate = function(i) 
+    sum(i, na.rm = TRUE) )
+  TotalCell      = Matrix::rowSums(gene[-1])
+  TotalName      = apply(gene[-1], 1, function(i) sum(!!i) )
   gene$TotalCell = TotalCell
   gene$TotalName = TotalName
-  gene = gene[order(-TotalName, -TotalCell),]
+  gene           = gene[order(-TotalName, -TotalCell),]
   if (have(target)) gene = gene[gene$Gene %in% target,]
   
   # save
@@ -65,8 +66,8 @@ TableVDJ = function(vdj, target = NULL, type = NULL, names = NULL, save = TRUE, 
 #' Table VJ Pairs in Each Name
 #'
 #' @param vdj      object.
-#' @param target   character.
 #' @param names    character.
+#' @param target   character.
 #' @param save     logical.
 #' @param out.pref character.
 #'
@@ -77,7 +78,7 @@ TableVDJ = function(vdj, target = NULL, type = NULL, names = NULL, save = TRUE, 
 #' data = TableVJpair(vdj)
 #' head(data)
 #' 
-TableVJpair = function(vdj, target = NULL, names = NULL, save = TRUE, out.pref = NULL) {
+TableVJpair = function(vdj, names = NULL, target = NULL, save = TRUE, out.pref = NULL) {
   
   # check name
   names = checkName(vdj, names)  
@@ -124,8 +125,8 @@ TableVJpair = function(vdj, target = NULL, names = NULL, save = TRUE, out.pref =
 #' Table VJ-AB in Each Name
 #'
 #' @param vdj      object.
-#' @param target   character.
 #' @param names    character.
+#' @param target   character.
 #' @param save     logical.
 #' @param out.pref character.
 #' @param verbose  logical.
@@ -137,7 +138,7 @@ TableVJpair = function(vdj, target = NULL, names = NULL, save = TRUE, out.pref =
 #' data = TableVJab(vdj)
 #' head(data)
 #' 
-TableVJab = function(vdj, target = NULL, names = NULL, save = TRUE, out.pref = NULL, verbose = TRUE) {
+TableVJab = function(vdj, names = NULL, target = NULL, save = TRUE, out.pref = NULL, verbose = TRUE) {
   
   # check name
   names = checkName(vdj, names)  
@@ -180,5 +181,68 @@ TableVJab = function(vdj, target = NULL, names = NULL, save = TRUE, out.pref = N
   }
   
   ab
+}
+
+#' Table CDR3dna or CDR3aa in Each Name
+#'
+#' @param vdj      object.
+#' @param names    character.
+#' @param type     character.
+#' @param target   character.
+#' @param save     logical.
+#' @param out.pref character.
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' data = TableCDR3(vdj)
+#' head(data)
+#'
+TableCDR3 = function(vdj, names = NULL, type = NULL, target = NULL, save = TRUE, out.pref = NULL) {
+  
+  # check name
+  names = checkName(vdj, names)
+  
+  # check para 
+  type     = as.character(type[1]  %|||% 'CDR3dna')
+  target   = as.character(target   %|||% NULL)
+  out.pref = as.character(out.pref %|||% paste0(paste(names, collapse = '-'), '.', type))
+  if (!type %in% c('CDR3dna', 'CDR3aa'))
+    stop('!!! ', timer(), ' type must be CDR3dna or CDR3aa !!!') 
+  
+  # fetch cdr3
+  CDR3 = do.call(rbind, lapply(names, function(n) {
+    if (n %in% names(vdj@samples)) {
+      cdr3 = fetchCdr3(vdj@samples[[n]]@consensus)
+      if (length(cdr3)) return(cbind(Name = factor(n), cdr3)) else
+        warning('--! ', timer(), ' no CDR3 found in sample: ', n, ' !--', call. = FALSE)
+    }
+    if (n %in% names(vdj@groups)) {
+      cdr3 = fetchCdr3(vdj@groups [[n]]@consensus)
+      if (length(cdr3)) return(cbind(Name = factor(n), cdr3)) else
+        warning('--! ', timer(), ' no CDR3 found in group: ',  n, ' !--', call. = FALSE)
+    }
+    NULL
+  }))
+  if (!length(CDR3)) return()
+  
+  # total
+  CDR3           = reshape2::dcast(CDR3, CDR3 ~ Name, value.var = 'Cells', fun.aggregate = function(i) 
+    sum(i, na.rm = TRUE) )
+  TotalCell      = Matrix::rowSums(CDR3[-1])
+  TotalName      = apply(CDR3[-1], 1, function(i) sum(!!i) )
+  CDR3$TotalCell = TotalCell
+  CDR3$TotalName = TotalName
+  CDR3           = CDR3[order(-TotalName, -TotalCell),]
+  if (have(target)) CDR3 = CDR3[CDR3$CDR3 %in% target,]
+  
+  # save
+  if (save) {
+    dir.create('TableCDR3', FALSE)
+    write.table(CDR3, paste0('TableCDR3/', out.pref, '.TableCDR3.txt'), sep = '\t', row.names = FALSE)
+  }
+  
+  CDR3
 }
 

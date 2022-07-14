@@ -202,8 +202,9 @@ fetchVDJ = function(consensus, type = c('V', 'D', 'J', 'C')) {
                if ('J' %in% type) data.frame(Gene = consensus@Jgene, Cells = consensus@Cells),
                if ('C' %in% type) data.frame(Gene = consensus@Cgene, Cells = consensus@Cells) )
   gene = gene[gene$Gene != '', ]
-  stats::setNames(aggregate(gene$Cells, list(gene$Gene), function(i) 
+  if (nrow(gene)) gene = stats::setNames(aggregate(gene$Cells, list(gene$Gene), function(i) 
     sum(i, na.rm = TRUE) ), c('Gene', 'Cells'))
+  gene
 }
 
 #' Fetch VJ Pair in a Consensus Class
@@ -219,10 +220,41 @@ fetchVDJ = function(consensus, type = c('V', 'D', 'J', 'C')) {
 #' 
 fetchVJpair = function(consensus) {
   i  = consensus@Vgene != '' & consensus@Jgene != ''
-  vj = data.frame(VJ    = paste0(consensus@Vgene[i], '~', consensus@Jgene[i]),
+  vj = data.frame(VJ    = paste0(consensus@Vgene, '~', consensus@Jgene)[i],
                   Cells = consensus@Cells[i])
-  stats::setNames(aggregate(vj$Cells, list(vj$VJ), function(i)
+  if (nrow(vj)) vj = stats::setNames(aggregate(vj$Cells, list(vj$VJ), function(i)
     sum(i, na.rm = TRUE) ), c('VJ', 'Cells'))
+  vj
+}
+
+#' Fetch CDR3dna or CDR3aa in a Consensus Class
+#'
+#' @param consensus class.     an object of the consensus class
+#' @param type      character. CDR3dna or CDR3aa
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' CDR3 = fetchCdr3(consensus, 'CDR3aa')
+#' head(CDR3)
+#' 
+fetchCdr3 = function(consensus, type = 'CDR3dna') {
+  if('CDR3dna' %in% type) {
+    i    = consensus@CDR3dna != ''
+    cdr3 = data.frame(CDR3 = consensus@CDR3dna[i], Cells = consensus@Cells[i])
+    if (nrow(cdr3)) cdr3 = stats::setNames(aggregate(cdr3$Cells, list(cdr3$CDR3), function(i) 
+      sum(i, na.rm = TRUE)), c('CDR3', 'Cells'))
+    return(cdr3)
+  }
+  if('CDR3aa'  %in% type) {
+    i    = consensus@CDR3aa != ''
+    cdr3 = data.frame(CDR3 = consensus@CDR3aa[i],  Cells = consensus@Cells[i])
+    if (nrow(cdr3)) cdr3 = stats::setNames(aggregate(cdr3$Cells, list(cdr3$CDR3), function(i) 
+      sum(i, na.rm = TRUE)), c('CDR3', 'Cells'))
+    return(cdr3)
+  }
+  stop('!!! ', timer(), ' type must be CDR3dna or CDR3aa !!!')
 }
 
 #' The Clonotype Class
