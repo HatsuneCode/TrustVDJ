@@ -464,7 +464,7 @@ cloneVenn = function(vdj, names = NULL, type = NULL, save = TRUE, out.pref = NUL
     pdata = dcast(data, Clono ~ Sample, value.var = 'In', fill = 0)
     pdf(paste0('cloneVenn/', out.pref, 'cloneVenn.pdf'), width = 14, height = 8)
     print(upset(pdata, nsets = length(clonotype), nintersects = NA, 
-          mainbar.y.label = 'Shared clonotypes\n', sets.x.label = 'Clonotypes'), newpage = F)
+          mainbar.y.label = 'Shared clonotypes\n', sets.x.label = 'Clonotypes'), newpage = FALSE)
     dev.off()
     rm(pdata)
   } else {
