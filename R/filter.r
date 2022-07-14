@@ -214,12 +214,12 @@ TableCDR3 = function(vdj, names = NULL, type = NULL, target = NULL, save = TRUE,
   # fetch cdr3
   CDR3 = do.call(rbind, lapply(names, function(n) {
     if (n %in% names(vdj@samples)) {
-      cdr3 = fetchCdr3(vdj@samples[[n]]@consensus)
+      cdr3 = fetchCdr3(vdj@samples[[n]]@consensus, type)
       if (nrow(cdr3)) return(cbind(Name = factor(n), cdr3)) else
         warning('--! ', timer(), ' no CDR3 found in sample: ', n, ' !--', call. = FALSE)
     }
     if (n %in% names(vdj@groups)) {
-      cdr3 = fetchCdr3(vdj@groups [[n]]@consensus)
+      cdr3 = fetchCdr3(vdj@groups [[n]]@consensus, type)
       if (nrow(cdr3)) return(cbind(Name = factor(n), cdr3)) else
         warning('--! ', timer(), ' no CDR3 found in group: ',  n, ' !--', call. = FALSE)
     }
