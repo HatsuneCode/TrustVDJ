@@ -4,7 +4,13 @@
 \alias{findCDR3Motif}
 \title{Find CDR3 Motif in K-mer and Position}
 \usage{
-findCDR3Motif(cdr3, kmers = NULL, position = NULL)
+findCDR3Motif(
+  cdr3,
+  kmers = NULL,
+  position = NULL,
+  min.freq = 3,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{cdr3}{character.}
@@ -12,6 +18,10 @@ findCDR3Motif(cdr3, kmers = NULL, position = NULL)
 \item{kmers}{numeric.}
 
 \item{position}{numeric.}
+
+\item{min.freq}{numeric.}
+
+\item{verbose}{logical.}
 }
 \value{
 
@@ -20,9 +30,9 @@ findCDR3Motif(cdr3, kmers = NULL, position = NULL)
 Find CDR3 Motif in K-mer and Position
 }
 \examples{
-CDR3  = TableCDR3(vdj)
+CDR3  = TableCDR3(vdj, type = 'CDR3aa')
 CDR3  = rep(CDR3$CDR3, CDR3$TotalCell)
-Motif = findCDR3Motif(CDR3, 3, c(4, Inf))
+Motif = findCDR3Motif(CDR3, 3, c(4, -3))
 head(Motif) 
 
 }

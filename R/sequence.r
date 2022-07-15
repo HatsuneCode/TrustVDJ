@@ -154,30 +154,53 @@ findMotif = function(x, kmer = 3) {
 #' @param cdr3     character.
 #' @param kmers    numeric.
 #' @param position numeric.
+#' @param min.freq numeric.
+#' @param verbose  logical.
 #'
 #' @return
 #' @export
 #'
 #' @examples
-#' CDR3  = TableCDR3(vdj)
+#' CDR3  = TableCDR3(vdj, type = 'CDR3aa')
 #' CDR3  = rep(CDR3$CDR3, CDR3$TotalCell)
-#' Motif = findCDR3Motif(CDR3, 3, c(4, Inf))
+#' Motif = findCDR3Motif(CDR3, 3, c(4, -3))
 #' head(Motif) 
 #'
-findCDR3Motif = function(cdr3, kmers = NULL, position = NULL) {
+findCDR3Motif = function(cdr3, kmers = NULL, position = NULL, min.freq = 3, verbose = TRUE) {
+  
+  # max length
+  maxChr   = max(nchar(unique(cdr3)))
   
   # check para
   kmers    = as.numeric(kmers    %|||% c(3, 4, 5))
   position = as.numeric(position %|||% c(0, Inf) )
+  min.freq = as.numeric(min.freq %|||% 3)
+  
   if (!length(position)-1) 
     stop('!!! ', timer(), ' position need c(start, end), such as: c(4, Inf) !!!')
-  if (position[2] == Inf) position[2] = max(nchar(unique(cdr3)))
+  if (position[2] == Inf) position[2] = maxChr
   
-  # substr #
-  cdr3 = substr(cdr3, position[1], position[2])
+  # sub string #
+  if (verbose) cat('-->', timer(), 'extract strings ... <-- \n')
+  if (position[2] <= 0) {
+    cdr3 = substr(cdr3, position[1], maxChr)
+    cdr3 = unlist(lapply(strsplit(cdr3, ''), function(i) if(length(i) > -position[2])
+      paste(i[seq(length(i) + position[2])], collapse = '') ))
+  } else 
+    cdr3 = substr(cdr3, position[1], position[2]) 
   
   # each kmer #
-  do.call(rbind, lapply(kmers, function(kmer) 
-    cbind(Kmer = kmer, findMotif(cdr3, kmer)) ))  
+  motif = do.call(rbind, lapply(kmers, function(kmer) {
+    if (verbose) cat('-->', timer(), 'find motif in K-mer:', kmer, '<-- \n')
+    cbind(Kmer = kmer, findMotif(cdr3, kmer))
+  }))
+  
+  # filter
+  if (verbose) cat('-->', timer(), 'filter frequency by min.freq:', min.freq, '<-- \n')
+  motif = motif[motif$Frequency >= min.freq, ]
+  
+  # return #
+  if (verbose) cat('-->', timer(), 'done <-- \n')
+  motif
 }
 
