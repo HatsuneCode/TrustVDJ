@@ -361,7 +361,7 @@ fetchVJab = function(consensus, clonotype, verbose = TRUE) {
                  VJab     = paste(consen@Vgene[consen@Chain == chain[1]][1], consen@Jgene[consen@Chain == chain[1]][1], 
                                   consen@Vgene[consen@Chain == chain[2]][1], consen@Jgene[consen@Chain == chain[2]][1],
                                   sep = '~'),
-                 Cells    = clonotype@Cells[clonotype@ID == id[i]]
+                 Cells    = clonotype@Cells[clonotype@ID == id[i]],
                  Barcodes = clonotype@Barcodes[clonotype@ID == id[i]] )
   }))
   if (verbose) close(p)
