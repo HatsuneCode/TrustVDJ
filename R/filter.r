@@ -164,6 +164,10 @@ TableVJab = function(vdj, names = NULL, target = NULL, save = TRUE, out.pref = N
     NULL
   }))
   if (!length(ab)) return()
+  if (save) {
+    dir.create('TableVJab', FALSE)
+    write.table(ab, paste0('TableVJab/', out.pref, '.TableVJab.raw.txt'), sep = '\t', row.names = FALSE)
+  }
 
   # total
   ab = reshape2::dcast(ab, VJab ~ Name, value.var = 'Cells', fun.aggregate = function(i) sum(i, na.rm = TRUE) )
@@ -175,10 +179,7 @@ TableVJab = function(vdj, names = NULL, target = NULL, save = TRUE, out.pref = N
   if (have(target)) ab = ab[ab$VJab %in% target,]
   
   # save
-  if (save) {
-    dir.create('TableVJab', FALSE)
-    write.table(ab, paste0('TableVJab/', out.pref, '.TableVJab.txt'), sep = '\t', row.names = FALSE)
-  }
+  if (save) write.table(ab, paste0('TableVJab/', out.pref, '.TableVJab.txt'), sep = '\t', row.names = FALSE)
   
   ab
 }

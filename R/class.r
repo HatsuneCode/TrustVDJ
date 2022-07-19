@@ -357,11 +357,12 @@ fetchVJab = function(consensus, clonotype, verbose = TRUE) {
     if (verbose) utils::setTxtProgressBar(p, i/length(id))
     chain  = sort(unique(consen@Chain))
     if (length(chain) > 1)
-      data.frame(ID    = id[i],
-                 VJab  = paste(consen@Vgene[consen@Chain == chain[1]][1], consen@Jgene[consen@Chain == chain[1]][1], 
-                               consen@Vgene[consen@Chain == chain[2]][1], consen@Jgene[consen@Chain == chain[2]][1],
-                               sep = '~'),
-                 Cells = clonotype@Cells[clonotype@ID == id[i]] )
+      data.frame(ID       = id[i],
+                 VJab     = paste(consen@Vgene[consen@Chain == chain[1]][1], consen@Jgene[consen@Chain == chain[1]][1], 
+                                  consen@Vgene[consen@Chain == chain[2]][1], consen@Jgene[consen@Chain == chain[2]][1],
+                                  sep = '~'),
+                 Cells    = clonotype@Cells[clonotype@ID == id[i]]
+                 Barcodes = clonotype@Barcodes[clonotype@ID == id[i]] )
   }))
   if (verbose) close(p)
   ab

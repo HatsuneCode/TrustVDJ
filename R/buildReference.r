@@ -82,6 +82,7 @@ build_IMGT_reference = function(outdir = NULL, method = NULL, verbose = TRUE) {
 
   # return
   file.remove(c(species_web_file, species_fa_file))
+  TRUE
 }
 
 #' Build NCBI-Igblast database reference
@@ -121,6 +122,7 @@ build_IgBlast_reference = function(outdir = NULL, method = NULL, verbose = TRUE)
  
   # return
   file.remove(files)
+  TRUE
 }
 
 #' Build Ensembl database reference
@@ -351,4 +353,6 @@ build_viruSite_reference = function(outdir = NULL, method = NULL, ftp_method = N
 
   # return
   file.remove(files)
+  TRUE
 }
+
