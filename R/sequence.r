@@ -239,13 +239,13 @@ GroupCDR3byMotif = function(CDR3, motif) {
   for (i in seq(motif)) {
     idx = grep(motif[i], CDR3)
     if (length(idx)) {
-      order = rbind(order, data.frame(Motif = motif[i], CDR3 = CDR3[idx], Freq = length(idx)))
+      order = rbind(order, data.frame(Motif = factor(motif[i]), CDR3 = CDR3[idx], Freq = length(idx)))
       CDR3  = CDR3[-idx]
     }
   }
-  order = order[order(-order$Freq, order$CDR3),]
+  order = order[order(order$Motif, -order$Freq, order$CDR3), ]
   if (length(CDR3))
-    order = rbind(order, data.frame(Motif = 'None', CDR3 = CDR3, Freq = 1))
+    order = rbind(order, data.frame(Motif = factor('None'), CDR3 = CDR3, Freq = 1))
   
   # return
   order
