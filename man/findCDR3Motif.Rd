@@ -9,6 +9,8 @@ findCDR3Motif(
   kmers = NULL,
   position = NULL,
   min.freq = 3,
+  save = TRUE,
+  out.pref = NULL,
   verbose = TRUE
 )
 }
@@ -20,6 +22,10 @@ findCDR3Motif(
 \item{position}{numeric.}
 
 \item{min.freq}{numeric.}
+
+\item{save}{logical.}
+
+\item{out.pref}{character.}
 
 \item{verbose}{logical.}
 }

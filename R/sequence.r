@@ -144,7 +144,8 @@ findMotif = function(x, kmer = 3) {
       substr(chr, i, i + kmer -1) ))) ))))
    if (nrow(motif)) {
     names(motif) = c('Motif', 'Frequency')
-    motif        = motif[order(-motif$Frequency),]
+    motif$Motif  = as.character(motif$Motif)
+    motif        = motif[order(-motif$Frequency), ]
    } else motif  = data.frame(Motif = ''[FALSE], Frequency = 0[FALSE])
    motif
 }
@@ -155,6 +156,8 @@ findMotif = function(x, kmer = 3) {
 #' @param kmers    numeric.
 #' @param position numeric.
 #' @param min.freq numeric.
+#' @param save     logical.
+#' @param out.pref character.
 #' @param verbose  logical.
 #'
 #' @return
@@ -166,16 +169,18 @@ findMotif = function(x, kmer = 3) {
 #' Motif = findCDR3Motif(CDR3, 3, c(4, -3))
 #' head(Motif) 
 #'
-findCDR3Motif = function(cdr3, kmers = NULL, position = NULL, min.freq = 3, verbose = TRUE) {
+findCDR3Motif = function(cdr3, kmers = NULL, position = NULL, min.freq = 3, save = TRUE, out.pref = NULL, verbose = TRUE) {
   
+  date     = sub(' ', '_', gsub(':', '-', timer()))
   # max length
   maxChr   = max(nchar(unique(cdr3)))
   
   # check para
-  kmers    = as.numeric(kmers    %|||% c(3, 4, 5))
-  position = as.numeric(position %|||% c(0, Inf) )
-  min.freq = as.numeric(min.freq %|||% 3)
-  
+  kmers    = as.numeric(  kmers    %|||% c(3, 4, 5))
+  position = as.numeric(  position %|||% c(0, Inf) )
+  min.freq = as.numeric(  min.freq %|||% 3         )
+  out.pref = as.character(out.pref %|||% date      )  
+
   if (!length(position)-1) 
     stop('!!! ', timer(), ' position need c(start, end), such as: c(4, Inf) !!!')
   if (position[2] == Inf) position[2] = maxChr
@@ -198,9 +203,51 @@ findCDR3Motif = function(cdr3, kmers = NULL, position = NULL, min.freq = 3, verb
   # filter
   if (verbose) cat('-->', timer(), 'filter frequency by min.freq:', min.freq, '<-- \n')
   motif = motif[motif$Frequency >= min.freq, ]
+
+  if (save) {
+    dir.create('CDR3Motif', FALSE)
+    write.table(motif, paste0('CDR3Motif/Motif.', out.pref, '.txt'), sep = '\t', row.names = FALSE)
+  }
   
   # return #
   if (verbose) cat('-->', timer(), 'done <-- \n')
   motif
+}
+
+#' Group CDR3 by motif
+#'
+#' @param CDR3  character.
+#' @param motif character.
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' CDR3  = c('CSALSWDKPEETQYF', 'CSALSADKPEETQYF', 
+#'           'CSALSWDAPEETQYF', 'CSALSWDKPEATQYF')
+#' motif = c('EET', 'DKP')
+#' GroupCDR3byMotif(CDR3, motif)
+#' 
+GroupCDR3byMotif = function(CDR3, motif) {
+
+  # check para
+  CDR3     = as.character(CDR3)
+  motif    = as.character(motif)
+  
+  # order by motif #
+  order = NULL
+  for (i in seq(motif)) {
+    idx = grep(motif[i], CDR3)
+    if (length(idx)) {
+      order = rbind(order, data.frame(Motif = motif[i], CDR3 = CDR3[idx], Freq = length(idx)))
+      CDR3  = CDR3[-idx]
+    }
+  }
+  order = order[order(-order$Freq, order$CDR3),]
+  if (length(CDR3))
+    order = rbind(order, data.frame(Motif = 'None', CDR3 = CDR3, Freq = 1))
+  
+  # return
+  order
 }
 
