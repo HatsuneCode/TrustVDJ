@@ -20,6 +20,7 @@ Collate:
     'class.r'
     'cloneSize.r'
     'consenSize.r'
+    'file.r'
     'filter.r'
     'object.r'
     'plot.r'
