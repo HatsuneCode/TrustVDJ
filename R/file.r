@@ -33,7 +33,7 @@ append = function(base,
                   append_header  = TRUE,
                   output         = 'result.txt',
                   output_sep     = '\t',
-                  fill           = '-') {
+                  fill           = '-' ) {
   
   # check parameter
   base_sep       = as.character(base_sep     %|||% '\t')
@@ -50,15 +50,21 @@ append = function(base,
   # readLine base, read.table append #
   if (base_by_line & !append_by_line) {
     file.remove(output)
+    cat('-->', timer(), 'read append file totally <-- \n')
     append = read.table(append, sep = append_sep, quote = '"', colClasses = 'character')
     fh     = file(base, 'r')
     f      = readLines(fh, 1)
     if (append_header) {
+      cat('-->', timer(), 'combine files header <-- \n')
       write.table(t(c(unlist(strsplit(f, base_sep)), as.character(append[1, -append_col]))), 
                   output, sep = output_sep, row.names = FALSE, col.names = FALSE, append = TRUE)
       append = append[-1, ,drop = FALSE]
       f      = readLines(fh, 1)
-    }
+    } else
+      cat('-->', timer(), 'omit to combine files header <-- \n')
+
+    # read base by line
+    cat('-->', timer(), 'read base file line by line <-- \n')
     while (length(f)) {
       if (!length(f)) break
       base = unlist(strsplit(f, base_sep))
@@ -72,19 +78,26 @@ append = function(base,
       f    = readLines(fh, 1)
     }
     close(fh)
+    cat('-->', timer(), 'done <-- \n')
   }
 
   # readLine append, read.table base #
   if (!base_by_line & append_by_line) {
+    cat('-->', timer(), 'read base file totally <-- \n')
     base = read.table(base, sep = base_sep, quote = '"', colClasses = 'character')
     head = NULL
     fh   = file(append, 'r')
     f    = readLines(fh, 1)
     df   = NULL
     if (append_header){
+      cat('-->', timer(), 'combine files header <-- \n')
       head  = c(as.character(base[1,]), unlist(strsplit(f, append_sep))[-append_col])
       base  = base[-1, ,drop = F]
-    }
+    } else
+      cat('-->', timer(), 'omit to combine files header <-- \n')
+
+    # read append by line
+    cat('-->', timer(), 'read append file line by line <-- \n')
     while (length(f)) {
       if (!length(f)) break
       append = unlist(strsplit(f, append_sep))
@@ -107,12 +120,17 @@ append = function(base,
       if (is.na(idx[i])) base[i,] else df[idx[i],] ))
     write.table(rbind(head, end), 
                 output, sep = output_sep, row.names = FALSE, col.names = FALSE)
+    cat('-->', timer(), 'done <-- \n')
   }
   
-  # readLine base, readLine append ?
-  if (base_by_line & append_by_line) {}
+  # readLine base, readLine append #
+  if (base_by_line & append_by_line) {
+
+  }
   
-  # read.table base, read.table append ?
-  if (!base_by_line & !append_by_line) {}
+  # read.table base, read.table append #
+  if (!base_by_line & !append_by_line) {
+
+  }
 }
 
