@@ -28,7 +28,7 @@ append = function(base,
                   base_col       = 1,
                   base_by_line   = FALSE,
                   append_sep     = '\t',
-                  append_by_line = TRUE,
+                  append_by_line = FALSE,
                   append_col     = 1,
                   append_header  = TRUE,
                   output         = 'result.txt',
@@ -58,7 +58,7 @@ append = function(base,
       cat('-->', timer(), 'combine files header <-- \n')
       write.table(t(c(unlist(strsplit(f, base_sep)), as.character(append[1, -append_col]))), 
                   output, sep = output_sep, row.names = FALSE, col.names = FALSE, append = TRUE)
-      append = append[-1, ,drop = FALSE]
+      append = append[-1, , drop = FALSE]
       f      = readLines(fh, 1)
     } else
       cat('-->', timer(), 'omit to combine files header <-- \n')
@@ -91,8 +91,8 @@ append = function(base,
     df   = NULL
     if (append_header){
       cat('-->', timer(), 'combine files header <-- \n')
-      head  = c(as.character(base[1,]), unlist(strsplit(f, append_sep))[-append_col])
-      base  = base[-1, ,drop = F]
+      head = c(as.character(base[1,]), unlist(strsplit(f, append_sep))[-append_col])
+      base = base[-1, , drop = FALSE]
     } else
       cat('-->', timer(), 'omit to combine files header <-- \n')
 
@@ -116,7 +116,7 @@ append = function(base,
     add  = matrix(fill, nrow = nrow(base), ncol = ncol(df) - ncol(base))
     base = cbind(base, add)
     idx  = match(base[, base_col], df[, base_col])
-    end  = do.call(rbind, lapply(1:nrow(base), function(i) 
+    end  = do.call(rbind, lapply(seq(idx), function(i) 
       if (is.na(idx[i])) base[i,] else df[idx[i],] ))
     write.table(rbind(head, end), 
                 output, sep = output_sep, row.names = FALSE, col.names = FALSE)
@@ -130,7 +130,25 @@ append = function(base,
   
   # read.table base, read.table append #
   if (!base_by_line & !append_by_line) {
-
+    cat('-->', timer(), 'read base file totally <-- \n')
+    base   = read.table(base,   sep = base_sep,   quote = '"', colClasses = 'character')
+    cat('-->', timer(), 'read append file totally <-- \n')
+    append = read.table(append, sep = append_sep, quote = '"', colClasses = 'character')
+    head   = NULL
+    if (append_header) {
+      cat('-->', timer(), 'combine files header <-- \n')
+      head   = as.character(cbind(base[1, ], append[1, -append_col]))
+      base   = base  [-1, , drop = FALSE]
+      append = append[-1, , drop = FALSE]
+    } else
+      cat('-->', timer(), 'omit to combine files header <-- \n')
+    idx = match(base[, base_col], append[, append_col])
+    add = do.call(rbind, lapply(seq(idx), function(i) if(is.na(idx[i])) 
+      rep(fill, ncol(append)-1) else as.character(append[idx[i], -append_col]) ))
+    end = cbind(base, add)
+    write.table(rbind(head, end),
+                output, sep = output_sep, row.names = FALSE, col.names = FALSE)
+    cat('-->', timer(), 'done <-- \n')
   }
 }
 

@@ -11,7 +11,7 @@ append(
   base_col = 1,
   base_by_line = FALSE,
   append_sep = "\\t",
-  append_by_line = TRUE,
+  append_by_line = FALSE,
   append_col = 1,
   append_header = TRUE,
   output = "result.txt",
