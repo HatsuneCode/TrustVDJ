@@ -22,18 +22,18 @@ NULL
 #' @examples
 #' print('waiting')
 #' 
-append = function(base,
-                  append,
-                  base_sep       = '\t',
-                  base_col       = 1,
-                  base_by_line   = FALSE,
-                  append_sep     = '\t',
-                  append_by_line = FALSE,
-                  append_col     = 1,
-                  append_header  = TRUE,
-                  output         = 'result.txt',
-                  output_sep     = '\t',
-                  fill           = '-' ) {
+appendFile = function(base,
+                      append,
+                      base_sep       = '\t',
+                      base_col       = 1,
+                      base_by_line   = FALSE,
+                      append_sep     = '\t',
+                      append_by_line = FALSE,
+                      append_col     = 1,
+                      append_header  = TRUE,
+                      output         = 'result.txt',
+                      output_sep     = '\t',
+                      fill           = '-' ) {
   
   # check parameter
   base_sep       = as.character(base_sep     %|||% '\t')
