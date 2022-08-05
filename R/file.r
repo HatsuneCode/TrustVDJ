@@ -154,8 +154,8 @@ appendFile = function(base,
 
 #' Get CDS Sequence from a Fasta file by GTF file
 #'
-#' @param fa      character.
-#' @param gtf     character.
+#' @param fa      character. fasta(.gz) file path
+#' @param gtf     character. gtf(.gz) file path
 #' @param cds.out character.
 #' @param pep.out character.
 #' @param verbose logical.
@@ -195,18 +195,19 @@ getCDS = function(fa, gtf, cds.out = 'cds.fa', pep.out = 'pep.fa', verbose = TRU
     if (length(unique(gf$seqnames)) > 1) 
       warning('!!! There is a transcript: ', id, ' in multi-chromosome !!!')
     # combine
-    fi = stats::setNames(paste(lapply(1:nrow(gf), function(r)
-      Biostrings::substr(fa[sub(' .*', '', names(fa)) %in% gf$seqnames[r]], gf$start[r], gf$end[r])), collapse = ''), id)
-    if ('-' %in% gf$strand)
-      fi = Biostrings::reverseComplement(Biostrings::DNAString(fi))
+    fi = paste(lapply(1:nrow(gf), function(r) Biostrings::substr(
+      fa[sub(' .*', '', names(fa)) %in% gf$seqnames[r]], gf$start[r], gf$end[r])), collapse = '')
+    if ('-' %in% gf$strand) fi = Biostrings::reverseComplement(Biostrings::DNAString(fi))
     if (verbose) utils::setTxtProgressBar(p, i/length(ids))
-    Biostrings::DNAStringSet(fi)
+    stats::setNames(Biostrings::DNAStringSet(fi), id)
   }))
   if (verbose) close(p)
   
   # return
   if (have(cds.out)) Biostrings::writeXStringSet(cds, as.character(cds.out))
   if (have(pep.out)) Biostrings::writeXStringSet(Biostrings::translate(cds), as.character(pep.out))
+  if (verbose) cat('-->', timer(), 'done <-- \n')
   cds
+
 }
 
