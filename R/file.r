@@ -154,11 +154,12 @@ appendFile = function(base,
 
 #' Get CDS Sequence from a Fasta file by GTF file
 #'
-#' @param fa      character. fasta(.gz) file path
-#' @param gtf     character. gtf(.gz) file path
-#' @param cds.out character.
-#' @param pep.out character.
-#' @param verbose logical.
+#' @param fa         character. fasta(.gz) file path
+#' @param gtf        character. gtf(.gz) file path
+#' @param cds.out    character.
+#' @param pep.out    character.
+#' @param init.codon logical.
+#' @param verbose    logical.
 #'
 #' @return
 #' @export
@@ -171,7 +172,7 @@ appendFile = function(base,
 #' @examples
 #' print('waiting...')
 #' 
-getCDS = function(fa, gtf, cds.out = 'cds.fa', pep.out = 'pep.fa', verbose = TRUE) {
+getCDS = function(fa, gtf, cds.out = 'cds.fa', pep.out = 'pep.fa', init.codon = TRUE, verbose = TRUE) {
   
   # check parameter
   fa   = normalizePath(as.character(fa),  '/', TRUE)
@@ -205,7 +206,7 @@ getCDS = function(fa, gtf, cds.out = 'cds.fa', pep.out = 'pep.fa', verbose = TRU
   
   # return
   if (have(cds.out)) Biostrings::writeXStringSet(cds, as.character(cds.out))
-  if (have(pep.out)) Biostrings::writeXStringSet(Biostrings::translate(cds), as.character(pep.out))
+  if (have(pep.out)) Biostrings::writeXStringSet(Biostrings::translate(cds, no.init.codon = !init.codon), as.character(pep.out))
   if (verbose) cat('-->', timer(), 'done <-- \n')
   cds
 
