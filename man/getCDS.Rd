@@ -4,14 +4,16 @@
 \alias{getCDS}
 \title{Get CDS Sequence from a Fasta file by GTF file}
 \usage{
-getCDS(fa, gtf, out = "cds.fa", verbose = TRUE)
+getCDS(fa, gtf, cds.out = "cds.fa", pep.out = "pep.fa", verbose = TRUE)
 }
 \arguments{
 \item{fa}{character.}
 
 \item{gtf}{character.}
 
-\item{out}{character.}
+\item{cds.out}{character.}
+
+\item{pep.out}{character.}
 
 \item{verbose}{logical.}
 }
