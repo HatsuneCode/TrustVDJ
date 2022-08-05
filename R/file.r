@@ -152,3 +152,59 @@ appendFile = function(base,
   }
 }
 
+#' Get CDS Sequence from a Fasta file by GTF file
+#'
+#' @param fa      character.
+#' @param gtf     character.
+#' @param out     character.
+#' @param verbose logical.
+#'
+#' @return
+#' @export
+#'
+#' @import Biostrings   readBStringSet substr reverseComplement DNAString DNAStringSet writeXStringSet
+#' @import rtracklayer  import
+#' @import utils        txtProgressBar setTxtProgressBar
+#' @import future.apply future_lapply
+#'
+#' @examples
+#' print('waiting...')
+#' 
+getCDS = function(fa, gtf, out = 'cds.fa', verbose = TRUE) {
+  
+  # check parameter
+  fa   = normalizePath(as.character(fa),  '/', TRUE)
+  gtf  = normalizePath(as.character(gtf), '/', TRUE)
+  
+  # read
+  if (verbose) cat('-->', timer(), 'read fa:',  fa,  '<-- \n')
+  fa  = Biostrings::readBStringSet(fa)
+  if (verbose) cat('-->', timer(), 'read gtf:', gtf, '<-- \n')
+  gtf = data.frame(rtracklayer::import(gtf), check.names = FALSE)
+  gtf = gtf[gtf$type %in% 'CDS', ]
+  
+  # cds
+  if (verbose) cat('-->', timer(), 'get cds fa <-- \n')
+  ids = as.character(unique(gtf$transcript_id))
+  if (verbose) p = utils::txtProgressBar(style = 3)
+  cds = do.call(c, lapply(seq(ids), function(i) {
+    id = ids[i]
+    gf = gtf[gtf$transcript_id %in% id, c('seqnames', 'start', 'end', 'strand', 'transcript_id')]
+    gf = gf [order(gf$start), ]
+    if (length(unique(gf$seqnames)) > 1) 
+      warning('!!! There is a transcript: ', id, ' in multi-chromosome !!!')
+    # combine
+    fi = setNames(paste(future.apply::future_lapply(1:nrow(gf), function(r)
+      Biostrings::substr(fa[sub(' .*', '', names(fa)) %in% gf$seqnames[r]], gf$start[r], gf$end[r])), collapse = ''), id)
+    if ('-' %in% gf$strand)
+      fi = Biostrings::reverseComplement(Biostrings::DNAString(fi))
+    if (verbose) utils::setTxtProgressBar(p, i/length(ids))
+    Biostrings::DNAStringSet(fi)
+  }))
+  if (verbose) close(p)
+  
+  # return
+  if (have(out)) Biostrings::writeXStringSet(cds, out)
+  cds
+}
+
