@@ -163,7 +163,7 @@ appendFile = function(base,
 #' @return
 #' @export
 #'
-#' @importFrom Biostrings   readBStringSet substr reverseComplement DNAString DNAStringSet writeXStringSet
+#' @importFrom Biostrings   readBStringSet substr reverseComplement DNAString DNAStringSet writeXStringSet translate
 #' @importFrom rtracklayer  import
 #' @importFrom utils        txtProgressBar setTxtProgressBar
 #' @importFrom future.apply future_lapply
