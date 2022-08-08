@@ -4,10 +4,14 @@
 \alias{Circos}
 \title{Plot Circos}
 \usage{
-Circos(VJpair)
+Circos(VJpair, col_grid = NULL, col_link = NULL)
 }
 \arguments{
 \item{VJpair}{character.}
+
+\item{col_grid}{character.}
+
+\item{col_link}{character.}
 }
 \value{
 
