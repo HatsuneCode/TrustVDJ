@@ -4,16 +4,25 @@
 \alias{getCDS}
 \title{Get CDS Sequence from a Fasta file by GTF file}
 \usage{
-getCDS(fa, gtf, cds.out = "cds.fa", pep.out = "pep.fa", verbose = TRUE)
+getCDS(
+  fa,
+  gtf,
+  cds.out = "cds.fa",
+  pep.out = "pep.fa",
+  init.codon = TRUE,
+  verbose = TRUE
+)
 }
 \arguments{
-\item{fa}{character.}
+\item{fa}{character. fasta(.gz) file path}
 
-\item{gtf}{character.}
+\item{gtf}{character. gtf(.gz) file path}
 
 \item{cds.out}{character.}
 
 \item{pep.out}{character.}
+
+\item{init.codon}{logical.}
 
 \item{verbose}{logical.}
 }
