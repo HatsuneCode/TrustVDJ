@@ -76,11 +76,13 @@ Sankey = function(VJab, out = NULL) {
 
 #' Plot UpSet
 #'
-#' @param x     list. a named list
-#' @param title character.
-#' @param out   character.
-#' @param w     numeric.
-#' @param h     numeric.
+#' @param x            list. a named list
+#' @param main.bar.col character.
+#' @param side.bar.col character.
+#' @param title        character.
+#' @param out          character.
+#' @param w            numeric.
+#' @param h            numeric.
 #'
 #' @return
 #' @export
@@ -89,18 +91,22 @@ Sankey = function(VJab, out = NULL) {
 #' Upset(list(A = 1:5, B = 2:6, C = 3:10))
 #' 
 #' 
-Upset = function(x, title = NULL, out = NULL, w = 10, h = 6) {
+Upset = function(x, title = NULL, side.bar.col = NULL, main.bar.col = NULL, out = NULL, w = 10, h = 6) {
   # check
   title = as.character(title %|||% '')
   w     = as.numeric(w       %|||% 10)
   h     = as.numeric(h       %|||% 6 )
+  # color
+  side.bar.col = as.character(side.bar.col %|||% colorRampPalette(color20)(length(x)) )
+  main.bar.col = as.character(main.bar.col %|||% 'gray')
+
   # plot
   pdata = reshape2::dcast(do.call(rbind, lapply(seq(x), function(i) 
     data.frame(Sample = names(x)[i], Clono = x[[i]], In = 1) )),
     Clono ~ Sample, value.var = 'In', fill = 0)
   p = UpSetR::upset(pdata, sets = names(x), nintersects = NA, keep.order = TRUE,
-                    sets.bar.color = colorRampPalette(color20)(length(x)),
-                    mainbar.y.label = paste('Shared', title, '\n'), 
+                    sets.bar.color = side.bar.col, main.bar.color = main.bar.col,
+                    mainbar.y.label = paste('Shared', title, '\n'),
                     sets.x.label = sub('.', toupper(substr(title, 1, 1)), title))
   # save
   if (have(out)) {

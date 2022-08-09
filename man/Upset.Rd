@@ -4,12 +4,24 @@
 \alias{Upset}
 \title{Plot UpSet}
 \usage{
-Upset(x, title = NULL, out = NULL, w = 10, h = 6)
+Upset(
+  x,
+  title = NULL,
+  side.bar.col = NULL,
+  main.bar.col = NULL,
+  out = NULL,
+  w = 10,
+  h = 6
+)
 }
 \arguments{
 \item{x}{list. a named list}
 
 \item{title}{character.}
+
+\item{side.bar.col}{character.}
+
+\item{main.bar.col}{character.}
 
 \item{out}{character.}
 
