@@ -148,3 +148,55 @@ Circos = function(VJpair, col_grid = NULL, col_link = NULL) {
   circlize::circos.clear()
 }
 
+#' Plot character logo
+#'
+#' @param x   character.
+#' @param out character.
+#'
+#' @return
+#' @export
+#' 
+#' @importFrom reshape2  acast melt
+#' @importFrom ggseqlogo geom_logo make_col_scheme
+#' @importFrom ggplot2   ggplot aes
+#'
+#' @examples
+#' Logo(c('hahaha', 'hehehe'))
+#' 
+Logo = function(x, col = NULL, out = NULL) {
+  
+  # check parameter
+  col = as.character(col %|||% color20)
+  
+  # split
+  split = strsplit(x, '')
+  pdata = reshape2::acast(na.omit(do.call(rbind, lapply(seq(max(sapply(split, length))), function(i)
+    data.frame(Local = i, Char = sapply(split, function(char) char[i] ))))), 
+    Char ~ Local, value.var = 'Char', fun.aggregate = length)
+  pdata = pdata[grepl('[A-Z]', rownames(pdata), ignore.case = TRUE), ]
+  
+  # plot logo
+  p1 = suppressWarnings(
+    ggplot2::ggplot() + ggseqlogo::geom_logo(
+      pdata, 
+      seq_type = 'custom', 
+      namespace = rownames(pdata), 
+      method = 'probability', 
+      col_scheme = ggseqlogo::make_col_scheme(
+        chars = rownames(pdata), 
+        cols  = colorRampPalette(col)(nrow(pdata)) ) ) + 
+      ggplot2::theme_void() + ggplot2::ggtitle('CDR3 Probability') + 
+      ggplot2::theme(plot.title = ggplot2::element_text(hjust = .5, size = 18)) )
+  p2 = ggplot2::ggplot(reshape2::melt(pdata), ggplot2::aes(Var2, value, fill = Var1)) + 
+    ggplot2::geom_col(show.legend = FALSE) + 
+    ggplot2::scale_fill_manual(values = colorRampPalette(col)(nrow(pdata))) + 
+    ggplot2::theme_classic() + ggplot2::labs(x = 'Position', y = 'Bits') + 
+    ggplot2::theme(text = ggplot2::element_text(size = 16))
+  p  = p1 / p2
+  
+  # save
+  if (have(out)) 
+    ggplot2::ggsave(out, p, width = 8, height = 6)
+  p
+}
+
