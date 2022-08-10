@@ -150,8 +150,10 @@ Circos = function(VJpair, col_grid = NULL, col_link = NULL) {
 
 #' Plot character logo
 #'
-#' @param x   character.
-#' @param out character.
+#' @param x      character.
+#' @param out    character.
+#' @param width  numeric.
+#' @param height numeric.
 #'
 #' @return
 #' @export
@@ -163,11 +165,13 @@ Circos = function(VJpair, col_grid = NULL, col_link = NULL) {
 #' @examples
 #' Logo(c('hahaha', 'hehehe'))
 #' 
-Logo = function(x, col = NULL, out = NULL) {
+Logo = function(x, col = NULL, out = NULL, width = 8, height = 6) {
   
   # check parameter
-  col = as.character(col %|||% color20)
-  
+  col    = as.character(col  %|||% color20)
+  width  = as.numeric(width  %|||% 8 ) 
+  height = as.numeric(height %|||% 6 )
+
   # split
   split = strsplit(x, '')
   pdata = reshape2::acast(na.omit(do.call(rbind, lapply(seq(max(sapply(split, length))), function(i)
@@ -196,7 +200,7 @@ Logo = function(x, col = NULL, out = NULL) {
   
   # save
   if (have(out)) 
-    ggplot2::ggsave(out, p, width = 8, height = 6)
+    ggplot2::ggsave(out, p, width = width, height = height)
   p
 }
 
